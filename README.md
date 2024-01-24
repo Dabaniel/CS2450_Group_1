@@ -8,7 +8,7 @@ Members:
   Dan Smith
   Enoch Gillman
 
-Language:
+ Project Language:
   Python
 
 Meeting Times:
