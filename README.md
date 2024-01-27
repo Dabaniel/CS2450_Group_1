@@ -10,6 +10,7 @@ This is the shared Project space for CS 2450-002 Group 1.
 
 # Project Language:
   Python
+  
   As a unit the team felt it appopriate to develop this code using a language that we are
   familiar   with. This will allow us the flexibility to help one another should any of us get 
   stuck. It also   allows the space to look for additional recources since the code is widely 
@@ -20,7 +21,9 @@ This is the shared Project space for CS 2450-002 Group 1.
 
 # Meeting Times/ Schedule:
   Friday Evenings; 5:30-6:00 PM,
+  
   Saturdays as needed
+  
   The majority of the team is available to have scrum meetings via Teams Video Call. We will    
   start meeting this way and if it becomes needed as the project progresses, we are able to     
   accommodate meeting at UVU Fulton Library, Daniel's house (As long as there are 6 chairs      
