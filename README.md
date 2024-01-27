@@ -3,7 +3,7 @@
 This is the shared Project space for CS 2450-002 Group 1.
 
 # Members:
-  Amy Mendoza Perez,
+  Amy Mendoza,
   Anthony Jankovik,
   Dan Smith,
   Enoch Gillman
