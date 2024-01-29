@@ -52,6 +52,10 @@ Will rotate alphabetically starting with Anthony, Daniel, Enoch, Amy.
 
 # Project Voting Individual Selection: 
 Amy Mendoza - Project 1 
+
 Anthony Jankovic - Project 1 
+
 Dan Smith - Project 1 
+
 Enoch Gillman - Project 1 
+
