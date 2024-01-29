@@ -31,7 +31,7 @@ Saturdays as needed
 The majority of the team is available to have scrum meetings via Teams Video Call. We will  
  start meeting this way and if it becomes needed as the project progresses, we are able to  
  accommodate meeting at UVU Fulton Library, Daniel's house (As long as there are 6 chairs  
- present), or we can road trip to Enoch's parents home.
+ present), or we can road trip to Enoch's parents' home.
 
 # Project Planner/ Management:
 
