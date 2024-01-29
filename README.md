@@ -50,7 +50,7 @@ Chwazee to assign scrum master for us.
 
 Will rotate alphabetically starting with Anthony, Daniel, Enoch, Amy.
 
-# Project Voting Individual Selection: 
+# Individual Project Voting: 
 Amy Mendoza - Project 1 
 
 Anthony Jankovic - Project 1 
