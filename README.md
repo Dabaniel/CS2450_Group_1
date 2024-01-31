@@ -59,3 +59,14 @@ Dan Smith - Project 1
 
 Enoch Gillman - Project 1 OR Project 1
 
+
+# Meeting Report Summaries: 
+
+Friday 1/26/2023 - 
+Agenda: Ensure every member has access to GitHub and is able to edit the repository. 
+
+Issues: We were not added as collaborators and therefore had to formally ask for push and pull requests.
+
+Fix: We ensured Dan added every member as a collaborator so that we could push or commit changes without Dan's constant aproval.
+
+Seperate Topics: Discused how everyones environments were set up. dan suggested Visual Studio Community. GitHub Desktop was also suggested. 
