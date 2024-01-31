@@ -1,3 +1,5 @@
 testing access to repository
 
 good thing this will work and not fail in any way '_'
+
+test in class
