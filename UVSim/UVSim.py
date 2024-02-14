@@ -34,52 +34,62 @@ class UVSim:
 
     #Switches cases based on the sign and first two integers of the input. This has already been split in the SplitData function
     def CaseSwitch(self, case, memoryLocation):
-        if (case == "+10"):
-            self.Read(int(memoryLocation))
-        elif (case == "+11"):
-            self.Write(memoryLocation)
-        elif (case == "+20"):
-            self.Load(int(memoryLocation))
-        elif (case == "+21"):
-            self.Store(int(memoryLocation))
-        elif (case == "+30"):
-            pass
-            #TODO
-            Add(memoryLocation)
-        elif (case == "+31"):
-            pass
-            #TODO
-            Subtract(memoryLocation)
-        elif (case == "+32"):
-            pass
-            #TODO
-            Divide(memoryLocation)
-        elif (case == "+33"):
-            pass
-            #TODO
-            Multiply(memoryLocation)
-        elif (case == "+40"):
-            pass
-            #TODO
-            Branch(memoryLocation)
-        elif (case == "+41"):
-            pass
-            #TODO
-            BranchNeg(memoryLocation)
-        elif (case == "+42"):
-            pass
-            #TODO
-            BranchZero(memoryLocation)
-        elif (case == "+43"):
-            pass
-            #TODO
-            Halt(memoryLocation)
-        else:
+        try:
+            self.operations[case](memoryLocation)
+        except:
+            print('CaseSwitch(): something went horribly wrong!!!')
             return ValueError
+        # if (case == "+10"):
+        #     self.Read(int(memoryLocation))
+        # elif (case == "+11"):
+        #     self.Write(memoryLocation)
+        # elif (case == "+20"):
+        #     self.Load(int(memoryLocation))
+        # elif (case == "+21"):
+        #     self.Store(int(memoryLocation))
+        # elif (case == "+30"):
+        #     pass
+        #     #TODO
+        #     Add(memoryLocation)
+        # elif (case == "+31"):
+        #     pass
+        #     #TODO
+        #     Subtract(memoryLocation)
+        # elif (case == "+32"):
+        #     pass
+        #     #TODO
+        #     Divide(memoryLocation)
+        # elif (case == "+33"):
+        #     pass
+        #     #TODO
+        #     Multiply(memoryLocation)
+        # elif (case == "+40"):
+        #     pass
+        #     #TODO
+        #     Branch(memoryLocation)
+        # elif (case == "+41"):
+        #     pass
+        #     #TODO
+        #     BranchNeg(memoryLocation)
+        # elif (case == "+42"):
+        #     pass
+        #     #TODO
+        #     BranchZero(memoryLocation)
+        # elif (case == "+43"):
+        #     pass
+        #     #TODO
+        #     Halt(memoryLocation)
+        # else:
+        #     return ValueError
 
     #I/O operators
     def Read(self, memoryLocation):
-        user_in = input()
+        try:
+            memoryLocation = int(memoryLocation)
+        except:
+            print('Read: Bad input')
+            return ValueError
+        user_in = input('Insert value to Read: ')
         self.memory[memoryLocation] = user_in
 
     def Write(self, memoryLocation):

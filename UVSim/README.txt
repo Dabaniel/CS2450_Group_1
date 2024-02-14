@@ -11,3 +11,5 @@ READ    / '+10XX': Read the following console input into memory location 'XX'.
 WRITE   / '+11XX': Write value at memory location 'XX' into console.
 LOAD    / '+20XX': 
 STORE   / '+21XX': 
+
+Hit enter to close the program
