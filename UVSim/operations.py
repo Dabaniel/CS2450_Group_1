@@ -1,4 +1,5 @@
-#THIS FILE WILL BE USED TO TEST A 2D LIST AGAINST PYTHON'S DICTIONARY
+#THIS FILE WAS USED TO TEST A 2D LIST AGAINST PYTHON'S DICTIONARY
+#THE PYTHON DICTIONARY IS SLIGHTLY FASTER
 
 #I/O operators
 #TODO
@@ -76,4 +77,11 @@ test_list = [
 ]
 
 def accessList(opcode):
-    return test_list[int(opcode[1] - 1)][int(opcode[2])]
+    return test_list[int(opcode[1]) - 1][int(opcode[2])]
+
+def main():
+    print(accessList('+10'))
+    print(test_dict['+10'])
+
+if __name__ == '__main__':
+    main()
