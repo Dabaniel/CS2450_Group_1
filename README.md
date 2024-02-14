@@ -62,7 +62,7 @@ Enoch Gillman - Project 2 OR Project 2
 
 # Meeting Report Summaries:
 
-Friday 1/26/2023 -
+Friday 1/26/2024 -
 Agenda: Ensure every member has access to GitHub and is able to edit the repository.
 
 Issues: We were not added as collaborators and therefore had to formally ask for push and pull requests.
@@ -70,3 +70,12 @@ Issues: We were not added as collaborators and therefore had to formally ask for
 Fix: We ensured Dan added every member as a collaborator so that we could push or commit changes without Dan's constant aproval.
 
 Seperate Topics: Discused how everyones environments were set up. dan suggested Visual Studio Community. GitHub Desktop was also suggested.
+
+
+Friday 2/9/2024 - 
+Agenda: Discuss as a group whether we would like to switch projects. 
+
+Issues: We are finding the UV Chat assignment to be difficult to conceptualize and vague in instruction. The UVSim seems like it may be a better option for all of us. 
+
+Fix: Reach out to professor for requirements on UVSim. Also ponder individually whether making the switch would be personally beneficial as well as beneficial for the group. 
+Summary of Conversation: The ChatBox although it seems like a fun project feels overwhelming because of the requirement to incorperate API function. There is also the element of having to sync student credentials which are safeguarded by University. Multiples of the group members feel that it would be beneficial to switch so we would be able to work on it independantly from the teacher as well. 
