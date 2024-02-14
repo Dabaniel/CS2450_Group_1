@@ -31,3 +31,29 @@ Non-Functional Requirements
 -Allow for however many inputs a student needs
 -Perform operations with little to to no delay
 -Able to run on low performance machines
+
+Development Plan
+
+Objective: 
+-Develop the foundational components of the UVSim, ensuring accuracy in mathematical operations and memory management.
+
+Key Actions:
+-Implement the accumulator logic to handle pre-calculation data storage and manipulation.
+-Develop the memory module with support for 100-word storage, ensuring correct handling of signed four-digit decimal numbers.
+-Implement the CPU module capable of decoding and executing BasicML instructions.
+-Create a loader mechanism for inputting BasicML programs into main memory starting at location 00.
+
+Testing and Validation:
+-Conduct thorough testing to ensure the UVSim and BasicML programs operate as intended across a variety of test cases.
+-Develop unit tests for individual components (CPU, memory, accumulator).
+-Create integration tests to verify the system works as a whole.
+-Design and run BasicML program test cases to validate the instruction set and execution flow.
+-Implement a debugging and logging framework to identify and fix issues.
+
+Documentation and Training:
+-Provide comprehensive documentation and training materials for users of the UVSim.
+-Document the system architecture, module interfaces, and interaction flows.
+-Create detailed documentation for the BasicML instruction set and programming guidelines.
+-Develop user guides for loading and running BasicML programs on the UVSim.
+-Organize meetings for developers or users.
+
