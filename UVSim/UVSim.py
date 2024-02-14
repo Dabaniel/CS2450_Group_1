@@ -2,6 +2,7 @@ class UVSim:
     def __init__(self) -> None:
         self.memory = [0] * 100
         self.register = ""
+        self.accumulator = 0 #
 
 
     #Simple function that gets user input as a string.
@@ -21,21 +22,13 @@ class UVSim:
     #Switches cases based on the sign and first two integers of the input. This has already been split in the SplitData function
     def CaseSwitch(self, case, memoryLocation):
         if (case == "+10"):
-            pass
-            #TODO
-            Read(memoryLocation)
+            self.Read(int(memoryLocation))
         elif (case == "+11"):
-            pass
-            #TODO
-            Write(memoryLocation)
+            self.Write(memoryLocation)
         elif (case == "+20"):
-            pass
-            #TODO
-            Load(memoryLocation)
+            self.Load(int(memoryLocation))
         elif (case == "+21"):
-            pass
-            #TODO
-            Store(memoryLocation)
+            self.Store(int(memoryLocation))
         elif (case == "+30"):
             pass
             #TODO
@@ -71,28 +64,26 @@ class UVSim:
         else:
             return ValueError
 
+    #I/O operators
+    def Read(self, memoryLocation):
+        user_in = input()
+        self.memory[memoryLocation] = user_in
+
+    def Write(self, memoryLocation):
+        print(self.memory[int(memoryLocation)])
+
+    #Load/Store operators
+    def Load(self, memoryLocation):
+        self.accumulator = self.memory[memoryLocation]
+
+    def Store(self, memoryLocation):
+       self.memory[memoryLocation] = self.accumulator
+
+
 """
 TODO - All of the functions below still need definitions. -Dan
      - Add each function as method to class. -Anthony
 """
-
-#I/O operators
-#TODO
-def Read(memoryLocation):
-    pass
-    
-#TODO
-def Write(memoryLocation):
-    pass
-
-#Load/Store operators
-#TODO
-def Load(memoryLocation):
-    pass
-
-#TODO
-def Store(memoryLocation):
-    pass
 
 #Arithmatic operators
 #TODO
@@ -133,6 +124,8 @@ def main():
     userInput = sim.GetUserInput()
     while userInput != "":
         inputData = sim.SplitData(userInput)
+        sim.CaseSwitch(inputData[0], inputData[1])
+        userInput = sim.GetUserInput()
 
 if __name__ == '__main__':
     main()
