@@ -89,7 +89,6 @@ TODO - All of the functions below still need definitions. -Dan
 #TODO
 def Add(self, memoryLocation):
     #ADD = 30 Add a word from a specific location in memory to the word in the accumulator (leave the result in the accumulator)
-    pass
     self.accumulator = self.accumulator + memoryLocation 
     return self.accumulator
 
