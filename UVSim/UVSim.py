@@ -97,9 +97,19 @@ class UVSim:
 
     #Load/Store operators
     def Load(self, memoryLocation):
+        try:
+            memoryLocation = int(memoryLocation)
+        except:
+            print('Load: Bad input')
+            return ValueError
         self.accumulator = self.memory[memoryLocation]
 
     def Store(self, memoryLocation):
+        try:
+            memoryLocation = int(memoryLocation)
+        except:
+            print('Store: Bad input')
+            return ValueError
        self.memory[memoryLocation] = self.accumulator
     
     #Arithmatic operators
