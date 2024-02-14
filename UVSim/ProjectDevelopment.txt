@@ -18,9 +18,41 @@ Use Cases
 -Map to specific instruction 20
 -Take value from specified location in memory and put into accumulator
 
-3. Load Function
+4. Store Function
 -Map to specific instruction 21
 -Take value from accumulator into specified location in memory
+
+5. Add Function
+-Map to specific instruction 30
+-Add a word from a specific location in memory to the word in the accumulator
+
+6. Subtract Function
+-Map to specific instruction 31
+-Subtract a word from a specific location in memory from the word in the accumulator
+
+7. Divide Function
+-Map to specific instruction 32
+-Divide the word in the accumulator by a word from a specific location in memory
+
+8. Multiply Function
+-Map to specific instruction 33
+-Multiply a word from a specific location in memory with the word in the accumulator
+
+9. Branch Function
+-Map to specific instruction 40
+-Branch to a specific location in memory.
+
+10. Branch if Negative Function
+-Map to specific instruction 41
+-Branch to a specific location in memory if the accumulator is negative.
+
+11. Branch if Zero Function
+-Map to specific instruction 42
+-Branch to a specific location in memory if the accumulator is zero.
+
+12. Halt Function
+-Map to specific instruction 43
+-Pause the program.
 
 Functional Requirements
 -Input from console
