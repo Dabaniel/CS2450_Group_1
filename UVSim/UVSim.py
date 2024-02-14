@@ -87,12 +87,15 @@ TODO - All of the functions below still need definitions. -Dan
 
 #Arithmatic operators
 #TODO
-def Add(memoryLocation):
+def Add(self, memoryLocation):
     #ADD = 30 Add a word from a specific location in memory to the word in the accumulator (leave the result in the accumulator)
     pass
+    self.accumulator = self.accumulator + memoryLocation 
+    return self.accumulator
 
 #TODO
 def Subtract(memoryLocation):
+    #Subtract a word from a specific location in memory from the word in the accumulator (leave the result in the accumulator)
     pass
 
 #TODO
