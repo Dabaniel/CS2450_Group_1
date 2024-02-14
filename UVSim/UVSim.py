@@ -1,8 +1,21 @@
 class UVSim:
     def __init__(self) -> None:
         self.memory = [0] * 100
-        self.register = ""
         self.accumulator = 0 #
+        self.operations = {
+            "+10": self.Read,
+            "+11": self.Write,
+            "+20": self.Load,
+            "+21": self.Store,
+            "+30": self.Add,
+            "+31": self.Subtract,
+            "+32": self.Divide,
+            "+33": self.Multiply,
+            "+40": self.Branch,
+            "+41": self.BranchNeg,
+            "+42": self.BranchZero,
+            "+43": self.Halt
+        }
 
 
     #Simple function that gets user input as a string.
@@ -78,6 +91,43 @@ class UVSim:
 
     def Store(self, memoryLocation):
        self.memory[memoryLocation] = self.accumulator
+    
+    #Arithmatic operators
+    #TODO
+    def Add(self, memoryLocation):
+        #ADD = 30 Add a word from a specific location in memory to the word in the accumulator (leave the result in the accumulator)
+        self.accumulator = self.accumulator + memoryLocation 
+        return self.accumulator
+
+    #TODO
+    def Subtract(memoryLocation):
+        #Subtract a word from a specific location in memory from the word in the accumulator (leave the result in the accumulator)
+        pass
+
+    #TODO
+    def Divide(memoryLocation):
+        pass
+
+    #TODO
+    def Multiply(memoryLocation):
+        pass
+
+    #Control operators
+    #TODO
+    def Branch(memoryLocation):
+        pass
+
+    #TODO
+    def BranchNeg(memoryLocation):
+        pass
+
+    #TODO
+    def BranchZero(memoryLocation):
+        pass
+
+    #TODO
+    def Halt():
+        pass
 
 
 """
