@@ -110,7 +110,7 @@ class UVSim:
         except:
             print('Store: Bad input')
             return ValueError
-       self.memory[memoryLocation] = self.accumulator
+        self.memory[memoryLocation] = self.accumulator
     
     #Arithmatic operators
     #TODO
