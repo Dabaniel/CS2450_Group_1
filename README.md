@@ -50,23 +50,23 @@ Chwazee to assign scrum master for us.
 
 Will rotate alphabetically starting with Anthony, Daniel, Enoch, Amy.
 
-# Individual Project Voting: 
-Amy Mendoza - Project 1 
+# Individual Project Voting:
 
-Anthony Jankovic - Project 1 
+Amy Mendoza - Project 2
 
-Dan Smith - Project 1 
+Anthony Jankovic - Project 2
 
-Enoch Gillman - Project 1 OR Project 1
+Dan Smith - Project 2
 
+Enoch Gillman - Project 2 OR Project 2
 
-# Meeting Report Summaries: 
+# Meeting Report Summaries:
 
-Friday 1/26/2023 - 
-Agenda: Ensure every member has access to GitHub and is able to edit the repository. 
+Friday 1/26/2023 -
+Agenda: Ensure every member has access to GitHub and is able to edit the repository.
 
 Issues: We were not added as collaborators and therefore had to formally ask for push and pull requests.
 
 Fix: We ensured Dan added every member as a collaborator so that we could push or commit changes without Dan's constant aproval.
 
-Seperate Topics: Discused how everyones environments were set up. dan suggested Visual Studio Community. GitHub Desktop was also suggested. 
+Seperate Topics: Discused how everyones environments were set up. dan suggested Visual Studio Community. GitHub Desktop was also suggested.
