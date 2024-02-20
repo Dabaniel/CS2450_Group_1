@@ -1,0 +1,14 @@
+The project is split into UVSim, Window, and Stack.
+UVSim holds all of the operations the user will need to have functioning BasicML. It will also have the accumulator/register.
+This involves cohesion of the operations and files associated with UVSim. The operations relate to each other on a high level,
+the other methods are required to start the BasicML program, and they are all held together by the UVSim class.
+
+The GUI is held in a separate class that inherits from UVSim. This relation is the low coupling of the project.
+Besides the inherited values for the GUI, there will be other methods for creating each aspect that the user
+will interact with.
+
+The last section of the project has the stack which is a composition with the Window class.
+The stack functions as a data structure that can handle push, pop, and other key stack methods.
+The reason for the composition with the GUI is to be able to display the stack from the GUI, which
+uses the data and user input from UVSim. Each of these classes are working as a model view controller
+design.
