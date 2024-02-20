@@ -1,7 +1,7 @@
 class UVSim:
     def __init__(self) -> None:
-        self.memory = [0] * 100
-        self.accumulator = 0 #
+        self.memory = [None] * 100
+        self.accumulator = [0, "0"] #First is next memory location, second is register content
         self.operations = {
             "+10": self.Read,
             "+11": self.Write,
@@ -16,7 +16,11 @@ class UVSim:
             "+42": self.BranchZero,
             "+43": self.Halt
         }
-
+    def LoadFromText(self, filename):
+        with open(filename, 'r') as file:
+            content = file.read().splitlines()
+            for i in range(len(content)):
+                self.memory[i] = content[i]
 
     #Simple function that gets user input as a string.
     def GetUserInput(self):
@@ -31,6 +35,11 @@ class UVSim:
         if (data[0][0] != "+"):
             return None
         return data
+
+    def CheckIfInstruction(self, input):
+        if input[0] == '+':
+            return True
+        return False
 
     #Switches cases based on the sign and first two integers of the input. This has already been split in the SplitData function
     def CaseSwitch(self, case, memoryLocation):
@@ -91,9 +100,11 @@ class UVSim:
             return ValueError
         user_in = input('Insert value to Read: ')
         self.memory[memoryLocation] = user_in
+        self.accumulator[0] += 1
 
     def Write(self, memoryLocation):
         print(self.memory[int(memoryLocation)])
+        self.accumulator[0] += 1
 
     #Load/Store operators
     def Load(self, memoryLocation):
@@ -102,7 +113,8 @@ class UVSim:
         except:
             print('Load: Bad input')
             return ValueError
-        self.accumulator = self.memory[memoryLocation]
+        self.accumulator[1] = self.memory[memoryLocation]
+        self.accumulator[0] += 1
 
     def Store(self, memoryLocation):
         try:
@@ -110,95 +122,105 @@ class UVSim:
         except:
             print('Store: Bad input')
             return ValueError
-        self.memory[memoryLocation] = self.accumulator
+        self.memory[memoryLocation] = self.accumulator[1]
+        self.accumulator[0] += 1
     
     #Arithmatic operators
-    #TODO
     def Add(self, memoryLocation):
         #ADD = 30 Add a word from a specific location in memory to the word in the accumulator (leave the result in the accumulator)
-        self.accumulator = self.accumulator + memoryLocation 
-        return self.accumulator
+        try:
+            memoryLocation = int(memoryLocation)
+        except:
+            print('Store: Bad input')
+            return ValueError
+        if self.accumulator[1] == None:
+            self.accumulator[1] = int(self.memory[memoryLocation])
+        else:
+            self.accumulator[1] = int(self.accumulator[1]) + int(self.memory[memoryLocation])
+        self.accumulator[0] += 1
 
-    #TODO
-    def Subtract(memoryLocation):
+    def Subtract(self, memoryLocation):
         #Subtract a word from a specific location in memory from the word in the accumulator (leave the result in the accumulator)
-        pass
+        try:
+            memoryLocation = int(memoryLocation)
+        except:
+            print('Store: Bad input')
+            return ValueError
+        if self.accumulator[1] == None:
+            self.accumulator[1] = 0 - int(self.memory[memoryLocation])
+        else:
+            self.accumulator[1] = int(self.accumulator[1]) - int(self.memory[memoryLocation])
+        self.accumulator[0] += 1
 
-    #TODO
-    def Divide(memoryLocation):
-        pass
+    def Divide(self, memoryLocation):
+        try:
+            memoryLocation = int(memoryLocation)
+        except:
+            print('Store: Bad input')
+            return ValueError
+        if self.accumulator[1] == None:
+            self.accumulator[1] = 0
+        else:
+            self.accumulator[1] = int(self.accumulator[1]) / int(self.memory[memoryLocation])
+        self.accumulator[0] += 1
 
-    #TODO
-    def Multiply(memoryLocation):
-        pass
+    def Multiply(self, memoryLocation):
+        try:
+            memoryLocation = int(memoryLocation)
+        except:
+            print('Store: Bad input')
+            return ValueError
+        if self.accumulator[1] == None:
+            self.accumulator[1] = 0
+        else:
+            self.accumulator[1] = int(self.accumulator[1]) * int(self.memory[memoryLocation])
+        self.accumulator[0] += 1
 
     #Control operators
-    #TODO
-    def Branch(memoryLocation):
-        pass
+    def Branch(self, memoryLocation):
+        try:
+            memoryLocation = int(memoryLocation)
+        except:
+            print('Store: Bad input')
+            return ValueError
+        self.accumulator[0] = memoryLocation
 
-    #TODO
-    def BranchNeg(memoryLocation):
-        pass
+    def BranchNeg(self, memoryLocation):
+        try:
+            memoryLocation = int(memoryLocation)
+        except:
+            print('Store: Bad input')
+            return ValueError
+        if self.accumulator[1] < 0:
+            self.accumulator[0] = memoryLocation
 
-    #TODO
-    def BranchZero(memoryLocation):
-        pass
+    def BranchZero(self, memoryLocation):
+        try:
+            memoryLocation = int(memoryLocation)
+        except:
+            print('Store: Bad input')
+            return ValueError
+        if self.accumulator[1] == 0:
+            self.accumulator[0] = memoryLocation
 
-    #TODO
-    def Halt():
-        pass
-
-
-"""
-TODO - All of the functions below still need definitions. -Dan
-     - Add each function as method to class. -Anthony
-"""
-
-#Arithmatic operators
-#TODO
-def Add(self, memoryLocation):
-    #ADD = 30 Add a word from a specific location in memory to the word in the accumulator (leave the result in the accumulator)
-    self.accumulator = self.accumulator + memoryLocation 
-    return self.accumulator
-
-#TODO
-def Subtract(memoryLocation):
-    #Subtract a word from a specific location in memory from the word in the accumulator (leave the result in the accumulator)
-    pass
-
-#TODO
-def Divide(memoryLocation):
-    pass
-
-#TODO
-def Multiply(memoryLocation):
-    pass
-
-#Control operators
-#TODO
-def Branch(memoryLocation):
-    pass
-
-#TODO
-def BranchNeg(memoryLocation):
-    pass
-
-#TODO
-def BranchZero(memoryLocation):
-    pass
-
-#TODO
-def Halt():
-    pass
+    def Halt(self, memoryLocation):
+        self.accumulator[0] = -1
 
 def main():
     sim = UVSim()
-    userInput = sim.GetUserInput()
-    while userInput != "":
-        inputData = sim.SplitData(userInput)
-        sim.CaseSwitch(inputData[0], inputData[1])
-        userInput = sim.GetUserInput()
+    sim.LoadFromText('test2.txt')
+    while sim.accumulator[0] >= 0:
+        if sim.CheckIfInstruction(sim.memory[sim.accumulator[0]]):
+            data = sim.SplitData(sim.memory[sim.accumulator[0]])
+            sim.CaseSwitch(data[0], data[1])
+        else:
+            sim.accumulator[0] += 1
+        
+    #userInput = sim.GetUserInput()
+    #while userInput != "":
+    #    inputData = sim.SplitData(userInput)
+    #    sim.CaseSwitch(inputData[0], inputData[1])
+    #    userInput = sim.GetUserInput()
 
 if __name__ == '__main__':
     main()
