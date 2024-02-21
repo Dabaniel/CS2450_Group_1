@@ -1,4 +1,8 @@
+"""Module that contains and runs the UVSim Virtual machine"""
+
 class UVSim:
+    """Class for UVSim Virtual Machine"""
+
     def __init__(self) -> None:
         self.memory = [None] * 100
         self.accumulator = [0, "0"] #First is next memory location, second is register content
@@ -16,211 +20,187 @@ class UVSim:
             "+42": self.BranchZero,
             "+43": self.Halt
         }
-    def LoadFromText(self, filename):
-        with open(filename, 'r') as file:
-            content = file.read().splitlines()
-            for i in range(len(content)):
-                self.memory[i] = content[i]
 
-    #Simple function that gets user input as a string.
-    def GetUserInput(self):
-        userInput = str(input(" "))
-        return userInput
+    def load_from_text(self, filename):
+        """Opens a text file and parses the content into memory by line"""
 
-    #Splits the input into a tuple: case, and memory location. Has built in check for correct input length and correct sign.
-    def SplitData(self, input):
-        if (len(input) > 5 or len(input) < 5):
+        with open(filename, 'r', encoding="utf-8") as file:
+            contents = file.read().splitlines()
+            for i, content in enumerate(contents):
+                self.memory[i] = content
+
+    def get_user_input(self):
+        """Simple function that gets user input as a string."""
+        user_input = str(input(" "))
+        return user_input
+
+    def split_data(self, user_input):
+        """Splits the input into a tuple: case, and memory location."""
+        if (len(user_input) > 5 or len(user_input) < 5):
             return ValueError
-        data = input[:3], input[3:]
-        if (data[0][0] != "+"):
+        data = user_input[:3], user_input[3:]
+        if data[0][0] != "+":
             return None
         return data
 
-    def CheckIfInstruction(self, input):
-        if input[0] == '+':
+    def check_if_instruction(self, user_input):
+        """Checks an input for sign, if sign detected returns True"""
+        if user_input[0] == '+':
             return True
         return False
 
-    #Switches cases based on the sign and first two integers of the input. This has already been split in the SplitData function
-    def CaseSwitch(self, case, memoryLocation):
+    def case_switch(self, case, memory_location):
+        """Switches cases based on the sign and first two integers of the input."""
         try:
-            self.operations[case](memoryLocation)
-        except:
-            print('CaseSwitch(): something went horribly wrong!!!')
+            self.operations[case](memory_location)
+        except ValueError:
+            print('case_switch(): something went horribly wrong!!!')
             return ValueError
-        # if (case == "+10"):
-        #     self.Read(int(memoryLocation))
-        # elif (case == "+11"):
-        #     self.Write(memoryLocation)
-        # elif (case == "+20"):
-        #     self.Load(int(memoryLocation))
-        # elif (case == "+21"):
-        #     self.Store(int(memoryLocation))
-        # elif (case == "+30"):
-        #     pass
-        #     #TODO
-        #     Add(memoryLocation)
-        # elif (case == "+31"):
-        #     pass
-        #     #TODO
-        #     Subtract(memoryLocation)
-        # elif (case == "+32"):
-        #     pass
-        #     #TODO
-        #     Divide(memoryLocation)
-        # elif (case == "+33"):
-        #     pass
-        #     #TODO
-        #     Multiply(memoryLocation)
-        # elif (case == "+40"):
-        #     pass
-        #     #TODO
-        #     Branch(memoryLocation)
-        # elif (case == "+41"):
-        #     pass
-        #     #TODO
-        #     BranchNeg(memoryLocation)
-        # elif (case == "+42"):
-        #     pass
-        #     #TODO
-        #     BranchZero(memoryLocation)
-        # elif (case == "+43"):
-        #     pass
-        #     #TODO
-        #     Halt(memoryLocation)
-        # else:
-        #     return ValueError
 
     #I/O operators
-    def Read(self, memoryLocation):
+    def Read(self, memory_location):
+        """Reads input from the keyboard and stores in specifed memory location"""
         try:
-            memoryLocation = int(memoryLocation)
-        except:
+            memory_location = int(memory_location)
+        except ValueError:
             print('Read: Bad input')
             return ValueError
         user_in = input('Insert value to Read: ')
-        self.memory[memoryLocation] = user_in
+        self.memory[memory_location] = user_in
         self.accumulator[0] += 1
 
-    def Write(self, memoryLocation):
-        print(self.memory[int(memoryLocation)])
+    def Write(self, memory_location):
+        """Writes word stored at memory location to console"""
+        print(self.memory[int(memory_location)])
         self.accumulator[0] += 1
 
     #Load/Store operators
-    def Load(self, memoryLocation):
+    def Load(self, memory_location):
+        """Loads word from memory loaction into accumulator"""
         try:
-            memoryLocation = int(memoryLocation)
-        except:
+            memory_location = int(memory_location)
+        except ValueError:
             print('Load: Bad input')
             return ValueError
-        self.accumulator[1] = self.memory[memoryLocation]
+        self.accumulator[1] = self.memory[memory_location]
         self.accumulator[0] += 1
 
-    def Store(self, memoryLocation):
+    def Store(self, memory_location):
+        """Stores word from accumulator into specified memory location"""
         try:
-            memoryLocation = int(memoryLocation)
-        except:
+            memory_location = int(memory_location)
+        except ValueError:
             print('Store: Bad input')
             return ValueError
-        self.memory[memoryLocation] = self.accumulator[1]
+        self.memory[memory_location] = self.accumulator[1]
         self.accumulator[0] += 1
-    
+
     #Arithmatic operators
-    def Add(self, memoryLocation):
-        #ADD = 30 Add a word from a specific location in memory to the word in the accumulator (leave the result in the accumulator)
+    def Add(self, memory_location):
+        """Add a word from a specific location in memory to the word in the accumulator"""
         try:
-            memoryLocation = int(memoryLocation)
-        except:
+            memory_location = int(memory_location)
+        except ValueError:
             print('Store: Bad input')
             return ValueError
-        if self.accumulator[1] == None:
-            self.accumulator[1] = int(self.memory[memoryLocation])
+        if self.accumulator[1] is None:
+            self.accumulator[1] = int(self.memory[memory_location])
         else:
-            self.accumulator[1] = int(self.accumulator[1]) + int(self.memory[memoryLocation])
+            self.accumulator[1] = int(self.accumulator[1]) + int(self.memory[memory_location])
         self.accumulator[0] += 1
 
-    def Subtract(self, memoryLocation):
-        #Subtract a word from a specific location in memory from the word in the accumulator (leave the result in the accumulator)
+    def Subtract(self, memory_location):
+        """Subtract a word from a specific location in memory from the word in the accumulator"""
         try:
-            memoryLocation = int(memoryLocation)
-        except:
+            memory_location = int(memory_location)
+        except ValueError:
             print('Store: Bad input')
             return ValueError
-        if self.accumulator[1] == None:
-            self.accumulator[1] = 0 - int(self.memory[memoryLocation])
+        if self.accumulator[1] is None:
+            self.accumulator[1] = 0 - int(self.memory[memory_location])
         else:
-            self.accumulator[1] = int(self.accumulator[1]) - int(self.memory[memoryLocation])
+            self.accumulator[1] = int(self.accumulator[1]) - int(self.memory[memory_location])
         self.accumulator[0] += 1
 
-    def Divide(self, memoryLocation):
+    def Divide(self, memory_location):
+        """Divide the word in the accumilator by the word stored in the specified memory location"""
         try:
-            memoryLocation = int(memoryLocation)
-        except:
+            memory_location = int(memory_location)
+        except ValueError:
             print('Store: Bad input')
             return ValueError
-        if self.accumulator[1] == None:
+        if self.accumulator[1] is None:
             self.accumulator[1] = 0
         else:
-            self.accumulator[1] = int(self.accumulator[1]) / int(self.memory[memoryLocation])
+            self.accumulator[1] = int(self.accumulator[1]) / int(self.memory[memory_location])
         self.accumulator[0] += 1
 
-    def Multiply(self, memoryLocation):
+    def Multiply(self, memory_location):
+        """Multiply word in the accumilator by the word stored in the specified memory location"""
         try:
-            memoryLocation = int(memoryLocation)
-        except:
+            memory_location = int(memory_location)
+        except ValueError:
             print('Store: Bad input')
             return ValueError
-        if self.accumulator[1] == None:
+        if self.accumulator[1] is None:
             self.accumulator[1] = 0
         else:
-            self.accumulator[1] = int(self.accumulator[1]) * int(self.memory[memoryLocation])
+            self.accumulator[1] = int(self.accumulator[1]) * int(self.memory[memory_location])
         self.accumulator[0] += 1
 
     #Control operators
-    def Branch(self, memoryLocation):
+    def Branch(self, memory_location):
+        """Branches to the specified memory location"""
         try:
-            memoryLocation = int(memoryLocation)
-        except:
+            memory_location = int(memory_location)
+        except ValueError:
             print('Store: Bad input')
             return ValueError
-        self.accumulator[0] = memoryLocation
+        self.accumulator[0] = memory_location
 
-    def BranchNeg(self, memoryLocation):
+    def BranchNeg(self, memory_location):
+        """Branches to the specified memory location if accumulator is negative"""
         try:
-            memoryLocation = int(memoryLocation)
-        except:
+            memory_location = int(memory_location)
+        except ValueError:
             print('Store: Bad input')
             return ValueError
         if self.accumulator[1] < 0:
-            self.accumulator[0] = memoryLocation
+            self.accumulator[0] = memory_location
+        else:
+            self.accumulator[0] += 1
 
-    def BranchZero(self, memoryLocation):
+    def BranchZero(self, memory_location):
+        """Branches to the specified memory location if accumulator is zero"""
         try:
-            memoryLocation = int(memoryLocation)
-        except:
+            memory_location = int(memory_location)
+        except ValueError:
             print('Store: Bad input')
             return ValueError
         if self.accumulator[1] == 0:
-            self.accumulator[0] = memoryLocation
+            self.accumulator[0] = memory_location
 
-    def Halt(self, memoryLocation):
+    def Halt(self, memory_location):
+        """Stops the sim"""
         self.accumulator[0] = -1
+        self.accumulator[1] = memory_location
 
-def main():
-    sim = UVSim()
-    sim.LoadFromText('test2.txt')
+def run_sim(sim, text_file):
+    """Runs the sim with the specified text file"""
+    sim.load_from_text(text_file)
     while sim.accumulator[0] >= 0:
-        if sim.CheckIfInstruction(sim.memory[sim.accumulator[0]]):
-            data = sim.SplitData(sim.memory[sim.accumulator[0]])
-            sim.CaseSwitch(data[0], data[1])
+        if sim.check_if_instruction(sim.memory[sim.accumulator[0]]):
+            data = sim.split_data(sim.memory[sim.accumulator[0]])
+            sim.case_switch(data[0], data[1])
         else:
             sim.accumulator[0] += 1
-        
-    #userInput = sim.GetUserInput()
-    #while userInput != "":
-    #    inputData = sim.SplitData(userInput)
-    #    sim.CaseSwitch(inputData[0], inputData[1])
-    #    userInput = sim.GetUserInput()
+
+def main():
+    """Main function"""
+    sim1 = UVSim()
+    run_sim(sim1, 'test1.txt')
+    sim2 = UVSim()
+    run_sim(sim2, 'test2.txt')
 
 if __name__ == '__main__':
     main()
