@@ -2,7 +2,6 @@
 
 class UVSim:
     """Class for UVSim Virtual Machine"""
-
     def __init__(self) -> None:
         self.memory = [None] * 100
         self.accumulator = [0, "0"] #First is next memory location, second is register content
@@ -23,7 +22,6 @@ class UVSim:
 
     def load_from_text(self, filename):
         """Opens a text file and parses the content into memory by line"""
-
         with open(filename, 'r', encoding="utf-8") as file:
             contents = file.read().splitlines()
             for i, content in enumerate(contents):
