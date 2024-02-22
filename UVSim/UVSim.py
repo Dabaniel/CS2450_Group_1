@@ -182,23 +182,3 @@ class UVSim:
         """Stops the sim"""
         self.accumulator[0] = -1
         self.accumulator[1] = memory_location
-
-def run_sim(sim, text_file):
-    """Runs the sim with the specified text file"""
-    sim.load_from_text(text_file)
-    while sim.accumulator[0] >= 0:
-        if sim.check_if_instruction(sim.memory[sim.accumulator[0]]):
-            data = sim.split_data(sim.memory[sim.accumulator[0]])
-            sim.case_switch(data[0], data[1])
-        else:
-            sim.accumulator[0] += 1
-
-def main():
-    """Main function"""
-    sim1 = UVSim()
-    run_sim(sim1, 'test1.txt')
-    sim2 = UVSim()
-    run_sim(sim2, 'test2.txt')
-
-if __name__ == '__main__':
-    main()
