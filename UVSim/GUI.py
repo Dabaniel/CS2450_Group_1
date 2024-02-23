@@ -1,14 +1,76 @@
-from PySide6.QtWidgets import QMainWindow, QPushButton # pip install pyside6
+from PySide6.QtWidgets import QMainWindow, QPushButton, QVBoxLayout, QTableWidget, QLabel, QTextEdit, QHBoxLayout, QWidget, QTableWidgetItem, QFileDialog # pip install pyside6
 
 class QTGUI(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Simple GUI")
-        self.setGeometry(100, 100, 200, 100)
+        self.setWindowTitle("BasicML Simulator")
+        self.setGeometry(100, 100, 800, 600)
+        self.UIsetup()
 
-        self.button = QPushButton("Click Me", self)
-        self.button.clicked.connect(self.on_button_clicked)  # Connect the button's clicked signal to a method
-        self.button.setGeometry(50, 20, 100, 50)
+    def UIsetup(self):
+        main_layout = QVBoxLayout()
+
+        # Memory display
+        self.memory_display = QTableWidget(100, 2)
+        self.memory_display.setHorizontalHeaderLabels(["Address", "Value"])
+        main_layout.addWidget(QLabel("Memory"))
+        main_layout.addWidget(self.memory_display)
+
+        labels = []
+        for i in range(100):
+            self.memory_display.setItem(i, 0, QTableWidgetItem(f"{i:02d}"))
+            labels.append("")
+        self.memory_display.setVerticalHeaderLabels(labels)
+
+        # Registers display
+        self.register_display = QTextEdit()
+        self.register_display.setFixedHeight(100)
+        main_layout.addWidget(QLabel("Registers"))
+        main_layout.addWidget(self.register_display)
+
+        # Console
+        self.console = QTextEdit()
+        self.console.setFixedHeight(100)
+        main_layout.addWidget(QLabel("Console"))
+        main_layout.addWidget(self.console)
+
+        # Control buttons
+        buttons_layout = QHBoxLayout()
+        self.load_button = QPushButton("Load")
+        self.run_button = QPushButton("Run")
+        self.step_button = QPushButton("Step")
+        self.reset_button = QPushButton("Reset")
+        buttons_layout.addWidget(self.load_button)
+        buttons_layout.addWidget(self.run_button)
+        buttons_layout.addWidget(self.step_button)
+        buttons_layout.addWidget(self.reset_button)
+
+        main_layout.addLayout(buttons_layout)
+
+        # Setting the central widget
+        central_widget = QWidget()
+        central_widget.setLayout(main_layout)
+        self.setCentralWidget(central_widget)
+
+        # Connect buttons to functions
+        self.load_button.clicked.connect(self.load)
+        self.run_button.clicked.connect(self.run)
+        self.step_button.clicked.connect(self.step)
+        self.reset_button.clicked.connect(self.reset)
+
+    def load(self):
+        filePath, _ = QFileDialog.getOpenFileName(self, "Open file", "", "All Files (*);;Text Files (*.txt)")
+        
+        if filePath:
+            print(f"Selected file: {filePath}")
+
+    def run(self):
+        # Placeholder for run function
+        print("Run")
+
+    def reset(self):
+        # Placeholder for reset function
+        print("Reset")
     
     def on_button_clicked(self):
         print("test button out")
