@@ -33,7 +33,7 @@ class UVSim:
 
     def run(self):
         """Runs the rest of the program"""
-        while step(): #Causes infinite loop
+        while self.step(): #Causes infinite loop
             pass
 
     def load_from_text(self, filename):
