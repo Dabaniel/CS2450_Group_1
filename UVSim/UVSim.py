@@ -24,8 +24,13 @@ class UVSim:
         """Opens a text file and parses the content into memory by line"""
         with open(filename, 'r', encoding="utf-8") as file:
             contents = file.read().splitlines()
+            valid = 'nope'
+            placeCnt = 0
             for i, content in enumerate(contents):
-                self.memory[i] = content
+                content = content.split()[0]
+                if(self.check_if_instruction(content)):
+                    self.memory[placeCnt] = content #[0:5]
+                    placeCnt += 1
 
     def get_user_input(self):
         """Simple function that gets user input as a string."""
@@ -51,8 +56,8 @@ class UVSim:
 
     def check_if_instruction(self, user_input):
         """Checks an input for sign, if sign detected returns True"""
-        if user_input[0] == '+':
-            return True
+        if user_input[0] == '+' or user_input[0] == '-':
+            return 4 < len(user_input)
         return False
 
     def case_switch(self, case, memory_location):
