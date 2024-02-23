@@ -1,6 +1,8 @@
 import pytest
 import UVSim
 
+#TODO: TESTS MUST BE KEPT UP-TO-DATE WITH PROGRESS IN MEMORY
+
 def test_get_memory():
     sim = UVSim.UVSim()
     assert type(sim.get_memory()) == type([])
@@ -24,6 +26,22 @@ def test_load_from_text(input, expected, expected_list):
     sim = UVSim.UVSim()
     sim.load_from_text(f'{input}.txt')
     assert (sim.get_memory() == expected_list) == expected
+
+@pytest.mark.parametrize('num', [
+    (0),
+    (1),
+    (2),
+    (3),
+    (4),
+    (5),
+    (6)
+])
+
+def test_accumulator_progression(num):
+    sim = UVSim.UVSim()
+    for i in range(num):
+        sim.step()
+    assert sim.get_accumulator() == [num, '0']
 
 # @pytest.mark.parametrize('example,num', [
 #     ('examplearg1', 1),

@@ -5,6 +5,7 @@ class UVSim:
     def __init__(self) -> None:
         self.memory = [None] * 100
         self.accumulator = [0, "0"] #First is next memory location, second is register content
+        self.step_limit = 90 #The last possible point to leave an operation before the memory for the operations start
         self.operations = {
             "+10": self.Read,
             "+11": self.Write,
@@ -19,6 +20,21 @@ class UVSim:
             "+42": self.BranchZero,
             "+43": self.Halt
         }
+
+    def step(self):
+        """Performs the current spot in memory, and proceeds the accumulator"""
+        if(self.memory[self.accumulator[0]] == '-99999' or self.step_limit - 1 <= self.accumulator[0]):
+            self.Halt()
+            return False
+        else:
+            #TODO: Perform code at memory location
+            self.Nothing()
+        return True
+
+    def run(self):
+        """Runs the rest of the program"""
+        while step(): #Causes infinite loop
+            pass
 
     def load_from_text(self, filename):
         """Opens a text file and parses the content into memory by line"""
@@ -69,6 +85,10 @@ class UVSim:
             return ValueError
 
     #I/O operators
+    def Nothing(self):
+        """Placeholder"""
+        self.accumulator[0] += 1
+
     def Read(self, memory_location):
         """Reads input from the keyboard and stores in specifed memory location"""
         try:
