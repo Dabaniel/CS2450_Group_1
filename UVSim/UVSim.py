@@ -33,8 +33,12 @@ class UVSim:
         return user_input
     
     def get_memory(self):
-        """Getter for 'memory'"""
+        """Getter for memory"""
         return self.memory
+    
+    def get_accumulator(self):
+        """Getter for accumulator"""
+        return self.accumulator
 
     def split_data(self, user_input):
         """Splits the input into a tuple: case, and memory location."""

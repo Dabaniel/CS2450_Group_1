@@ -6,6 +6,11 @@ def test_get_memory():
     assert type(sim.get_memory()) == type([])
     assert sim.get_memory() == [None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
 
+def test_Read():
+    sim = UVSim.UVSim()
+    assert type(sim.get_accumulator()) == type([])
+    assert sim.get_accumulator() == [0, '0']
+
 # @pytest.mark.parametrize('example,num', [
 #     ('examplearg1', 1),
 #     ('examplearg2', 2),
