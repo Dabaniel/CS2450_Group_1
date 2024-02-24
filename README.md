@@ -90,3 +90,14 @@ Separate Topics: We divided the assignment due on Monday 2/19. We will combine o
 
 Summary of Conversation: At first, the project's plan needed to be cleared up about what we are working towards and what is due next. We discussed some GUI options
 and finished with understanding our assignment due on Monday.
+
+Friday 2/23/24
+Agenda: Clean up code for milestone 3
+
+Issues: Understanding our class compositions and where to implement certain tasks.
+
+Fix: We decided to have the GUI class communicate with UVSim to pull the necessary information into the GUI.
+
+Separate Topics: Compile all of the SRS documents into one pdf
+
+Summary of Conversation: Read through the milestone 3 assignment and each gave pushed our parts to the repository.
