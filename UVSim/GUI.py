@@ -64,6 +64,9 @@ class QTGUI(QMainWindow):
         if filePath:
             print(f"Selected file: {filePath}")
 
+    def step(self):
+        pass
+
     def run(self):
         # Placeholder for run function
         print("Run")
