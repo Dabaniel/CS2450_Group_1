@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QMainWindow, QPushButton, QVBoxLayout, QTableWidget, QLabel, QTextEdit, QHBoxLayout, QWidget, QTableWidgetItem, QFileDialog # pip install pyside6
+from PySide6.QtWidgets import QAbstractItemView, QMainWindow, QPushButton, QVBoxLayout, QTableWidget, QLabel, QTextEdit, QHBoxLayout, QWidget, QTableWidgetItem, QFileDialog # pip install pyside6
 
 class QTGUI(QMainWindow):
     def __init__(self):
@@ -21,6 +21,8 @@ class QTGUI(QMainWindow):
             self.memory_display.setItem(i, 0, QTableWidgetItem(f"{i:02d}"))
             labels.append("")
         self.memory_display.setVerticalHeaderLabels(labels)
+        # immutable table
+        self.memory_display.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         # Registers display
         self.register_display = QTextEdit()
