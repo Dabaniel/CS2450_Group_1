@@ -271,12 +271,7 @@ def main():
     test_sim = UVSim()
     test_input = 'h'
     while True:
-        if(test_input[0] == 'h'):
-            print('\nRunning a console version of UVSim. Here are the commands:\nq/quit = quit\nm/memory = print memory\na/accumulator = print registers\ns/step = step\nr/run = run\nt/terminate = halt program\np/point = set accumulator\ni/insert = insert command at memory location\nc/copy = copy each memory location into console\nh/help = help dialogue')
-        elif(test_input[0] == 'q'):
-            print('The script will now terminate. Have a day.\n')
-            break
-        elif(test_input[0] == 'm'):
+        if(test_input[0] == 'm'):
             print(f'Memory: {test_sim.get_memory()}')
         elif(test_input[0] == 'a'):
             print(f'Accumulator: {test_sim.get_acc()[0]}\nRegister: {test_sim.get_acc()[1]}')
@@ -314,6 +309,11 @@ def main():
                     for i in buffer_memory:
                         print(i)
                     buffer_memory = []
+        elif(test_input[0] == 'h'):
+            print('\nRunning a console version of UVSim. Here are the commands:\nm/memory = print memory\na/accumulator = print registers\ns/step = step\nr/run = run\nt/terminate = halt program\np/point = set accumulator\ni/insert = insert command at memory location\nc/copy = copy code from memory\nh/help = help dialogue\nq/quit = quit')
+        elif(test_input[0] == 'q'):
+            print('The script will now terminate. Have a day.\n')
+            break
         else:
             print("That didn't seem to match any existing commands. Type \"h\" or \"help\" for the list of valid commands.")
         
