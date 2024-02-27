@@ -1,0 +1,5 @@
++1102  //This program tests how the interpreter includes/excludes data
+//Ampersands are used to include a line
+&
+&hot dogs
+-99999

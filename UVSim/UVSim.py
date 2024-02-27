@@ -3,7 +3,10 @@
 class UVSim:
     """Class for UVSim Virtual Machine"""
     def __init__(self) -> None:
-        self.memory = [None] * 100
+        self.default_memory = [None] * 100
+        self.memory = []
+        for i in self.default_memory:
+            self.memory.append(i)
         self.accumulator = [0, "0"] #First is next memory location, second is register content
         self.step_limit = 90 #The last possible point to leave an operation before the memory for the operations start
         self.operations = {
@@ -23,18 +26,40 @@ class UVSim:
 
     def step(self):
         """Performs the current spot in memory, and proceeds the accumulator"""
-        if(self.memory[self.accumulator[0]] == '-99999' or self.step_limit - 1 <= self.accumulator[0]):
+        if(self.get_acc()[0] < 0):
+            #Test to see if program has been halted
+            self.set_acc()
+        
+        if(self.memory[self.get_acc()[0]] == '-99999' or self.step_limit - 1 <= self.get_acc()[0]):
+            #Test to see if program should end
             self.Halt()
             return False
         else:
-            #TODO: Perform code at memory location
-            self.Nothing()
+            #Test to see if correct format to execute
+            try:
+                if(self.memory[self.get_acc()[0]][0] != '+'):
+                    self.Nothing()
+                    return True
+            except:
+                self.Nothing()
+                return True
+            
+            try:
+                data = self.split_data(self.memory[self.get_acc()[0]])
+                self.case_switch(data[0], data[1])
+            except:
+                print(f"Something went wrong at line {self.get_acc()[0]}")
+                self.Halt()
+                return False
+            
         return True
 
     def run(self):
         """Runs the rest of the program"""
-        while self.step(): #Causes infinite loop
-            pass
+        if(self.get_acc()[0] < 0):
+            self.set_acc()
+        while -1 < self.get_acc()[0]:
+            self.step()
 
     def load_from_text(self, filename):
         """Opens a text file and parses the content into memory by line"""
@@ -43,9 +68,12 @@ class UVSim:
             valid = 'nope'
             placeCnt = 0
             for i, content in enumerate(contents):
+                if(self.check_if_non_instruction(content)):
+                    self.memory[placeCnt] = content[1:]
+                    placeCnt += 1
                 content = content.split()[0]
                 if(self.check_if_instruction(content)):
-                    self.memory[placeCnt] = content #[0:5]
+                    self.memory[placeCnt] = content
                     placeCnt += 1
 
     def get_user_input(self):
@@ -57,9 +85,23 @@ class UVSim:
         """Getter for memory"""
         return self.memory
     
-    def get_accumulator(self):
+    def get_acc(self):
         """Getter for accumulator"""
         return self.accumulator
+    
+    def set_acc(self, a = 0):
+        """Getter for accumulator"""
+        try:
+            self.accumulator[0] = int(a)
+        except:
+            self.accumulator[0] = 0
+    
+    def add_acc(self, a = 1):
+        self.accumulator[0] += a
+    
+    def set_position_in_memory(self, position, value):
+        """Setter for memory"""
+        self.memory[position] = value
 
     def split_data(self, user_input):
         """Splits the input into a tuple: case, and memory location."""
@@ -75,6 +117,8 @@ class UVSim:
         if user_input[0] == '+' or user_input[0] == '-':
             return 4 < len(user_input)
         return False
+    def check_if_non_instruction(self, user_input):
+        return user_input[0] == '&'
 
     def case_switch(self, case, memory_location):
         """Switches cases based on the sign and first two integers of the input."""
@@ -87,7 +131,7 @@ class UVSim:
     #I/O operators
     def Nothing(self):
         """Placeholder"""
-        self.accumulator[0] += 1
+        self.add_acc()
 
     def Read(self, memory_location):
         """Reads input from the keyboard and stores in specifed memory location"""
@@ -98,12 +142,12 @@ class UVSim:
             return ValueError
         user_in = input('Insert value to Read: ')
         self.memory[memory_location] = user_in
-        self.accumulator[0] += 1
+        self.add_acc()
 
     def Write(self, memory_location):
         """Writes word stored at memory location to console"""
         print(self.memory[int(memory_location)])
-        self.accumulator[0] += 1
+        self.add_acc()
 
     #Load/Store operators
     def Load(self, memory_location):
@@ -114,7 +158,7 @@ class UVSim:
             print('Load: Bad input')
             return ValueError
         self.accumulator[1] = self.memory[memory_location]
-        self.accumulator[0] += 1
+        self.add_acc()
 
     def Store(self, memory_location):
         """Stores word from accumulator into specified memory location"""
@@ -124,7 +168,7 @@ class UVSim:
             print('Store: Bad input')
             return ValueError
         self.memory[memory_location] = self.accumulator[1]
-        self.accumulator[0] += 1
+        self.add_acc()
 
     #Arithmatic operators
     def Add(self, memory_location):
@@ -138,7 +182,7 @@ class UVSim:
             self.accumulator[1] = int(self.memory[memory_location])
         else:
             self.accumulator[1] = int(self.accumulator[1]) + int(self.memory[memory_location])
-        self.accumulator[0] += 1
+        self.add_acc()
 
     def Subtract(self, memory_location):
         """Subtract a word from a specific location in memory from the word in the accumulator"""
@@ -151,7 +195,7 @@ class UVSim:
             self.accumulator[1] = 0 - int(self.memory[memory_location])
         else:
             self.accumulator[1] = int(self.accumulator[1]) - int(self.memory[memory_location])
-        self.accumulator[0] += 1
+        self.add_acc()
 
     def Divide(self, memory_location):
         """Divide the word in the accumilator by the word stored in the specified memory location"""
@@ -164,7 +208,7 @@ class UVSim:
             self.accumulator[1] = 0
         else:
             self.accumulator[1] = int(self.accumulator[1]) / int(self.memory[memory_location])
-        self.accumulator[0] += 1
+        self.add_acc()
 
     def Multiply(self, memory_location):
         """Multiply word in the accumilator by the word stored in the specified memory location"""
@@ -177,7 +221,7 @@ class UVSim:
             self.accumulator[1] = 0
         else:
             self.accumulator[1] = int(self.accumulator[1]) * int(self.memory[memory_location])
-        self.accumulator[0] += 1
+        self.add_acc()
 
     #Control operators
     def Branch(self, memory_location):
@@ -187,7 +231,7 @@ class UVSim:
         except ValueError:
             print('Store: Bad input')
             return ValueError
-        self.accumulator[0] = memory_location
+        self.set_acc(memory_location)
 
     def BranchNeg(self, memory_location):
         """Branches to the specified memory location if accumulator is negative"""
@@ -197,9 +241,9 @@ class UVSim:
             print('Store: Bad input')
             return ValueError
         if self.accumulator[1] < 0:
-            self.accumulator[0] = memory_location
+            self.set_acc(memory_location)
         else:
-            self.accumulator[0] += 1
+            self.add_acc()
 
     def BranchZero(self, memory_location):
         """Branches to the specified memory location if accumulator is zero"""
@@ -209,9 +253,62 @@ class UVSim:
             print('Store: Bad input')
             return ValueError
         if self.accumulator[1] == 0:
-            self.accumulator[0] = memory_location
+            self.set_acc(memory_location)
 
-    def Halt(self, memory_location):
+    def Halt(self, memory_location = '0'):
         """Stops the sim"""
-        self.accumulator[0] = -1
+        self.set_acc(-1)
         self.accumulator[1] = memory_location
+    
+    def Reboot(self):
+        """Reboot the simulation"""
+        self.accumulator = [0, '0']
+        self.memory = []
+        for i in self.default_memory:
+            self.memory.append(i)
+
+def main():
+    test_sim = UVSim()
+    test_input = 'h'
+    while True:
+        if(test_input[0] == 'h'):
+            print('\nRunning a console version of UVSim. Here are the commands:\nq/quit = quit\nm/memory = print memory\na/accumulator = print registers\ns/step = step\nr/run = run\nt/terminate = halt program\np/point = set accumulator\ni/insert = insert command at memory location\nh/help = help dialogue')
+        elif(test_input[0] == 'q'):
+            print('The script will now terminate. Have a day.\n')
+            break
+        elif(test_input[0] == 'm'):
+            print(f'Memory: {test_sim.get_memory()}')
+        elif(test_input[0] == 'a'):
+            print(f'Accumulator: {test_sim.get_acc()[0]}\nRegister: {test_sim.get_acc()[1]}')
+        elif(test_input[0] == 's'):
+            test_sim.step()
+        elif(test_input[0] == 'r'):
+            test_sim.run()
+        elif(test_input[0] == 'i'):
+            while True:
+                position = input('--Type the desired position in memory (0-99): ')
+                if(position == 'q'):
+                    break
+                try:
+                    position = int(position)
+                    test_sim.set_position_in_memory(position, input('--List the desired value to insert: '))
+                    break
+                except:
+                    print('Invalid Input.')
+        elif(test_input[0] == 'f'):
+            try:
+                test_sim.load_from_text(input('--Share the name of the file you want to pass into the simulation: '))
+            except:
+                print('Huh. Something went wrong with UVSim -> load_from_text()')
+        elif(test_input[0] == 't'):
+            test_sim.Halt()
+            test_sim.Reboot()
+        elif(test_input[0] == 'p'):
+            test_sim.set_acc(input('Value for accumulator: '))
+        else:
+            print("That didn't seem to match any existing commands. Type \"h\" or \"help\" for the list of valid commands.")
+        
+        test_input = input('\n  --Next course of action: ')
+
+if __name__ == '__main__':
+    main()
