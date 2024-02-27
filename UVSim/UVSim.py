@@ -272,7 +272,7 @@ def main():
     test_input = 'h'
     while True:
         if(test_input[0] == 'h'):
-            print('\nRunning a console version of UVSim. Here are the commands:\nq/quit = quit\nm/memory = print memory\na/accumulator = print registers\ns/step = step\nr/run = run\nt/terminate = halt program\np/point = set accumulator\ni/insert = insert command at memory location\nh/help = help dialogue')
+            print('\nRunning a console version of UVSim. Here are the commands:\nq/quit = quit\nm/memory = print memory\na/accumulator = print registers\ns/step = step\nr/run = run\nt/terminate = halt program\np/point = set accumulator\ni/insert = insert command at memory location\nc/copy = copy each memory location into console\nh/help = help dialogue')
         elif(test_input[0] == 'q'):
             print('The script will now terminate. Have a day.\n')
             break
@@ -305,6 +305,15 @@ def main():
             test_sim.Reboot()
         elif(test_input[0] == 'p'):
             test_sim.set_acc(input('Value for accumulator: '))
+        elif(test_input[0] == 'c'):
+            test_memory = test_sim.get_memory()
+            buffer_memory = []
+            for i in test_memory:
+                buffer_memory.append(i)
+                if(type(i) != type(None)):
+                    for i in buffer_memory:
+                        print(i)
+                    buffer_memory = []
         else:
             print("That didn't seem to match any existing commands. Type \"h\" or \"help\" for the list of valid commands.")
         
