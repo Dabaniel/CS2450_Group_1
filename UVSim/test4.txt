@@ -1,16 +1,18 @@
-+1111 //print "This is a really..."
-+1009 //take in first value
-+1112 //print "Value 2:"
-+1010 //take in second value
-+2010 //load second into register
-+3009 //add register with first value
-+2111 //stores output
-+1111 //print addition
++1112 //print "This is a really..."
++1010 //take in first value
++1113 //print "Value 2:"
++1011 //take in second value
++2011 //load second into register
++3010 //add register with first value
++2112 //stores output
++1114 //print closing message
++1112 //print addition
 -99999
 &
 &
 &This is a really dumb calculator. Insert two values to add them together.\nValue one: 
 &Value 2: 
+&Your value is:
 
 //overhead: 
 //lines0-3: get the two values
