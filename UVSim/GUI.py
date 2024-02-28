@@ -1,4 +1,5 @@
 from PySide6.QtWidgets import QAbstractItemView, QMainWindow, QPushButton, QVBoxLayout, QTableWidget, QLabel, QTextEdit, QHBoxLayout, QWidget, QTableWidgetItem, QFileDialog # pip install pyside6
+from UVSim import UVSim
 
 class QTGUI(QMainWindow):
     def __init__(self):
@@ -6,6 +7,8 @@ class QTGUI(QMainWindow):
         self.setWindowTitle("BasicML Simulator")
         self.setGeometry(100, 100, 800, 600)
         self.UIsetup()
+
+        self.sim = UVSim()
 
     def UIsetup(self):
         main_layout = QVBoxLayout()
@@ -61,10 +64,14 @@ class QTGUI(QMainWindow):
         self.reset_button.clicked.connect(self.reset)
 
     def load(self):
-        filePath, _ = QFileDialog.getOpenFileName(self, "Open file", "", "All Files (*);;Text Files (*.txt)")
+        file_path, _ = QFileDialog.getOpenFileName(self, "Open file", "", "All Files (*);;Text Files (*.txt)")
         
-        if filePath:
-            print(f"Selected file: {filePath}")
+        if file_path:
+            print(f"Selected file: {file_path}")
+            stack_memory = self.sim.get_memory()
+            print(stack_memory)
+            for i in range(100):
+                self.memory_display.setItem(i, 1, QTableWidgetItem(f"{stack_memory[i]}"))
 
     def step(self):
         pass
