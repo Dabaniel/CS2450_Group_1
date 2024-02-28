@@ -67,14 +67,22 @@ class UVSim:
             contents = file.read().splitlines()
             valid = 'nope'
             placeCnt = 0
+            load_buffer = []
             for i, content in enumerate(contents):
-                if(self.check_if_non_instruction(content)):
-                    self.memory[placeCnt] = content[1:]
-                    placeCnt += 1
-                content = content.split()[0]
-                if(self.check_if_instruction(content)):
-                    self.memory[placeCnt] = content
-                    placeCnt += 1
+                if(0 < len(content)):
+                    if(self.check_if_non_instruction(content)):
+                        #self.memory[placeCnt] = content[1:]
+                        load_buffer.append(content[1:].replace('\\n', '\n'))
+                        placeCnt += 1
+                    content = content.split()[0]
+                    if(self.check_if_instruction(content)):
+                        #self.memory[placeCnt] = content
+                        load_buffer.append(content)
+                        placeCnt += 1
+            if(len(load_buffer) < self.step_limit):
+                for i, content in enumerate(load_buffer):
+                    self.memory[i] = content
+
 
     def get_user_input(self):
         """Simple function that gets user input as a string."""
@@ -126,6 +134,7 @@ class UVSim:
             self.operations[case](memory_location)
         except ValueError:
             print('case_switch(): something went horribly wrong!!!')
+            self.Halt()
             return ValueError
 
     #I/O operators

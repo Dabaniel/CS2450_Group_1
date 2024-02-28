@@ -1,5 +1,19 @@
-+1102  //This program tests how the interpreter includes/excludes data
-//Ampersands are used to include a line
-&
-&hot dogs
++1111 //print "This is a really..."
++1009 //take in first value
++1112 //print "Value 2:"
++1010 //take in second value
++2010 //load second into register
++3009 //add register with first value
++2111 //stores output
++1111 //print addition
 -99999
+&
+&
+&This is a really dumb calculator. Insert two values to add them together.\nValue one: 
+&Value 2: 
+
+//overhead: 
+//lines0-3: get the two values
+//lines4-5: set up and execute addition
+//lines6-7: store and print addition
+//lines9-12: allocate space in memory for the program
