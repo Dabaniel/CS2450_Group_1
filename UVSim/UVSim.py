@@ -315,11 +315,12 @@ def main():
             for i in test_memory:
                 if(type(i) == type(None)):
                     buffer_memory.append('')
-                elif(len(i) == 0):
-                    buffer_memory.append('&')
                 else:
-                    buffer_memory.append('&' * (not test_sim.check_if_instruction(i)) + i.replace('\n', '\\n'))
-                if(type(i) != type(None)):
+                    i = str(i)
+                    if(len(i) == 0):
+                        buffer_memory.append('&')
+                    else:
+                        buffer_memory.append('&' * (not test_sim.check_if_instruction(i)) + i.replace('\n', '\\n'))
                     for i in buffer_memory:
                         print(i)
                     buffer_memory = []
