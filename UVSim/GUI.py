@@ -63,6 +63,9 @@ class QTGUI(QMainWindow):
         self.step_button.clicked.connect(self.step)
         self.reset_button.clicked.connect(self.reset)
 
+    
+    # Move button functions and self.uvsim to facade in main.py
+
     def load(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Open file", "", "All Files (*);;Text Files (*.txt)")
         
@@ -71,7 +74,7 @@ class QTGUI(QMainWindow):
             stack_memory = self.sim.get_memory()
             print(stack_memory)
             for i in range(100):
-                self.memory_display.setItem(i, 1, QTableWidgetItem(f"{stack_memory[i]}"))
+                self.memory_display.setItem(i, 1, QTableWidgetItem(f"{stack_memory[i]}")) # add ternary to remove Nones
 
     def step(self):
         pass
