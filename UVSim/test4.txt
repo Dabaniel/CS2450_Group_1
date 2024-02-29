@@ -6,9 +6,9 @@
 +1011 //take in second value
 +2011 //load second into register
 +3010 //add register with first value
-+2112 //stores output
++2111 //stores output
 +1114 //print closing message
-+1112 //print addition
++1111 //print addition
 -99999
 &
 &
