@@ -15,9 +15,3 @@
 &This is a really dumb calculator. Insert two values to add them together.\nValue one: 
 &Value 2: 
 &Your value is:
-
-//overhead: 
-//lines0-3: get the two values
-//lines4-5: set up and execute addition
-//lines6-7: store and print addition
-//lines9-12: allocate space in memory for the program
