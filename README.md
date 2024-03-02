@@ -101,3 +101,13 @@ Fix: We decided to have the GUI class communicate with UVSim to pull the necessa
 Separate Topics: Compile all of the SRS documents into one pdf
 
 Summary of Conversation: Read through the milestone 3 assignment and each gave pushed our parts to the repository.
+
+Friday 3/1/24 Agenda: Feedback on Milestone #
+
+Issues: Fixing problems with housekeeping and structure of project files on github and structure of the project
+
+Fix: address and update repositories and update project with suggested changes
+
+Separate Topics: We will need to read through suggested code changes to fully understand their usefullness/benefit.
+
+Summary of Conversation: We spent some time reading through the general feedback for milestone three. We discussed the next steps that needed to be taken to finish the implementation of the full functionallity of the code, and what steps will need to be taken for milestone four. Updates will need to be made to our project tracker to help us disperse our workload more evenly, and we plan on having our next meeting in person to make sure we all understand the parts of our code some of us have had no hand in creating.
