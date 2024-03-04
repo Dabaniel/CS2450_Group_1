@@ -3,13 +3,13 @@
 class UVSim:
     """Class for UVSim Virtual Machine"""
     def __init__(self) -> None:
-        self.default_memory = [None] * 100
-        self.memory = []
-        for i in self.default_memory:
-            self.memory.append(i)
-        self.accumulator = [0, "0"] #First is next memory location, second is register content
-        self.step_limit = 90 #The last possible point to leave an operation before the memory for the operations start
-        self.operations = {
+        self._default_memory = [None] * 100
+        self._memory = []
+        for i in self._default_memory:
+            self._memory.append(i)
+        self._accumulator = [0, "0"] #First is next memory location, second is register content
+        self._step_limit = 90 #The last possible point to leave an operation before the memory for the operations start
+        self._operations = {
             "+10": self.Read,
             "+11": self.Write,
             "+20": self.Load,
@@ -24,20 +24,21 @@ class UVSim:
             "+43": self.Halt
         }
 
+    ## CALLED ##
     def step(self):
         """Performs the current spot in memory, and proceeds the accumulator"""
         if(self.get_acc()[0] < 0):
             #Test to see if program has been halted
             self.set_acc()
         
-        if(self.memory[self.get_acc()[0]] == '-99999' or self.step_limit - 1 <= self.get_acc()[0]):
+        if(self._memory[self.get_acc()[0]] == '-99999' or self._step_limit - 1 <= self.get_acc()[0]):
             #Test to see if program should end
             self.Halt()
             return False
         else:
             #Test to see if correct format to execute
             try:
-                if(self.memory[self.get_acc()[0]][0] != '+'):
+                if(self._memory[self.get_acc()[0]][0] != '+'):
                     self.Nothing()
                     return True
             except:
@@ -45,10 +46,10 @@ class UVSim:
                 return True
             
             try:
-                data = self.split_data(self.memory[self.get_acc()[0]])
-                self.case_switch(data[0], data[1])
+                data = self.split_data(self._memory[self.get_acc()[0]])
+                self._case_switch(data[0], data[1])
             except:
-                print(f"Something went wrong at line {self.get_acc()[0]}")
+                print(f"Something went wrong at line {self.get_acc()[0]}. The simulation will now halt.")
                 self.Halt()
                 return False
             
@@ -71,46 +72,45 @@ class UVSim:
             for i, content in enumerate(contents):
                 if(0 < len(content)):
                     if(self.check_if_non_instruction(content)):
-                        #self.memory[placeCnt] = content[1:]
+                        #self._memory[placeCnt] = content[1:]
                         load_buffer.append(content[1:].replace('\\n', '\n'))
                         placeCnt += 1
                     content = content.split()[0]
                     if(self.check_if_instruction(content)):
-                        #self.memory[placeCnt] = content
+                        #self._memory[placeCnt] = content
                         load_buffer.append(content)
                         placeCnt += 1
-            if(len(load_buffer) < self.step_limit):
+            if(len(load_buffer) < self._step_limit):
                 for i, content in enumerate(load_buffer):
-                    self.memory[i] = content
+                    self._memory[i] = content
 
-
-    def get_user_input(self):
-        """Simple function that gets user input as a string."""
-        user_input = str(input(" "))
-        return user_input
+    ## GETTERS/SETTERS ##
+    # UNUSED
+    # def get_user_input(self):
+    #     """Simple function that gets user input as a string."""
+    #     user_input = str(input(" "))
+    #     return user_input
     
     def get_memory(self):
         """Getter for memory"""
-        return self.memory
+        return self._memory
     
     def get_acc(self):
         """Getter for accumulator"""
-        return self.accumulator
+        return self._accumulator
     
     def set_acc(self, a = 0, which = 0):
         """Getter for accumulator"""
-        try:
-            self.accumulator[which] = int(a)
-        except:
-            self.accumulator[0] = 0
+        self._accumulator[which] = int(a)
     
     def add_acc(self, a = 1):
-        self.accumulator[0] += a
+        self._accumulator[0] += a
     
     def set_position_in_memory(self, position, value):
         """Setter for memory"""
-        self.memory[position] = value
+        self._memory[position] = value
 
+    ## 
     def split_data(self, user_input):
         """Splits the input into a tuple: case, and memory location."""
         if (len(user_input) > 5 or len(user_input) < 5):
@@ -125,15 +125,16 @@ class UVSim:
         if user_input[0] == '+' or user_input[0] == '-':
             return 4 < len(user_input)
         return False
+
     def check_if_non_instruction(self, user_input):
         return user_input[0] == '&'
 
-    def case_switch(self, case, memory_location):
+    def _case_switch(self, case, memory_location):
         """Switches cases based on the sign and first two integers of the input."""
         try:
-            self.operations[case](memory_location)
+            self._operations[case](memory_location)
         except ValueError:
-            print('case_switch(): something went horribly wrong!!!')
+            print('_case_switch(): something went horribly wrong!!!')
             self.Halt()
             return ValueError
 
@@ -150,12 +151,12 @@ class UVSim:
             print('Read: Bad input')
             return ValueError
         user_in = input('Insert value to Read: ')
-        self.memory[memory_location] = user_in
+        self._memory[memory_location] = user_in
         self.add_acc()
 
     def Write(self, memory_location):
         """Writes word stored at memory location to console"""
-        print(self.memory[int(memory_location)])
+        print(self._memory[int(memory_location)])
         self.add_acc()
 
     #Load/Store operators
@@ -166,7 +167,7 @@ class UVSim:
         except ValueError:
             print('Load: Bad input')
             return ValueError
-        self.accumulator[1] = self.memory[memory_location]
+        self._accumulator[1] = self._memory[memory_location]
         self.add_acc()
 
     def Store(self, memory_location):
@@ -176,7 +177,7 @@ class UVSim:
         except ValueError:
             print('Store: Bad input')
             return ValueError
-        self.memory[memory_location] = self.accumulator[1]
+        self._memory[memory_location] = self._accumulator[1]
         self.add_acc()
 
     #Arithmatic operators
@@ -187,10 +188,10 @@ class UVSim:
         except ValueError:
             print('Store: Bad input')
             return ValueError
-        if self.accumulator[1] is None:
-            self.accumulator[1] = int(self.memory[memory_location])
+        if self._accumulator[1] is None:
+            self._accumulator[1] = int(self._memory[memory_location])
         else:
-            self.accumulator[1] = int(self.accumulator[1]) + int(self.memory[memory_location])
+            self._accumulator[1] = int(self._accumulator[1]) + int(self._memory[memory_location])
         self.add_acc()
 
     def Subtract(self, memory_location):
@@ -200,10 +201,10 @@ class UVSim:
         except ValueError:
             print('Store: Bad input')
             return ValueError
-        if self.accumulator[1] is None:
-            self.accumulator[1] = 0 - int(self.memory[memory_location])
+        if self._accumulator[1] is None:
+            self._accumulator[1] = 0 - int(self._memory[memory_location])
         else:
-            self.accumulator[1] = int(self.accumulator[1]) - int(self.memory[memory_location])
+            self._accumulator[1] = int(self._accumulator[1]) - int(self._memory[memory_location])
         self.add_acc()
 
     def Divide(self, memory_location):
@@ -213,10 +214,10 @@ class UVSim:
         except ValueError:
             print('Store: Bad input')
             return ValueError
-        if self.accumulator[1] is None:
-            self.accumulator[1] = 0
+        if self._accumulator[1] is None:
+            self._accumulator[1] = 0
         else:
-            self.accumulator[1] = int(self.accumulator[1]) / int(self.memory[memory_location])
+            self._accumulator[1] = int(self._accumulator[1]) / int(self._memory[memory_location])
         self.add_acc()
 
     def Multiply(self, memory_location):
@@ -226,10 +227,10 @@ class UVSim:
         except ValueError:
             print('Store: Bad input')
             return ValueError
-        if self.accumulator[1] is None:
-            self.accumulator[1] = 0
+        if self._accumulator[1] is None:
+            self._accumulator[1] = 0
         else:
-            self.accumulator[1] = int(self.accumulator[1]) * int(self.memory[memory_location])
+            self._accumulator[1] = int(self._accumulator[1]) * int(self._memory[memory_location])
         self.add_acc()
 
     #Control operators
@@ -249,7 +250,7 @@ class UVSim:
         except ValueError:
             print('Store: Bad input')
             return ValueError
-        if self.accumulator[1] < 0:
+        if self._accumulator[1] < 0:
             self.set_acc(memory_location)
         else:
             self.add_acc()
@@ -261,20 +262,20 @@ class UVSim:
         except ValueError:
             print('Store: Bad input')
             return ValueError
-        if self.accumulator[1] == 0:
+        if self._accumulator[1] == 0:
             self.set_acc(memory_location)
 
     def Halt(self, memory_location = '0'):
         """Stops the sim"""
         self.set_acc(-1)
-        self.accumulator[1] = memory_location
+        self._accumulator[1] = memory_location
     
     def Reboot(self):
         """Reboot the simulation"""
-        self.accumulator = [0, '0']
-        self.memory = []
-        for i in self.default_memory:
-            self.memory.append(i)
+        self._accumulator = [0, '0']
+        self._memory = []
+        for i in self._default_memory:
+            self._memory.append(i)
 
 def main():
     test_sim = UVSim()
