@@ -97,10 +97,10 @@ class UVSim:
         """Getter for accumulator"""
         return self.accumulator
     
-    def set_acc(self, a = 0):
+    def set_acc(self, a = 0, which = 0):
         """Getter for accumulator"""
         try:
-            self.accumulator[0] = int(a)
+            self.accumulator[which] = int(a)
         except:
             self.accumulator[0] = 0
     

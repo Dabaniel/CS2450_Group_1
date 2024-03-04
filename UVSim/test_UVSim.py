@@ -8,10 +8,10 @@ def test_get_memory():
     assert type(sim.get_memory()) == type([])
     assert sim.get_memory() == [None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
 
-def test_get_accumulator():
+def test_get_acc():
     sim = UVSim.UVSim()
-    assert type(sim.get_accumulator()) == type([])
-    assert sim.get_accumulator() == [0, '0']
+    assert type(sim.get_acc()) == type([])
+    assert sim.get_acc() == [0, '0']
 
 @pytest.mark.parametrize('input,expected,expected_list', [
     ('test1', True, ['+1007', '+1008', '+2007', '+2008', '+2109', '+1109', '+4300', '+0000', '+0000', '+0000', '-99999', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]),
@@ -41,7 +41,7 @@ def test_accumulator_progression(num):
     sim = UVSim.UVSim()
     for i in range(num):
         sim.step()
-    assert sim.get_accumulator() == [num, '0']
+    assert sim.get_acc() == [num, '0']
 
 # @pytest.mark.parametrize('example,num', [
 #     ('examplearg1', 1),
