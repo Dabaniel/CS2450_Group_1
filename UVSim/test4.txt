@@ -9,9 +9,10 @@
 +2111 //stores output
 +1114 //print closing message
 +1111 //print addition
--99999
++4300 //End program
 &
 &
 &This is a really dumb calculator. Insert two values to add them together.\nValue one: 
 &Value 2: 
 &Your value is:
+-99999
