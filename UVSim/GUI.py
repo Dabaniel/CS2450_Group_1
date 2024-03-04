@@ -1,5 +1,4 @@
-from PySide6.QtWidgets import QAbstractItemView, QMainWindow, QPushButton, QVBoxLayout, QTableWidget, QLabel, QTextEdit, QHBoxLayout, QWidget, QTableWidgetItem, QFileDialog # pip install pyside6
-from UVSim import UVSim
+from PySide6.QtWidgets import QAbstractItemView, QMainWindow, QPushButton, QVBoxLayout, QTableWidget, QLabel, QTextEdit, QHBoxLayout, QWidget, QTableWidgetItem # pip install pyside6
 
 class QTGUI(QMainWindow):
     def __init__(self):
@@ -7,8 +6,6 @@ class QTGUI(QMainWindow):
         self.setWindowTitle("BasicML Simulator")
         self.setGeometry(100, 100, 800, 600)
         self.UIsetup()
-
-        self.sim = UVSim()
 
     def UIsetup(self):
         main_layout = QVBoxLayout()
@@ -57,35 +54,31 @@ class QTGUI(QMainWindow):
         central_widget.setLayout(main_layout)
         self.setCentralWidget(central_widget)
 
-        # Connect buttons to functions
-        self.load_button.clicked.connect(self.load)
-        self.run_button.clicked.connect(self.run)
-        self.step_button.clicked.connect(self.step)
-        self.reset_button.clicked.connect(self.reset)
+        
 
     
     # Move button functions and self.uvsim to facade in main.py
 
-    def load(self):
-        file_path, _ = QFileDialog.getOpenFileName(self, "Open file", "", "All Files (*);;Text Files (*.txt)")
+    # def load(self):
+    #     file_path, _ = QFileDialog.getOpenFileName(self, "Open file", "", "All Files (*);;Text Files (*.txt)")
         
-        if file_path:
-            print(f"Selected file: {file_path}")
-            stack_memory = self.sim.get_memory()
-            print(stack_memory)
-            for i in range(100):
-                self.memory_display.setItem(i, 1, QTableWidgetItem(f"{stack_memory[i]}")) # add ternary to remove Nones
+    #     if file_path:
+    #         print(f"Selected file: {file_path}")
+    #         stack_memory = self.sim.get_memory()
+    #         print(stack_memory)
+    #         for i in range(100):
+    #             self.memory_display.setItem(i, 1, QTableWidgetItem(f"{stack_memory[i]}")) # add ternary to remove Nones
 
-    def step(self):
-        pass
+    # def step(self):
+    #     pass
 
-    def run(self):
-        # Placeholder for run function
-        print("Run")
+    # def run(self):
+    #     # Placeholder for run function
+    #     print("Run")
 
-    def reset(self):
-        # Placeholder for reset function
-        print("Reset")
+    # def reset(self):
+    #     # Placeholder for reset function
+    #     print("Reset")
     
-    def on_button_clicked(self):
-        print("test button out")
+    # def on_button_clicked(self):
+    #     print("test button out")
