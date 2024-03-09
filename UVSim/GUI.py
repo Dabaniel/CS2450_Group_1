@@ -26,9 +26,19 @@ class QTGUI(QMainWindow):
 
         # Registers display
         self.register_display = QTextEdit()
-        self.register_display.setFixedHeight(100)
-        main_layout.addWidget(QLabel("Registers"))
+        self.register_display.setFixedWidth(400)
+        self.register_display.setFixedHeight(50)
+
+        main_layout.addWidget(QLabel("Register"))
         main_layout.addWidget(self.register_display)
+
+        # Accumulator display
+        self.accumulator_display = QTextEdit()
+        self.accumulator_display.setFixedWidth(400)
+        self.accumulator_display.setFixedHeight(50)
+
+        main_layout.addWidget(QLabel("Accumulator"))
+        main_layout.addWidget(self.accumulator_display)
 
         # Console
         self.console = QTextEdit()

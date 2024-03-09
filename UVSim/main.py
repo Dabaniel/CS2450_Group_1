@@ -33,18 +33,27 @@ class Controller():
             self.sim.load_from_text(file_path)
             stack_memory = self.sim.get_memory()
             for i in range(100):
-                self.gui.memory_display.setItem(i, 1, QTableWidgetItem(f"{stack_memory[i] if stack_memory[i] is not None else ''}")) # add ternary to remove Nones
+                self.gui.memory_display.setItem(i, 1, QTableWidgetItem(f"{stack_memory[i] if stack_memory[i] is not None else ''}"))
     
     def step(self):
-        pass
-
+        self.sim.step()
+        stack_memory = self.sim.get_memory()
+        for i in range(100):
+            self.gui.memory_display.setItem(i, 1, QTableWidgetItem(f"{stack_memory[i] if stack_memory[i] is not None else ''}"))
+    
     def run(self):
-        # Placeholder for run function
-        print("Run")
+        self.sim.run()
+        stack_memory = self.sim.get_memory()
+        for i in range(100):
+            self.gui.memory_display.setItem(i, 1, QTableWidgetItem(f"{stack_memory[i] if stack_memory[i] is not None else ''}"))
+    
 
     def reset(self):
         # Placeholder for reset function
         print("Reset")
+
+    def update_regacc(self):
+        pass
 
 def run_sim(sim, text_file):
     """Runs the sim with the specified text file"""
