@@ -1,5 +1,55 @@
 """Module that contains and runs the UVSim Virtual machine"""
 
+import UVSim
+
+def check_if_instruction(user_input):
+    """Checks an input for sign, if sign detected returns True"""
+    if user_input[0] == '+' or user_input[0] == '-':
+        return 4 < len(user_input)
+    return False
+
+def check_if_non_instruction(user_input):
+    return user_input[0] == '&'
+
+class I_UVSim():
+    def __init__(self, uvsim: UVSim) -> None:
+        self.uvsim = uvsim
+
+    ## GETTERS ##
+    def get_accumulator(self):
+        return self.uvsim.get_acc()[0]
+    
+    def get_register(self):
+        return self.uvsim.get_acc()[1]
+    
+    def get_memory(self):
+        return self.uvsim.get_memory()
+
+    ## SETTERS ##
+    def set_accumulator(self, value):
+        return self.uvsim.set_acc(value, 0)
+    
+    def set_register(self, value):
+        return self.uvsim.set_acc(value, 1)
+    
+    def set_memory_location(self, position, value):
+        return self.uvsim.set_position_in_memory(position, value)
+
+    def step(self):
+        self.uvsim.step()
+
+    def run(self):
+        self.uvsim.run()
+
+    def halt(self):
+        self.uvsim.Halt()
+
+    def reboot(self):
+        self.uvsim.Reboot()
+
+    def load_text_file(self, file):
+        self.uvsim.load_from_text(file)
+
 class UVSim:
     """Class for UVSim Virtual Machine"""
     def __init__(self) -> None:
@@ -278,38 +328,39 @@ class UVSim:
             self._memory.append(i)
 
 def main():
-    test_sim = UVSim()
+    test_sim = I_UVSim(UVSim())
     test_input = 'h'
     while True:
         if(test_input[0] == 'm'):
             print(f'Memory: {test_sim.get_memory()}')
         elif(test_input[0] == 'a'):
-            print(f'Accumulator: {test_sim.get_acc()[0]}\nRegister: {test_sim.get_acc()[1]}')
+            print(f'Accumulator: {test_sim.get_accumulator()}\nRegister: {test_sim.get_register()}')
         elif(test_input[0] == 's'):
             test_sim.step()
         elif(test_input[0] == 'r'):
             test_sim.run()
         elif(test_input[0] == 'i'):
+            pass
             while True:
                 position = input('--Type the desired position in memory (0-99): ')
                 if(position == 'q'):
                     break
                 try:
                     position = int(position)
-                    test_sim.set_position_in_memory(position, input('--List the desired value to insert: '))
+                    test_sim.set_memory_location(position, input('--List the desired value to insert: '))
                     break
                 except:
                     print('Invalid Input.')
         elif(test_input[0] == 'f'):
             try:
-                test_sim.load_from_text(input('--Share the name of the file you want to pass into the simulation: '))
+                test_sim.load_text_file(input('--Share the name of the file you want to pass into the simulation: '))
             except:
                 print('Huh. Something went wrong with UVSim -> load_from_text()')
         elif(test_input[0] == 't'):
-            test_sim.Halt()
-            test_sim.Reboot()
+            test_sim.halt()
+            test_sim.reboot()
         elif(test_input[0] == 'p'):
-            test_sim.set_acc(input('Value for accumulator: '))
+            test_sim.set_accumulator(input('Value for accumulator: '))
         elif(test_input[0] == 'c'):
             test_memory = test_sim.get_memory()
             buffer_memory = []
@@ -321,7 +372,7 @@ def main():
                     if(len(i) == 0):
                         buffer_memory.append('&')
                     else:
-                        buffer_memory.append('&' * (not test_sim.check_if_instruction(i)) + i.replace('\n', '\\n'))
+                        buffer_memory.append('&' * (not check_if_instruction(i)) + i.replace('\n', '\\n'))
                     for i in buffer_memory:
                         print(i)
                     buffer_memory = []
@@ -334,6 +385,62 @@ def main():
             print("That didn't seem to match any existing commands. Type \"h\" or \"help\" for the list of valid commands.")
         
         test_input = input('\n  --Next course of action: ')
+    # test_sim = UVSim()
+    # test_input = 'h'
+    # while True:
+    #     if(test_input[0] == 'm'):
+    #         print(f'Memory: {test_sim.get_memory()}')
+    #     elif(test_input[0] == 'a'):
+    #         print(f'Accumulator: {test_sim.get_acc()[0]}\nRegister: {test_sim.get_acc()[1]}')
+    #     elif(test_input[0] == 's'):
+    #         test_sim.step()
+    #     elif(test_input[0] == 'r'):
+    #         test_sim.run()
+    #     elif(test_input[0] == 'i'):
+    #         while True:
+    #             position = input('--Type the desired position in memory (0-99): ')
+    #             if(position == 'q'):
+    #                 break
+    #             try:
+    #                 position = int(position)
+    #                 test_sim.set_position_in_memory(position, input('--List the desired value to insert: '))
+    #                 break
+    #             except:
+    #                 print('Invalid Input.')
+    #     elif(test_input[0] == 'f'):
+    #         try:
+    #             test_sim.load_from_text(input('--Share the name of the file you want to pass into the simulation: '))
+    #         except:
+    #             print('Huh. Something went wrong with UVSim -> load_from_text()')
+    #     elif(test_input[0] == 't'):
+    #         test_sim.Halt()
+    #         test_sim.Reboot()
+    #     elif(test_input[0] == 'p'):
+    #         test_sim.set_acc(input('Value for accumulator: '))
+    #     elif(test_input[0] == 'c'):
+    #         test_memory = test_sim.get_memory()
+    #         buffer_memory = []
+    #         for i in test_memory:
+    #             if(type(i) == type(None)):
+    #                 buffer_memory.append('')
+    #             else:
+    #                 i = str(i)
+    #                 if(len(i) == 0):
+    #                     buffer_memory.append('&')
+    #                 else:
+    #                     buffer_memory.append('&' * (not test_sim.check_if_instruction(i)) + i.replace('\n', '\\n'))
+    #                 for i in buffer_memory:
+    #                     print(i)
+    #                 buffer_memory = []
+    #     elif(test_input[0] == 'h'):
+    #         print('\nRunning a console version of UVSim. Here are the commands:\nm/memory = print memory\na/accumulator = print registers\ns/step = step\nr/run = run\nt/terminate = halt program\np/point = set accumulator\ni/insert = insert command at memory location\nc/copy = copy code from memory\nh/help = help dialogue\nq/quit = quit')
+    #     elif(test_input[0] == 'q'):
+    #         print('The script will now terminate. Have a day.\n')
+    #         break
+    #     else:
+    #         print("That didn't seem to match any existing commands. Type \"h\" or \"help\" for the list of valid commands.")
+        
+    #     test_input = input('\n  --Next course of action: ')
 
 if __name__ == '__main__':
     main()
