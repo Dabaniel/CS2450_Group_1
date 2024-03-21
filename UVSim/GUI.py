@@ -1,20 +1,25 @@
 from PySide6.QtWidgets import QAbstractItemView, QMainWindow, QPushButton, QVBoxLayout, QTableWidget, QLabel, QTextEdit, QHBoxLayout, QWidget, QTableWidgetItem # pip install pyside6
+from PySide6.QtGui import QPixmap
 
 class QTGUI(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("BasicML Simulator")
-        self.setGeometry(100, 100, 800, 600)
+        self.setGeometry(100, 100, 600, 500)
         self.UIsetup()
 
     def UIsetup(self):
         main_layout = QVBoxLayout()
+        display_layout = QHBoxLayout()
 
         # Memory display
         self.memory_display = QTableWidget(100, 2)
         self.memory_display.setHorizontalHeaderLabels(["Address", "Value"])
-        main_layout.addWidget(QLabel("Memory"))
-        main_layout.addWidget(self.memory_display)
+        self.memory_display.setFixedWidth(227)
+        self.memory_display.setFixedHeight(300)
+        memory_layout = QVBoxLayout()
+        memory_layout.addWidget(QLabel("Memory"))
+        memory_layout.addWidget(self.memory_display)
 
         labels = []
         for i in range(100):
@@ -29,16 +34,33 @@ class QTGUI(QMainWindow):
         self.register_display.setFixedWidth(400)
         self.register_display.setFixedHeight(50)
 
-        main_layout.addWidget(QLabel("Register"))
-        main_layout.addWidget(self.register_display)
-
         # Accumulator display
         self.accumulator_display = QTextEdit()
         self.accumulator_display.setFixedWidth(400)
         self.accumulator_display.setFixedHeight(50)
 
-        main_layout.addWidget(QLabel("Accumulator"))
-        main_layout.addWidget(self.accumulator_display)
+
+        # Textbox Layout
+        textbox_layout = QVBoxLayout()
+        # self.logo = QLabel(self)
+        # textbox_layout.addWidget(self.logo)
+        # self.image = QPixmap("Utah_Valley_University_seal.svg.png")
+        # self.logo.setPixmap(self.image)
+        # self.logo.resize(self.image.width(), self.image.height())
+        textbox_layout.addStretch()
+        textbox_layout.addWidget(QLabel("Register"))
+        textbox_layout.addWidget(self.register_display)
+        textbox_layout.addWidget(QLabel("Accumulator"))
+        textbox_layout.addWidget(self.accumulator_display)
+
+
+        # Setup layout
+        display_layout.addLayout(memory_layout)
+        display_layout.addStretch()
+        display_layout.addLayout(textbox_layout)
+        main_layout.addLayout(display_layout)
+        main_layout.addStretch()
+        
 
         # Console
         self.console = QTextEdit()
@@ -63,32 +85,3 @@ class QTGUI(QMainWindow):
         central_widget = QWidget()
         central_widget.setLayout(main_layout)
         self.setCentralWidget(central_widget)
-
-        
-
-    
-    # Move button functions and self.uvsim to facade in main.py
-
-    # def load(self):
-    #     file_path, _ = QFileDialog.getOpenFileName(self, "Open file", "", "All Files (*);;Text Files (*.txt)")
-        
-    #     if file_path:
-    #         print(f"Selected file: {file_path}")
-    #         stack_memory = self.sim.get_memory()
-    #         print(stack_memory)
-    #         for i in range(100):
-    #             self.memory_display.setItem(i, 1, QTableWidgetItem(f"{stack_memory[i]}")) # add ternary to remove Nones
-
-    # def step(self):
-    #     pass
-
-    # def run(self):
-    #     # Placeholder for run function
-    #     print("Run")
-
-    # def reset(self):
-    #     # Placeholder for reset function
-    #     print("Reset")
-    
-    # def on_button_clicked(self):
-    #     print("test button out")
