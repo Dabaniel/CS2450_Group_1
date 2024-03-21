@@ -1,8 +1,8 @@
 from UVSim import UVSim
 from GUI import QTGUI
 from PySide6.QtWidgets import QApplication, QFileDialog, QTableWidgetItem
+from PySide6 import QtGui
 import sys
-import threading
 
 class Controller():
     def __init__(self) -> None:
@@ -19,11 +19,17 @@ class Controller():
         sys.exit(app.exec())
 
     def button_activation(self):
-        # Connect buttons to functions
+        """Connect buttons to functions
+        """
         self.gui.load_button.clicked.connect(self.load)
         self.gui.run_button.clicked.connect(self.run)
         self.gui.step_button.clicked.connect(self.step)
         self.gui.reset_button.clicked.connect(self.reset)
+        self.gui.file_menu.addAction("Load", self.load)
+        self.gui.edit_menu.addAction("Toggle Theme", self.gui.change_theme)
+        self.gui.help_menu.addAction("About", self.gui.show_version)
+        self.gui.help_menu.addAction("Docs", self.gui.show_help)
+
 
     def load(self):
         file_path, _ = QFileDialog.getOpenFileName(self.gui, "Open file", "", "All Files (*);;Text Files (*.txt)")
@@ -68,20 +74,6 @@ def run_sim(sim, text_file):
 def main():
     """Main function"""
     simple_start = Controller()
-
-
-
-    # sim1 = UVSim()
-    # thread_sim = threading.Thread(target=run_sim, args=(sim1, 'test1.txt'))
-    # thread_sim.start()
-    
-    # app = QApplication(sys.argv)
-    # window = QTGUI()
-    # window.show()
-    # thread_gui = threading.Thread(target=sys.exit, args=(app.exec()))
-    # thread_gui.start
-
-    
 
 
 if __name__ == '__main__':
