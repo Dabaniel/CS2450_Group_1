@@ -9,6 +9,9 @@ class Controller():
         #Simulation interface
         self.sim = I_UVSim(UVSim())
 
+        #Simulation text source
+        self.sim_editor = ''
+
         # GUI dispaly
         app = QApplication(sys.argv)
         self.gui = QTGUI()
@@ -32,6 +35,7 @@ class Controller():
         self.gui.reset_button.clicked.connect(self.reset)
         self.gui.accumulator_button.clicked.connect(self.set_accumulator)
         self.gui.register_button.clicked.connect(self.set_register)
+        self.gui.editor_button.clicked.connect(self.open_editor)
         self.gui.file_menu.addAction("Load", self.load)
         self.gui.edit_menu.addAction("Toggle Theme", self.gui.change_theme)
         self.gui.help_menu.addAction("About", self.gui.show_version)
@@ -86,6 +90,13 @@ class Controller():
         else:
             self.sim.set_accumulator(ret)
             self.update_accumulator()
+    
+    def open_editor(self):
+        ret = self.gui.change_code_editor()
+        if(False):
+            self.invalid_input()
+        else:
+            pass
     
     def invalid_input():
         print('that input is invalid!')

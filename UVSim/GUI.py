@@ -79,6 +79,9 @@ class QTGUI(QMainWindow):
         self.register_button = QPushButton("Register: NaN")
         self.register_button.setStyleSheet("background-color: #dbdbdb;")
         self.textbox_layout.addWidget(self.register_button)
+        self.editor_button = QPushButton("Open Code Editor")
+        self.editor_button.setStyleSheet("background-color: #dbdbdb;")
+        self.textbox_layout.addWidget(self.editor_button)
 
         # optional logo placement at eof
         self.textbox_layout.addStretch()
@@ -182,6 +185,18 @@ class QTGUI(QMainWindow):
             return int(self.new_dialog.textValue())
         except:
             return None
+    
+    def change_code_editor(self):
+        self.new_dialog = QInputDialog()
+        self.new_dialog.setWindowTitle("Code Editor")
+        # self.new_dialog.setLabelText("Enter a Register value (TODO):")
+
+        _ = self.new_dialog.exec_()
+        try:
+            return self.new_dialog.textValue()
+        except:
+            return None
+        
 
 """
 This is optional if logo image is wanted
