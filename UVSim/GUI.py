@@ -1,11 +1,12 @@
 from PySide6.QtWidgets import QAbstractItemView, QMainWindow, QPushButton, QVBoxLayout, QTableWidget, QLabel, QTextEdit, QHBoxLayout, QWidget, QTableWidgetItem # pip install pyside6
 from PySide6.QtGui import QPixmap
+import os
 
 class QTGUI(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("BasicML Simulator")
-        self.setGeometry(100, 100, 600, 500)
+        self.setGeometry(100, 100, 600, 350)
         self.UIsetup()
 
     def UIsetup(self):
@@ -40,19 +41,20 @@ class QTGUI(QMainWindow):
         self.accumulator_display.setFixedHeight(50)
 
 
+        # Console
+        self.console = QTextEdit()
+        self.console.setFixedHeight(100)
+
         # Textbox Layout
         textbox_layout = QVBoxLayout()
-        # self.logo = QLabel(self)
-        # textbox_layout.addWidget(self.logo)
-        # self.image = QPixmap("Utah_Valley_University_seal.svg.png")
-        # self.logo.setPixmap(self.image)
-        # self.logo.resize(self.image.width(), self.image.height())
+        # optional logo placement at eof
         textbox_layout.addStretch()
         textbox_layout.addWidget(QLabel("Register"))
         textbox_layout.addWidget(self.register_display)
         textbox_layout.addWidget(QLabel("Accumulator"))
         textbox_layout.addWidget(self.accumulator_display)
-
+        textbox_layout.addWidget(QLabel("Console"))
+        textbox_layout.addWidget(self.console)
 
         # Setup layout
         display_layout.addLayout(memory_layout)
@@ -60,13 +62,6 @@ class QTGUI(QMainWindow):
         display_layout.addLayout(textbox_layout)
         main_layout.addLayout(display_layout)
         main_layout.addStretch()
-        
-
-        # Console
-        self.console = QTextEdit()
-        self.console.setFixedHeight(100)
-        main_layout.addWidget(QLabel("Console"))
-        main_layout.addWidget(self.console)
 
         # Control buttons
         buttons_layout = QHBoxLayout()
@@ -85,3 +80,13 @@ class QTGUI(QMainWindow):
         central_widget = QWidget()
         central_widget.setLayout(main_layout)
         self.setCentralWidget(central_widget)
+
+"""
+This is optional if logo image is wanted
+self.logo = QLabel(self)
+textbox_layout.addWidget(self.logo)
+__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+self.image = QPixmap(os.path.join(__location__, "uvu.png"))
+self.image = self.image.scaled(250, 250)
+self.logo.setPixmap(self.image)
+"""
