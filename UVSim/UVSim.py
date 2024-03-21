@@ -12,6 +12,26 @@ def check_if_non_instruction(user_input):
     return user_input[0] == '&'
 
 class I_UVSim():
+    """
+        Interface for UVSim
+            This is an interface for the UVSim class. Here are the interface's capabilities:
+        -- METHODS --
+        Getters:
+            get_accumulator()
+            get_register()
+            get_memory()
+
+        Setters:
+            set_accumulator(value)
+            set_register(value)
+            set_data_at_location(position, value)
+            load_text_file(file)
+            load_string(text)
+            step()
+            run()
+            halt()
+            reboot()
+    """
     def __init__(self, uvsim: UVSim) -> None:
         self.uvsim = uvsim
 
@@ -27,13 +47,21 @@ class I_UVSim():
 
     ## SETTERS ##
     def set_accumulator(self, value):
-        return self.uvsim.set_acc(value, 0)
+        return self.uvsim.set_accumulator(value)
     
     def set_register(self, value):
-        return self.uvsim.set_acc(value, 1)
+        return self.uvsim.set_register(value)
     
-    def set_memory_location(self, position, value):
+    def set_data_at_location(self, position, value):
         return self.uvsim.set_position_in_memory(position, value)
+
+    def load_text_file(self, file):
+        """Load code from a .txt file"""
+        self.uvsim.load_from_text(file)
+
+    def load_string(self, text):
+        """Load code from a string"""
+        self.uvsim.load_from_string(text)
 
     def step(self):
         self.uvsim.step()
@@ -46,9 +74,6 @@ class I_UVSim():
 
     def reboot(self):
         self.uvsim.Reboot()
-
-    def load_text_file(self, file):
-        self.uvsim.load_from_text(file)
 
 class UVSim:
     """Class for UVSim Virtual Machine"""
@@ -79,7 +104,7 @@ class UVSim:
         """Performs the current spot in memory, and proceeds the accumulator"""
         if(self.get_acc()[0] < 0):
             #Test to see if program has been halted
-            self.set_acc()
+            self.set_accumulator()
         
         if(self._memory[self.get_acc()[0]] == '-99999' or self._step_limit - 1 <= self.get_acc()[0]):
             #Test to see if program should end
@@ -108,38 +133,34 @@ class UVSim:
     def run(self):
         """Runs the rest of the program"""
         if(self.get_acc()[0] < 0):
-            self.set_acc()
+            self.set_accumulator()
         while -1 < self.get_acc()[0]:
             self.step()
+
+    def load_from_string(self, text):
+        """parses the content of a string into memory by line"""
+        contents = text.splitlines()
+        placeCnt = 0
+        load_buffer = []
+        for i, content in enumerate(contents):
+            if(0 < len(content)):
+                if(self.check_if_non_instruction(content)):
+                    load_buffer.append(content[1:].replace('\\n', '\n'))
+                    placeCnt += 1
+                content = content.split()[0]
+                if(self.check_if_instruction(content)):
+                    load_buffer.append(content)
+                    placeCnt += 1
+        if(len(load_buffer) < self._step_limit):
+            for i, content in enumerate(load_buffer):
+                self._memory[i] = content
 
     def load_from_text(self, filename):
         """Opens a text file and parses the content into memory by line"""
         with open(filename, 'r', encoding="utf-8") as file:
-            contents = file.read().splitlines()
-            valid = 'nope'
-            placeCnt = 0
-            load_buffer = []
-            for i, content in enumerate(contents):
-                if(0 < len(content)):
-                    if(self.check_if_non_instruction(content)):
-                        #self._memory[placeCnt] = content[1:]
-                        load_buffer.append(content[1:].replace('\\n', '\n'))
-                        placeCnt += 1
-                    content = content.split()[0]
-                    if(self.check_if_instruction(content)):
-                        #self._memory[placeCnt] = content
-                        load_buffer.append(content)
-                        placeCnt += 1
-            if(len(load_buffer) < self._step_limit):
-                for i, content in enumerate(load_buffer):
-                    self._memory[i] = content
+            self.load_from_string(file.read())
 
     ## GETTERS/SETTERS ##
-    # UNUSED
-    # def get_user_input(self):
-    #     """Simple function that gets user input as a string."""
-    #     user_input = str(input(" "))
-    #     return user_input
     
     def get_memory(self):
         """Getter for memory"""
@@ -149,9 +170,13 @@ class UVSim:
         """Getter for accumulator"""
         return self._accumulator
     
-    def set_acc(self, a = 0, which = 0):
-        """Getter for accumulator"""
-        self._accumulator[which] = int(a)
+    def set_accumulator(self, a = 0):
+        """Setter for accumulator"""
+        self._accumulator[0] = int(a)
+    
+    def set_register(self, a):
+        """Setter for accumulator"""
+        self._accumulator[1] = a
     
     def add_acc(self, a = 1):
         self._accumulator[0] += a
@@ -291,7 +316,7 @@ class UVSim:
         except ValueError:
             print('Store: Bad input')
             return ValueError
-        self.set_acc(memory_location)
+        self.set_accumulator(memory_location)
 
     def BranchNeg(self, memory_location):
         """Branches to the specified memory location if accumulator is negative"""
@@ -301,7 +326,7 @@ class UVSim:
             print('Store: Bad input')
             return ValueError
         if self._accumulator[1] < 0:
-            self.set_acc(memory_location)
+            self.set_accumulator(memory_location)
         else:
             self.add_acc()
 
@@ -313,13 +338,17 @@ class UVSim:
             print('Store: Bad input')
             return ValueError
         if self._accumulator[1] == 0:
-            self.set_acc(memory_location)
+            self.set_accumulator(memory_location)
 
     def Halt(self, memory_location = '0'):
         """Stops the sim"""
-        self.set_acc(-1)
+        self.set_accumulator(-1)
         self._accumulator[1] = memory_location
     
+    def Reset(self):
+        """Reset the registers"""
+        self._accumulator = [0, '0']
+
     def Reboot(self):
         """Reboot the simulation"""
         self._accumulator = [0, '0']
@@ -328,6 +357,28 @@ class UVSim:
             self._memory.append(i)
 
 def main():
+    test_the_sim = UVSim()
+    test_the_sim.load_from_string("""
+//Test operations Read, Write, Load, Store, Add
+
++1112 //print "This is a really..."
++1010 //take in first value
++1113 //print "Value 2:"
++1011 //take in second value
++2011 //load second into register
++3010 //add register with first value
++2111 //stores output
++1114 //print closing message
++1111 //print addition
++4300 //End program
+&
+&
+&This is a really dumb calculator. Insert two values to add them together.\nValue one: 
+&Value 2: 
+&Your value is:
+-99999""")
+    print(test_the_sim.get_memory())
+
     test_sim = I_UVSim(UVSim())
     test_input = 'h'
     while True:
@@ -347,7 +398,7 @@ def main():
                     break
                 try:
                     position = int(position)
-                    test_sim.set_memory_location(position, input('--List the desired value to insert: '))
+                    test_sim.set_data_at_location(position, input('--List the desired value to insert: '))
                     break
                 except:
                     print('Invalid Input.')
@@ -385,62 +436,6 @@ def main():
             print("That didn't seem to match any existing commands. Type \"h\" or \"help\" for the list of valid commands.")
         
         test_input = input('\n  --Next course of action: ')
-    # test_sim = UVSim()
-    # test_input = 'h'
-    # while True:
-    #     if(test_input[0] == 'm'):
-    #         print(f'Memory: {test_sim.get_memory()}')
-    #     elif(test_input[0] == 'a'):
-    #         print(f'Accumulator: {test_sim.get_acc()[0]}\nRegister: {test_sim.get_acc()[1]}')
-    #     elif(test_input[0] == 's'):
-    #         test_sim.step()
-    #     elif(test_input[0] == 'r'):
-    #         test_sim.run()
-    #     elif(test_input[0] == 'i'):
-    #         while True:
-    #             position = input('--Type the desired position in memory (0-99): ')
-    #             if(position == 'q'):
-    #                 break
-    #             try:
-    #                 position = int(position)
-    #                 test_sim.set_position_in_memory(position, input('--List the desired value to insert: '))
-    #                 break
-    #             except:
-    #                 print('Invalid Input.')
-    #     elif(test_input[0] == 'f'):
-    #         try:
-    #             test_sim.load_from_text(input('--Share the name of the file you want to pass into the simulation: '))
-    #         except:
-    #             print('Huh. Something went wrong with UVSim -> load_from_text()')
-    #     elif(test_input[0] == 't'):
-    #         test_sim.Halt()
-    #         test_sim.Reboot()
-    #     elif(test_input[0] == 'p'):
-    #         test_sim.set_acc(input('Value for accumulator: '))
-    #     elif(test_input[0] == 'c'):
-    #         test_memory = test_sim.get_memory()
-    #         buffer_memory = []
-    #         for i in test_memory:
-    #             if(type(i) == type(None)):
-    #                 buffer_memory.append('')
-    #             else:
-    #                 i = str(i)
-    #                 if(len(i) == 0):
-    #                     buffer_memory.append('&')
-    #                 else:
-    #                     buffer_memory.append('&' * (not test_sim.check_if_instruction(i)) + i.replace('\n', '\\n'))
-    #                 for i in buffer_memory:
-    #                     print(i)
-    #                 buffer_memory = []
-    #     elif(test_input[0] == 'h'):
-    #         print('\nRunning a console version of UVSim. Here are the commands:\nm/memory = print memory\na/accumulator = print registers\ns/step = step\nr/run = run\nt/terminate = halt program\np/point = set accumulator\ni/insert = insert command at memory location\nc/copy = copy code from memory\nh/help = help dialogue\nq/quit = quit')
-    #     elif(test_input[0] == 'q'):
-    #         print('The script will now terminate. Have a day.\n')
-    #         break
-    #     else:
-    #         print("That didn't seem to match any existing commands. Type \"h\" or \"help\" for the list of valid commands.")
-        
-    #     test_input = input('\n  --Next course of action: ')
 
 if __name__ == '__main__':
     main()

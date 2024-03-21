@@ -16,8 +16,8 @@ class QTGUI(QMainWindow):
 
         self.create_menu_bar()
         self.create_memory()
-        self.create_register()
-        self.create_accumulator()
+        # self.create_register()
+        # self.create_accumulator()
         self.create_console()
         self.create_textbox()
         self.display_main()
@@ -50,13 +50,19 @@ class QTGUI(QMainWindow):
     def create_register(self):
         self.register_display = QTextEdit()
         self.register_display.setStyleSheet("background-color: #dbdbdb;")
-        self.register_display.setFixedWidth(400)
+        self.register_display.setFixedWidth(50)
         self.register_display.setFixedHeight(50)
+
+        
+        buttons_layout = QHBoxLayout()
+        self.reset_button = QPushButton("Reset")
+        self.reset_button.setStyleSheet("background-color: #dbdbdb;")
+        buttons_layout.addWidget(self.reset_button)
 
     def create_accumulator(self):
         self.accumulator_display = QTextEdit()
         self.accumulator_display.setStyleSheet("background-color: #dbdbdb;")
-        self.accumulator_display.setFixedWidth(400)
+        self.accumulator_display.setFixedWidth(50)
         self.accumulator_display.setFixedHeight(50)
 
     def create_console(self):
@@ -66,20 +72,27 @@ class QTGUI(QMainWindow):
 
     def create_textbox(self):
         self.textbox_layout = QVBoxLayout()
+        #Register and Accumulator
+        self.accumulator_button = QPushButton("Accumulator: NaN")
+        self.accumulator_button.setStyleSheet("background-color: #dbdbdb;")
+        self.textbox_layout.addWidget(self.accumulator_button)
+        self.register_button = QPushButton("Register: NaN")
+        self.register_button.setStyleSheet("background-color: #dbdbdb;")
+        self.textbox_layout.addWidget(self.register_button)
+
         # optional logo placement at eof
         self.textbox_layout.addStretch()
-        self.register_label = QLabel("Register")
-        self.register_label.setStyleSheet("color: #FFFFFF;")
-        self.textbox_layout.addWidget(self.register_label)
-        self.textbox_layout.addWidget(self.register_display)
-        self.accumulator_label = QLabel("Accumulator")
-        self.accumulator_label.setStyleSheet("color: #FFFFFF;")
-        self.textbox_layout.addWidget(self.accumulator_label)
-        self.textbox_layout.addWidget(self.accumulator_display)
+        # self.register_label = QLabel("Register")
+        # self.register_label.setStyleSheet("color: #FFFFFF;")
+        # self.textbox_layout.addWidget(self.register_label)
+        # self.textbox_layout.addWidget(self.register_display)
+        # self.accumulator_label = QLabel("Accumulator")
+        # self.accumulator_label.setStyleSheet("color: #FFFFFF;")
+        # self.textbox_layout.addWidget(self.accumulator_label)
+        # self.textbox_layout.addWidget(self.accumulator_display)
         
         self.console_label = QLabel("Console")
         self.console_label.setStyleSheet("color: #FFFFFF;")
-        self.textbox_layout.addWidget(self.console_label)
         self.textbox_layout.addWidget(self.console_label)
         self.textbox_layout.addWidget(self.console)
 
@@ -147,6 +160,28 @@ class QTGUI(QMainWindow):
                                  "'+20XX': \nSTORE   / '+21XX': \n\nHit enter to close the program")
 
         _ = self.help_dialog.exec_()
+
+    def change_register(self):
+        self.new_dialog = QInputDialog()
+        self.new_dialog.setWindowTitle("Change Register")
+        self.new_dialog.setLabelText("Enter a Register value (TODO):")
+
+        _ = self.new_dialog.exec_()
+        try:
+            return self.new_dialog.textValue()
+        except:
+            return None
+
+    def change_accumulator(self):
+        self.new_dialog = QInputDialog()
+        self.new_dialog.setWindowTitle("Change Accumulator")
+        self.new_dialog.setLabelText("Enter an Accumulator value (0-99):")
+
+        _ = self.new_dialog.exec_()
+        try:
+            return int(self.new_dialog.textValue())
+        except:
+            return None
 
 """
 This is optional if logo image is wanted
