@@ -53,7 +53,12 @@ class Controller():
         #Confirm a file path was garnered, then insert the file into memory
         if file_path:
             print(f"Selected file: {file_path}")
-            self.sim.load_text_file(file_path)
+            with open(file_path, 'r', encoding="utf-8") as file:
+                contents = file.read().splitlines()
+                self.sim_editor = ''
+                for i in contents:
+                    self.sim_editor += i + '\n'
+            self.sim.load_string(self.sim_editor)
             self.update_memory()
     
     def step(self):
@@ -68,12 +73,13 @@ class Controller():
     def reset(self):
         # Placeholder for reset function
         print("Reset")
+        self.append_console('what')
 
-    def append_console(self):
-        pass
+    def append_console(self, info: str):
+        self.gui.console.append(info)
 
     def clear_console(self):
-        pass
+        self.gui.console.setText()
 
     def set_register(self):
         ret = self.gui.change_register()
@@ -92,14 +98,18 @@ class Controller():
             self.update_accumulator()
     
     def open_editor(self):
-        ret = self.gui.change_code_editor()
+        ret = self.gui.change_code_editor(self.sim_editor)
         if(False):
             self.invalid_input()
         else:
-            pass
+            try:
+                self.sim.load_string(ret)
+                self.sim_editor = ret
+            except:
+                self.invalid_input('Compiler Error', 'Code did not compile properly')
     
-    def invalid_input(self):
-        self.gui.invalid_input()
+    def invalid_input(self, title = "About your input...", desc = "The input provided was not proper!"):
+        self.gui.invalid_input(title, desc)
 
     def update_memory(self):
         stack_memory = self.sim.get_memory()

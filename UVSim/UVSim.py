@@ -225,6 +225,7 @@ class UVSim:
         except ValueError:
             print('Read: Bad input')
             return ValueError
+        #TODO: get this input to communicate with main.py to open up an input dialog
         user_in = input('Insert value to Read: ')
         self._memory[memory_location] = user_in
         self.add_acc()

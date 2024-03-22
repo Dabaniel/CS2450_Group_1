@@ -68,7 +68,10 @@ class QTGUI(QMainWindow):
     def create_console(self):
         self.console = QTextEdit()
         self.console.setStyleSheet("background-color: #dbdbdb;")
-        self.console.setFixedHeight(100)
+        self.console.setFixedHeight(150)
+        self.console.setPlaceholderText("Programs will print out to here.")
+        self.console.setDisabled(True)
+        self.console.setTextColor('#000000')
 
     def create_textbox(self):
         self.textbox_layout = QVBoxLayout()
@@ -164,12 +167,12 @@ class QTGUI(QMainWindow):
 
         _ = self.help_dialog.exec_()
 
-    def invalid_input(self):
+    def invalid_input(self, title, desc):
         self.new_dialog = QMessageBox()
         self.new_dialog.setStyleSheet("QLabel{min-width: 200px; text-align: left;}")
         # change the following to an updated instruction list
-        self.new_dialog.setWindowTitle("About your input...")
-        self.new_dialog.setText("The input provided was not proper!")
+        self.new_dialog.setWindowTitle(title)
+        self.new_dialog.setText(desc)
 
         _ = self.new_dialog.exec_()
 
@@ -195,10 +198,11 @@ class QTGUI(QMainWindow):
         except:
             return None
     
-    def change_code_editor(self):
+    def change_code_editor(self, code):
         self.new_dialog = QWizard()
         self.text_editor = QTextEdit()
         self.text_editor.setFixedSize(400, 250)
+        self.text_editor.setText(code)
 
         self.wiz_layout = QHBoxLayout()
         self.wiz_layout.addWidget(self.text_editor)
