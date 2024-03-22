@@ -85,7 +85,7 @@ class Controller():
 
     def set_accumulator(self):
         ret = self.gui.change_accumulator()
-        if(ret < 0 or len(self.sim.get_memory()) < ret):
+        if(ret < 0 or len(self.sim.get_memory()) <= ret):
             self.invalid_input()
         else:
             self.sim.set_accumulator(ret)
@@ -98,8 +98,8 @@ class Controller():
         else:
             pass
     
-    def invalid_input():
-        print('that input is invalid!')
+    def invalid_input(self):
+        self.gui.invalid_input()
 
     def update_memory(self):
         stack_memory = self.sim.get_memory()

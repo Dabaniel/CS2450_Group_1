@@ -164,6 +164,15 @@ class QTGUI(QMainWindow):
 
         _ = self.help_dialog.exec_()
 
+    def invalid_input(self):
+        self.new_dialog = QMessageBox()
+        self.new_dialog.setStyleSheet("QLabel{min-width: 200px; text-align: left;}")
+        # change the following to an updated instruction list
+        self.new_dialog.setWindowTitle("About your input...")
+        self.new_dialog.setText("The input provided was not proper!")
+
+        _ = self.new_dialog.exec_()
+
     def change_register(self):
         self.new_dialog = QInputDialog()
         self.new_dialog.setWindowTitle("Change Register")
