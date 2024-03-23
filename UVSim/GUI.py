@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QAbstractItemView, QMainWindow, QPushButton, QVBoxLayout, \
     QTableWidget, QLabel, QTextEdit, QHBoxLayout, QWidget, QTableWidgetItem, QMenu, QInputDialog, QMessageBox, QWizard, QWizardPage # pip install pyside6
+from PySide6 import QtCore
 
 class QTGUI(QMainWindow):
     def __init__(self):
@@ -200,12 +201,16 @@ class QTGUI(QMainWindow):
     
     def change_code_editor(self, code):
         self.new_dialog = QWizard()
+        # self.new_dialog.NoCancelButton
         self.text_editor = QTextEdit()
-        self.text_editor.setFixedSize(400, 250)
         self.text_editor.setText(code)
 
         self.wiz_layout = QHBoxLayout()
         self.wiz_layout.addWidget(self.text_editor)
+        self.load_button = QPushButton("Load")
+        self.load_button.setStyleSheet("background-color: #dbdbdb;")
+        self.wiz_layout.addWidget(self.load_button)
+
         self.new_dialog.setLayout(self.wiz_layout)
         # self.new_dialog.setWindowTitle("Code Editor")
         # self.new_dialog.setLabelText("Enter a Register value (TODO):")
