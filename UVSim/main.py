@@ -103,7 +103,6 @@ class Controller():
             self.invalid_input()
         else:
             try:
-                self.sim.load_string(ret)
                 self.sim_editor = ret
             except:
                 self.invalid_input('Compiler Error', 'Code did not compile properly')

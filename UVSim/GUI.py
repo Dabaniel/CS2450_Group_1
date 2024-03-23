@@ -212,7 +212,7 @@ class QTGUI(QMainWindow):
 
         _ = self.new_dialog.exec_()
         try:
-            return self.new_dialog.textValue()
+            return self.text_editor.toPlainText()
         except:
             return None
         
