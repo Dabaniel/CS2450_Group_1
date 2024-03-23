@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QAbstractItemView, QMainWindow, QPushButton, QVBoxLayout, \
     QTableWidget, QLabel, QTextEdit, QHBoxLayout, QWidget, QTableWidgetItem, QMenu, QInputDialog, QMessageBox, QWizard, QWizardPage # pip install pyside6
-from PySide6 import QtCore
+from PySide6.QtCore import Qt
 
 class QTGUI(QMainWindow):
     def __init__(self):
@@ -198,29 +198,23 @@ class QTGUI(QMainWindow):
             return int(self.new_dialog.textValue())
         except:
             return None
-    
-    def change_code_editor(self, code):
+
+    def code_editor(self, code):
         self.new_dialog = QWizard()
-        # self.new_dialog.NoCancelButton
+        self.new_dialog.setStyleSheet("QWizard { background-color: #ffffff; }")
+        self.new_dialog.setButtonLayout([])
+        # self.new_dialog.setWindowFlags(self.windowFlags() & ~Qt.WindowCloseButtonHint) # no close button
         self.text_editor = QTextEdit()
         self.text_editor.setText(code)
-
+        self.code_load_button = QPushButton("Upload")
+        self.code_load_button.setStyleSheet("background-color: #dbdbdb;")
         self.wiz_layout = QHBoxLayout()
         self.wiz_layout.addWidget(self.text_editor)
-        self.load_button = QPushButton("Load")
-        self.load_button.setStyleSheet("background-color: #dbdbdb;")
-        self.wiz_layout.addWidget(self.load_button)
+        self.wiz_layout.addWidget(self.code_load_button)
 
         self.new_dialog.setLayout(self.wiz_layout)
         # self.new_dialog.setWindowTitle("Code Editor")
         # self.new_dialog.setLabelText("Enter a Register value (TODO):")
-
-        _ = self.new_dialog.exec_()
-        try:
-            return self.text_editor.toPlainText()
-        except:
-            return None
-        
 
 """
 This is optional if logo image is wanted

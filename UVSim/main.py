@@ -3,6 +3,7 @@ from GUI import QTGUI
 from PySide6.QtWidgets import QApplication, QFileDialog, QTableWidgetItem
 from PySide6 import QtGui
 import sys
+from functools import partial
 
 class Controller():
     def __init__(self) -> None:
@@ -11,6 +12,7 @@ class Controller():
 
         #Simulation text source
         self.sim_editor = ''
+        self.text_check = ''
 
         # GUI dispaly
         app = QApplication(sys.argv)
@@ -98,15 +100,33 @@ class Controller():
             self.update_accumulator()
     
     def open_editor(self):
-        ret = self.gui.change_code_editor(self.sim_editor)
+        self.gui.code_editor(self.sim_editor)
+        
+        self.gui.text_editor.textChanged.connect(self.set_code)
+        self.gui.code_load_button.clicked.connect(partial(self.sim.load_string, self.sim_editor))
+        self.gui.code_load_button.clicked.connect(self.update_memory)
+        
+        _ = self.gui.new_dialog.exec()
         if(False):
             self.invalid_input()
         else:
             try:
-                self.sim_editor = ret
+                self.sim_editor = self.gui.text_editor.toPlainText()
             except:
                 self.invalid_input('Compiler Error', 'Code did not compile properly')
     
+    # def change_code_editor(self):
+    #     self.change_code_editor() # ret = 
+    #     try:
+    #         return self.gui.text_editor.toPlainText()
+    #     except:
+    #         return None
+    
+    def set_code(self):
+        self.sim_editor = self.gui.text_editor.toPlainText()
+        self.text_check = self.gui.text_editor.toPlainText()
+        print(self.text_check)
+
     def invalid_input(self, title = "About your input...", desc = "The input provided was not proper!"):
         self.gui.invalid_input(title, desc)
 
