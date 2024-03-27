@@ -159,14 +159,13 @@ class QTGUI(QMainWindow):
         _ = self.theme_dialog.exec_()
         if self.theme_dialog.textValue():
             self.main_theme = self.theme_dialog.textValue()
-            self.setStyleSheet(f"background-color: {self.main_theme};")
+            self.setStyleSheet(f"background-color: {self.main_theme}; color: {self.off_theme};")
 
         _ = self.off_theme_dialog.exec_()
         if self.off_theme_dialog.textValue():
             self.off_theme = self.off_theme_dialog.textValue()
             self.setStyleSheet(f"color: {self.off_theme}; ")
-            self.memory_label.setStyleSheet(f"color: {self.off_theme}; ")
-            self.console_label.setStyleSheet(f"color: {self.off_theme}; ")
+            self.setStyleSheet(f"background-color: {self.main_theme}; color: {self.off_theme};")
 
         con = open(os.path.join(self.__location__, "config.ini"), "w")
         con.write(self.main_theme + "\n")
