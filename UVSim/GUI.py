@@ -1,14 +1,19 @@
 from PySide6.QtWidgets import QAbstractItemView, QMainWindow, QPushButton, QVBoxLayout, \
     QTableWidget, QLabel, QTextEdit, QHBoxLayout, QWidget, QTableWidgetItem, QMenu, QInputDialog, QMessageBox, QWizard, QWizardPage # pip install pyside6
 from PySide6.QtCore import Qt
+import os
 
 class QTGUI(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("BasicML Simulator")
         self.setGeometry(100, 100, 600, 350)
-        self.theme = "#4C721D"
-        self.setStyleSheet(f"background-color: {self.theme};")
+        self.__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+        con = open(os.path.join(self.__location__, "config.ini"))
+        lines = con.readlines()
+        self.main_theme = lines[0]
+        self.off_theme = lines[1]
+        self.setStyleSheet(f"background-color: {self.main_theme}; color: {self.off_theme};")
         self.UIsetup()
 
     def UIsetup(self):
@@ -143,12 +148,28 @@ class QTGUI(QMainWindow):
     
     def change_theme(self):
         self.theme_dialog = QInputDialog()
-        self.theme_dialog.setWindowTitle("Change Theme")
-        self.theme_dialog.setLabelText("Enter a hex value to change the theme:")
+        self.theme_dialog.setWindowTitle("Change Main Theme")
+        self.theme_dialog.setLabelText("Enter a hex value to change the main theme:")
+
+        self.off_theme_dialog = QInputDialog()
+        self.off_theme_dialog.setWindowTitle("Change Off Theme")
+        self.off_theme_dialog.setLabelText("Enter a hex value to change the off theme:")
+
 
         _ = self.theme_dialog.exec_()
+        _ = self.off_theme_dialog.exec_()
         if self.theme_dialog.textValue():
+            self.main_theme = self.theme_dialog.textValue()
             self.setStyleSheet(f"background-color: {self.theme_dialog.textValue()};")
+        if self.off_theme_dialog.textValue():
+            self.off_theme = self.off_theme_dialog.textValue()
+            self.setStyleSheet(f"color: {self.off_theme_dialog.textValue()}; ")
+            self.memory_label.setStyleSheet(f"color: {self.off_theme_dialog.textValue()}; ")
+            self.console_label.setStyleSheet(f"color: {self.off_theme_dialog.textValue()}; ")
+        con = open(os.path.join(self.__location__, "config.ini"), "w")
+        con.write(self.main_theme + "\n")
+        con.write(self.off_theme)
+
 
     def show_version(self):
         self.version_dialog = QMessageBox()
