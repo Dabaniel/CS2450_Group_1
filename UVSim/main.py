@@ -73,9 +73,8 @@ class Controller():
         self.update_memory()
 
     def reset(self):
-        # Placeholder for reset function
-        print("Reset")
-        self.append_console('what')
+        self.sim.reboot()
+        self.update_memory()
 
     def append_console(self, info: str):
         self.gui.console.append(info)
@@ -105,6 +104,8 @@ class Controller():
         self.gui.text_editor.textChanged.connect(self.set_code)
         self.gui.code_load_button.clicked.connect(partial(self.sim.load_string, self.sim_editor))
         self.gui.code_load_button.clicked.connect(self.update_memory)
+        self.gui.export_button.clicked.connect(self.gui.name_export)
+        self.gui.export_button.clicked.connect(self.export_code)
         
         _ = self.gui.new_dialog.exec()
         if(False):
@@ -122,10 +123,13 @@ class Controller():
     #     except:
     #         return None
     
+    def export_code(self):
+        with open(self.gui.file_name, "w") as export_file:
+            export_file.write(self.sim_editor)
+    
     def set_code(self):
         self.sim_editor = self.gui.text_editor.toPlainText()
         self.text_check = self.gui.text_editor.toPlainText()
-        print(self.text_check)
 
     def invalid_input(self, title = "About your input...", desc = "The input provided was not proper!"):
         self.gui.invalid_input(title, desc)

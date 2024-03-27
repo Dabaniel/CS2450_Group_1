@@ -228,15 +228,37 @@ class QTGUI(QMainWindow):
         # self.new_dialog.setWindowFlags(self.windowFlags() & ~Qt.WindowCloseButtonHint) # no close button
         self.text_editor = QTextEdit()
         self.text_editor.setText(code)
-        self.code_load_button = QPushButton("Upload")
-        self.code_load_button.setStyleSheet("background-color: #dbdbdb;")
+
+        self.button_layout = QVBoxLayout()
+        
         self.wiz_layout = QHBoxLayout()
         self.wiz_layout.addWidget(self.text_editor)
-        self.wiz_layout.addWidget(self.code_load_button)
+
+        self.code_load_button = QPushButton("Upload")
+        self.code_load_button.setStyleSheet("background-color: #dbdbdb;")
+        self.export_button = QPushButton("Export")
+        self.export_button.setStyleSheet("background-color: #dbdbdb;")
+    
+        self.button_layout.addWidget(self.code_load_button)
+        self.button_layout.addWidget(self.export_button)
+        self.wiz_layout.addLayout(self.button_layout)
+
+
 
         self.new_dialog.setLayout(self.wiz_layout)
         # self.new_dialog.setWindowTitle("Code Editor")
         # self.new_dialog.setLabelText("Enter a Register value (TODO):")
+
+    def name_export(self):
+        self.export_name = QInputDialog()
+        self.export_name.setWindowTitle("Enter File Name")
+        self.export_name.setLabelText("Saves to Current Directory\nFile Name:")
+        self.export_name.setOkButtonText("Save")
+        _ = self.export_name.exec_()
+        try:
+            self.file_name =  self.export_name.textValue()
+        except:
+            return None 
 
 """
 This is optional if logo image is wanted
