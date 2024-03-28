@@ -2,13 +2,13 @@
 
 import UVSim
 
-def check_if_instruction(user_input):
+def check_if_instruction( user_input ):
     """Checks an input for sign, if sign detected returns True"""
     if user_input[0] == '+' or user_input[0] == '-':
         return 4 < len(user_input)
     return False
 
-def check_if_non_instruction(user_input):
+def check_if_non_instruction( user_input ):
     return user_input[0] == '&'
 
 class I_UVSim():
@@ -32,28 +32,46 @@ class I_UVSim():
             halt()
             reboot()
     """
-    def __init__(self, uvsim: UVSim) -> None:
+    def __init__( self, uvsim: UVSim ) -> None:
         self.uvsim = uvsim
 
     ## GETTERS ##
-    def get_accumulator(self):
+    def get_accumulator( self ):
         return self.uvsim.get_acc()[0]
     
-    def get_register(self):
+    def get_register( self ):
         return self.uvsim.get_acc()[1]
     
-    def get_memory(self):
+    def get_memory( self ):
         return self.uvsim.get_memory()
+    
+    def get_buffer_bit( self ):
+        return self.uvsim.get_buffer_bit()
+    
+    def get_buffer_message( self ):
+        return self.uvsim.get_buffer_message()
+    
+    def get_buffer_location( self ):
+        return self.uvsim.get_buffer_location()
 
     ## SETTERS ##
-    def set_accumulator(self, value):
+    def set_accumulator(self, value = 0):
         return self.uvsim.set_accumulator(value)
     
-    def set_register(self, value):
-        return self.uvsim.set_register(value)
+    def set_register(self, value = '00'):
+        self.uvsim.set_register(value)
     
     def set_data_at_location(self, position, value):
-        return self.uvsim.set_position_in_memory(position, value)
+        self.uvsim.set_position_in_memory(position, value)
+    
+    def set_buffer_bit(self, value = 0):
+        self.uvsim.set_buffer_bit(value)
+    
+    def set_buffer_message(self, value = '' ):
+        self.uvsim.set_buffer_message(value)
+    
+    def set_buffer_location(self, value = '' ):
+        self.uvsim.set_buffer_location(value)
 
     def load_text_file(self, file):
         """Load code from a .txt file"""
@@ -77,12 +95,14 @@ class I_UVSim():
 
 class UVSim:
     """Class for UVSim Virtual Machine"""
-    def __init__(self) -> None:
+    def __init__(self, using_buffer = False) -> None:
         self._default_memory = [None] * 100
         self._memory = []
+        self._using_buffer = using_buffer
+        self._buffer = [0, 0, ''] #First is the buffer bit, second is the buffer contents
         for i in self._default_memory:
             self._memory.append(i)
-        self._accumulator = [0, "0"] #First is next memory location, second is register content
+        self._accumulator = [0, "00"] #First is next memory location, second is register content
         self._step_limit = 90 #The last possible point to leave an operation before the memory for the operations start
         self._operations = {
             "+10": self.Read,
@@ -170,6 +190,18 @@ class UVSim:
         """Getter for accumulator"""
         return self._accumulator
     
+    def get_buffer_bit( self ):
+        """Setter for the buffer bit"""
+        return self._buffer[0]
+    
+    def get_buffer_location( self ):
+        """Setter for the buffer bit"""
+        return self._buffer[1]
+    
+    def get_buffer_message( self ):
+        """Setter for the buffer bit"""
+        return self._buffer[2]
+    
     def set_accumulator(self, a = 0):
         """Setter for accumulator"""
         self._accumulator[0] = int(a)
@@ -184,6 +216,18 @@ class UVSim:
     def set_position_in_memory(self, position, value):
         """Setter for memory"""
         self._memory[position] = value
+    
+    def set_buffer_bit(self, value = 0):
+        """Setter for the buffer bit"""
+        self._buffer[0] = value
+    
+    def set_buffer_location(self, value = ''):
+        """Setter for the buffer bit"""
+        self._buffer[1] = value
+    
+    def set_buffer_message(self, value = ''):
+        """Setter for the buffer bit"""
+        self._buffer[2] = value
 
     ## 
     def split_data(self, user_input):
@@ -226,13 +270,23 @@ class UVSim:
             print('Read: Bad input')
             return ValueError
         #TODO: get this input to communicate with main.py to open up an input dialog
-        user_in = input('Insert value to Read: ')
-        self._memory[memory_location] = user_in
+        if(not self._using_buffer):
+            user_in = input('Insert value to Read: ')
+            self._memory[memory_location] = user_in
+        else:
+            self.set_buffer_bit(1)
+            self.set_buffer_message('')
+            self.set_buffer_location(memory_location)
         self.add_acc()
 
     def Write(self, memory_location):
         """Writes word stored at memory location to console"""
-        print(self._memory[int(memory_location)])
+        if(not self._using_buffer):
+            print(self._memory[int(memory_location)])
+        else:
+            self.set_buffer_bit(1)
+            self.set_buffer_message(str(self._memory[int(memory_location)]))
+            self.set_buffer_location(memory_location)
         self.add_acc()
 
     #Load/Store operators

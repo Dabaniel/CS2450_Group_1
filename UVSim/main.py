@@ -6,16 +6,17 @@ import sys
 from functools import partial
 
 class Controller():
-    def __init__(self) -> None:
+    def __init__( self ) -> None:
         #Simulation interface
-        self.sim = I_UVSim(UVSim())
+        self.sim = I_UVSim( UVSim( True ) ) # Create a Interface with a UVSim object using its buffer
 
         #Simulation text source
         self.sim_editor = ''
         self.text_check = ''
+        self.file_path = ''
 
         # GUI dispaly
-        app = QApplication(sys.argv)
+        app = QApplication( sys.argv )
         self.gui = QTGUI()
         self.gui.show()
         self.button_activation()
@@ -28,7 +29,7 @@ class Controller():
         # Gui exit handler
         sys.exit(app.exec())
 
-    def button_activation(self):
+    def button_activation( self ):
         """Connect buttons to functions
         """
         self.gui.load_button.clicked.connect(self.load)
@@ -57,23 +58,40 @@ class Controller():
             print(f"Selected file: {file_path}")
             with open(file_path, 'r', encoding="utf-8") as file:
                 contents = file.read().splitlines()
-                self.sim_editor = ''
+                new_code = ''
                 for i in contents:
-                    self.sim_editor += i + '\n'
+                    new_code += i + '\n'
+            self.set_sim_editor(new_code)
             self.sim.load_string(self.sim_editor)
             self.update_memory()
+            self.file_path = file_path
     
-    def step(self):
+    def step(self, in_run = False):
         """Increment the simulation by one step"""
         self.sim.step()
-        self.update_memory()
+        if(self.sim.get_buffer_bit()):
+            self.sim.set_buffer_bit()
+            buffer = self.sim.get_buffer_message()
+            if(len(buffer)):
+                self.append_console(buffer)
+            else:
+                ret = self.gui.insert_Read()
+                self.sim.set_data_at_location(self.sim.get_buffer_location(), ret)
+            if(in_run):
+                self.update_memory()
+        if(not in_run):
+            self.update_memory()
     
     def run(self):
-        self.sim.run()
-        self.update_memory()
+        print('huzzah')
+        while -1 < self.sim.get_accumulator():
+            self.step(True)
 
     def reset(self):
-        self.sim.reboot()
+        self.sim.load_string(self.sim_editor)
+        self.sim.set_register()
+        self.sim.set_accumulator()
+        self.clear_console()
         self.update_memory()
 
     def append_console(self, info: str):
@@ -85,7 +103,7 @@ class Controller():
     def set_register(self):
         ret = self.gui.change_register()
         if(False):
-            self.invalid_input()
+            self.custom_alert()
         else:
             self.sim.set_register(ret)
             self.update_register()
@@ -93,7 +111,7 @@ class Controller():
     def set_accumulator(self):
         ret = self.gui.change_accumulator()
         if(ret < 0 or len(self.sim.get_memory()) <= ret):
-            self.invalid_input()
+            self.custom_alert()
         else:
             self.sim.set_accumulator(ret)
             self.update_accumulator()
@@ -106,15 +124,16 @@ class Controller():
         self.gui.code_load_button.clicked.connect(self.update_memory)
         self.gui.export_button.clicked.connect(self.gui.name_export)
         self.gui.export_button.clicked.connect(self.export_code)
-        
+        self.gui.editor_load_button.clicked.connect(self.load)
+
         _ = self.gui.new_dialog.exec()
         if(False):
-            self.invalid_input()
+            self.custom_alert()
         else:
             try:
-                self.sim_editor = self.gui.text_editor.toPlainText()
+                self.set_sim_editor(self.gui.text_editor.toPlainText())
             except:
-                self.invalid_input('Compiler Error', 'Code did not compile properly')
+                self.custom_alert('Compiler Error', 'Code did not compile properly')
     
     # def change_code_editor(self):
     #     self.change_code_editor() # ret = 
@@ -130,9 +149,15 @@ class Controller():
     def set_code(self):
         self.sim_editor = self.gui.text_editor.toPlainText()
         self.text_check = self.gui.text_editor.toPlainText()
+    
+    def set_sim_editor(self, value):
+        self.sim_editor = value
+        #TODO detect if QWizard is open, then set text
+        if(False):
+            pass
 
-    def invalid_input(self, title = "About your input...", desc = "The input provided was not proper!"):
-        self.gui.invalid_input(title, desc)
+    def custom_alert(self, title = "About your input...", desc = "The input provided was not proper!"):
+        self.gui.custom_alert(title, desc)
 
     def update_memory(self):
         stack_memory = self.sim.get_memory()

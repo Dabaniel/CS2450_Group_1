@@ -190,7 +190,7 @@ class QTGUI(QMainWindow):
 
         _ = self.help_dialog.exec_()
 
-    def invalid_input(self, title, desc):
+    def custom_alert(self, title, desc):
         self.new_dialog = QMessageBox()
         self.new_dialog.setStyleSheet("QLabel{min-width: 200px; text-align: left;}")
         # change the following to an updated instruction list
@@ -221,6 +221,17 @@ class QTGUI(QMainWindow):
         except:
             return None
 
+    def insert_Read(self):
+        self.new_dialog = QInputDialog()
+        self.new_dialog.setWindowTitle("Insert Value")
+        self.new_dialog.setLabelText("Enter a value for the program:")
+
+        _ = self.new_dialog.exec_()
+        try:
+            return int(self.new_dialog.textValue())
+        except:
+            return None
+
     def code_editor(self, code):
         self.new_dialog = QWizard()
         self.new_dialog.setStyleSheet("QWizard { background-color: #ffffff; }")
@@ -238,9 +249,15 @@ class QTGUI(QMainWindow):
         self.code_load_button.setStyleSheet("background-color: #dbdbdb;")
         self.export_button = QPushButton("Export")
         self.export_button.setStyleSheet("background-color: #dbdbdb;")
+        self.save_button = QPushButton("Save")
+        self.save_button.setStyleSheet("background-color: #dbdbdb;")
+        self.editor_load_button = QPushButton("Load")
+        self.editor_load_button.setStyleSheet("background-color: #dbdbdb;")
     
         self.button_layout.addWidget(self.code_load_button)
         self.button_layout.addWidget(self.export_button)
+        self.button_layout.addWidget(self.save_button)
+        self.button_layout.addWidget(self.editor_load_button)
         self.wiz_layout.addLayout(self.button_layout)
 
 
