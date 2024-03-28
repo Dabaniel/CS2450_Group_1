@@ -1,0 +1,8 @@
+Use the terminal to input commands. The first three characters will be '+XX', where XX is a code for an operation.\ni.e.
+
+'+11' is WRITE. The next two characters will be a memory address '+XXxx', where xx is the memory address.\n\nEX:
+Write value in memory location '00' into console: '+1100'\n\nWorking commands:\n\nREAD    / '+10XX': Read the following
+console input into memory location 'XX'.\n\WRITE   / '+11XX': Write value at memory location 'XX' into console.\nLOAD    /
+'+20XX': \nSTORE   / '+21XX': \n\nHit enter to close the program
+
+test

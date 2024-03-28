@@ -182,11 +182,11 @@ class QTGUI(QMainWindow):
         self.help_dialog = QMessageBox()
         self.help_dialog.setStyleSheet("QLabel{min-width: 700px; text-align: left;}")
         # change the following to an updated instruction list
-        self.help_dialog.setText("Use the terminal to input commands. The first three characters will be '+XX', where XX is a code for an operation.\ni.e."
-                                 "'+11' is WRITE. The next two characters will be a memory address '+XXxx', where xx is the memory address.\n\nEX:"
-                                 "Write value in memory location '00' into console: '+1100'\n\nWorking commands:\n\nREAD    / '+10XX': Read the following"
-                                 "console input into memory location 'XX'.\n\WRITE   / '+11XX': Write value at memory location 'XX' into console.\nLOAD    /"
-                                 "'+20XX': \nSTORE   / '+21XX': \n\nHit enter to close the program")
+        
+        help_doc = open(os.path.join(self.__location__, "DOCS.txt"))
+        help_doc_lines = help_doc.read()
+        
+        self.help_dialog.setText(help_doc_lines)
 
         _ = self.help_dialog.exec_()
 
