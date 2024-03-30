@@ -39,7 +39,7 @@ class Controller():
         self.gui.accumulator_button.clicked.connect(self.set_accumulator)
         self.gui.register_button.clicked.connect(self.set_register)
         self.gui.editor_button.clicked.connect(self.open_editor)
-        self.gui.file_menu.addAction("Load", self.load)
+        self.gui.file_menu.addAction("Open New File", self.load)
         self.gui.edit_menu.addAction("Toggle Theme", self.gui.change_theme)
         self.gui.help_menu.addAction("About", self.gui.show_version)
         self.gui.help_menu.addAction("Docs", self.gui.show_help)
@@ -63,8 +63,11 @@ class Controller():
                     new_code += i + '\n'
             self.set_sim_editor(new_code)
             self.sim.load_string(self.sim_editor)
-            self.update_memory()
+            if(self.gui.new_dialog_id == 'code_editor'):
+                self.gui.text_editor.setText(self.sim_editor)
+            # self.update_memory()
             self.file_path = file_path
+            self.gui.setWindowTitle(f"BasicML Simulator - {file_path.split('/')[-1]} (1/1)")
     
     def step(self, in_run = False):
         """Increment the simulation by one step"""
@@ -134,6 +137,7 @@ class Controller():
                 self.set_sim_editor(self.gui.text_editor.toPlainText())
             except:
                 self.custom_alert('Compiler Error', 'Code did not compile properly')
+        self.gui.close_dialog()
     
     # def change_code_editor(self):
     #     self.change_code_editor() # ret = 

@@ -6,8 +6,10 @@ import os
 class QTGUI(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("BasicML Simulator")
+        self.setWindowTitle("BasicML Simulator - No File Opened (0/1)")
         self.setGeometry(100, 100, 600, 350)
+        self.new_dialog = None
+        self.new_dialog_id = ''
         self.__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
         con = open(os.path.join(self.__location__, "config.ini"))
         lines = con.readlines()
@@ -182,11 +184,11 @@ class QTGUI(QMainWindow):
         self.help_dialog = QMessageBox()
         self.help_dialog.setStyleSheet("QLabel{min-width: 700px; text-align: left;}")
         # change the following to an updated instruction list
-        
-        help_doc = open(os.path.join(self.__location__, "DOCS.txt"))
-        help_doc_lines = help_doc.read()
-        
-        self.help_dialog.setText(help_doc_lines)
+        self.help_dialog.setText("Use the terminal to input commands. The first three characters will be '+XX', where XX is a code for an operation.\ni.e."
+                                 "'+11' is WRITE. The next two characters will be a memory address '+XXxx', where xx is the memory address.\n\nEX:"
+                                 "Write value in memory location '00' into console: '+1100'\n\nWorking commands:\n\nREAD    / '+10XX': Read the following"
+                                 "console input into memory location 'XX'.\n\WRITE   / '+11XX': Write value at memory location 'XX' into console.\nLOAD    /"
+                                 "'+20XX': \nSTORE   / '+21XX': \n\nHit enter to close the program")
 
         _ = self.help_dialog.exec_()
 
@@ -231,9 +233,14 @@ class QTGUI(QMainWindow):
             return int(self.new_dialog.textValue())
         except:
             return None
+        
+    def close_dialog(self):
+        self.new_dialog = None
+        self.new_dialog_id = ''
 
     def code_editor(self, code):
         self.new_dialog = QWizard()
+        self.new_dialog_id = 'code_editor'
         self.new_dialog.setStyleSheet("QWizard { background-color: #ffffff; }")
         self.new_dialog.setButtonLayout([])
         # self.new_dialog.setWindowFlags(self.windowFlags() & ~Qt.WindowCloseButtonHint) # no close button
@@ -245,13 +252,13 @@ class QTGUI(QMainWindow):
         self.wiz_layout = QHBoxLayout()
         self.wiz_layout.addWidget(self.text_editor)
 
-        self.code_load_button = QPushButton("Upload")
+        self.code_load_button = QPushButton("Compile")
         self.code_load_button.setStyleSheet("background-color: #dbdbdb;")
-        self.export_button = QPushButton("Export")
+        self.export_button = QPushButton("Save As")
         self.export_button.setStyleSheet("background-color: #dbdbdb;")
         self.save_button = QPushButton("Save")
         self.save_button.setStyleSheet("background-color: #dbdbdb;")
-        self.editor_load_button = QPushButton("Load")
+        self.editor_load_button = QPushButton("Open File")
         self.editor_load_button.setStyleSheet("background-color: #dbdbdb;")
     
         self.button_layout.addWidget(self.code_load_button)
@@ -260,7 +267,7 @@ class QTGUI(QMainWindow):
         self.button_layout.addWidget(self.editor_load_button)
         self.wiz_layout.addLayout(self.button_layout)
 
-
+        # self.new_dialog.finished(self.close_dialog)
 
         self.new_dialog.setLayout(self.wiz_layout)
         # self.new_dialog.setWindowTitle("Code Editor")
