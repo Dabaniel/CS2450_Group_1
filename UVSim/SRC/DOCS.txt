@@ -1,8 +1,15 @@
-Use the terminal to input commands. The first three characters will be '+XX', where XX is a code for an operation.\ni.e.
+When writing an operations, there are two necessary parts:
+  - The first three characters represent the "opcode," the code for the operation, and will be '+XX'. The 'XX' must be a code for an operation: i.e. '+11' is WRITE.
+  - The following characters will be a memory address, i.e. '+XXxx', where xx is the memory address.
 
-'+11' is WRITE. The next two characters will be a memory address '+XXxx', where xx is the memory address.\n\nEX:
-Write value in memory location '00' into console: '+1100'\n\nWorking commands:\n\nREAD    / '+10XX': Read the following
-console input into memory location 'XX'.\n\WRITE   / '+11XX': Write value at memory location 'XX' into console.\nLOAD    /
-'+20XX': \nSTORE   / '+21XX': \n\nHit enter to close the program
+EX:
+Write value in memory location '00' into console: '+1100'
 
-test
+Working commands:
+
+READ    / '+10XX': Read the following console input into memory location 'XX'.
+WRITE   / '+11XX': Write value at memory location 'XX' into console.
+LOAD    / '+20XX': 
+STORE   / '+21XX': 
+
+Hit enter to close the program
