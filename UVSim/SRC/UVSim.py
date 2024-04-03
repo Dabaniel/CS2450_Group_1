@@ -53,6 +53,9 @@ class I_UVSim():
     
     def get_buffer_location( self ):
         return self.uvsim.get_buffer_location()
+    
+    def get_memory_size( self ):
+        return self.uvsim.get_memory_size()
 
     ## SETTERS ##
     def set_accumulator(self, value = 0):
@@ -95,13 +98,14 @@ class I_UVSim():
 
 class UVSim:
     """Class for UVSim Virtual Machine"""
-    def __init__(self, using_buffer = False) -> None:
-        self._default_memory = [None] * 100
-        self._memory = []
+    def __init__(self, using_buffer = False, memory_size = 100) -> None:
+        self._memory_size = memory_size
+        self._memory = [''] * memory_size
+        self._command_length = 5 #3 + len(str(memory_size - 1))
+
         self._using_buffer = using_buffer
         self._buffer = [0, 0, ''] #First is the buffer bit, second is the buffer contents
-        for i in self._default_memory:
-            self._memory.append(i)
+        
         self._accumulator = [0, "00"] #First is next memory location, second is register content
         self._step_limit = 90 #The last possible point to leave an operation before the memory for the operations start
         self._operations = {
@@ -202,6 +206,9 @@ class UVSim:
         """Setter for the buffer bit"""
         return self._buffer[2]
     
+    def get_memory_size( self ):
+        return self._memory_size
+    
     def set_accumulator(self, a = 0):
         """Setter for accumulator"""
         self._accumulator[0] = int(a)
@@ -232,7 +239,7 @@ class UVSim:
     ## 
     def split_data(self, user_input):
         """Splits the input into a tuple: case, and memory location."""
-        if (len(user_input) > 5 or len(user_input) < 5):
+        if (not len(user_input) == self._command_length):
             return ValueError
         data = user_input[:3], user_input[3:]
         if data[0][0] != "+":
@@ -407,9 +414,7 @@ class UVSim:
     def Reboot(self):
         """Reboot the simulation"""
         self._accumulator = [0, '0']
-        self._memory = []
-        for i in self._default_memory:
-            self._memory.append(i)
+        self._memory = [''] * self.get_memory_size()
 
 def main():
     test_the_sim = UVSim()

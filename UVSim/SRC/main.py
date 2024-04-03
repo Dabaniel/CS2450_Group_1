@@ -80,13 +80,13 @@ class Controller():
             else:
                 ret = self.gui.insert_Read()
                 self.sim.set_data_at_location(self.sim.get_buffer_location(), ret)
+                self.append_console(str(ret))
             if(in_run):
                 self.update_memory()
         if(not in_run):
             self.update_memory()
     
     def run(self):
-        print('huzzah')
         while -1 < self.sim.get_accumulator():
             self.step(True)
 
