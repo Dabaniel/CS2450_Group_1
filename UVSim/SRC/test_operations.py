@@ -1,5 +1,5 @@
 import pytest
-import operations
+import UVSim.SRC.operations as operations
 
 # @pytest.mark.parametrize('example,num', [
 #     ('examplearg1', 1),

@@ -1,8 +1,16 @@
 #OPERATIONS CLASS
 
-class Operations:
-    def __init__(self) -> None:
-        self.operations = {
+class Operator:
+    def __init__(self, memory_getter, memory_setter, acc_getter, acc_setter, reg_getter, reg_setter, buff) -> None:
+        self._get_memory = memory_getter
+        self._set_memory = memory_setter
+        self._get_accumulator = acc_getter
+        self._set_accumulator = acc_setter
+        self._get_register = reg_getter
+        self._set_register = reg_setter
+        self._buffer = buff
+
+        self._operations = {
             "+10": self.Read,
             "+11": self.Write,
             "+20": self.Load,
@@ -16,40 +24,122 @@ class Operations:
             "+42": self.BranchZero,
             "+43": self.Halt
         }
+    
+    def _add_acc(self, add = 1):
+        self._set_accumulator(self._get_accumulator() + add)
+    
+    def case_switch(self, case, memory_location):
+        """Switches cases based on the sign and first two integers of the input."""
+        try:
+            self._operations[case](memory_location)
+        except ValueError:
+            print('_case_switch(): something went horribly wrong!!!')
+            self.Halt()
+            return ValueError
+    
     #I/O operators
-    #TODO
-    def Read(memoryLocation):
-        pass
-        
-    #TODO
-    def Write(memoryLocation):
-        pass
+    def Read(self, memory_location):
+        """Reads input from the keyboard and stores in specifed memory location"""
+        mem_loc = 0
+        try:
+            mem_loc = int(memory_location)
+        except ValueError:
+            print('Read: Bad input')
+            return ValueError
+        if(type(self._buffer) == None):
+            user_in = input('Insert value to Read: ')
+            self._set_memory(mem_loc, user_in)
+        else:
+            self._buffer.set_buffer(1, mem_loc, '')
+        self._add_acc()
+    
+    def Write(self, memory_location):
+        """Writes word stored at memory location to console"""
+        if(type(self._buffer) == None):
+            print(self._memory[int(memory_location)])
+        else:
+            self._buffer.set_buffer(1, int(memory_location), str(self._get_memory()[int(memory_location)]))
+        self._add_acc()
 
     #Load/Store operators
-    #TODO
-    def Load(memoryLocation):
-        pass
+    def Load(self, memory_location):
+        """Loads word from memory loaction into accumulator"""
+        mem_loc = 0
+        try:
+            mem_loc = int(memory_location)
+        except ValueError:
+            print('Load: Bad input')
+            return ValueError
+        self._set_register(self._get_memory()[mem_loc])
+        self._add_acc()
 
-    #TODO
-    def Store(memoryLocation):
-        pass
+    def Store(self, memory_location):
+        """Stores word from accumulator into specified memory location"""
+        mem_loc = 0
+        try:
+            mem_loc = int(memory_location)
+        except ValueError:
+            print('Store: Bad input')
+            return ValueError
+        self._set_memory(mem_loc, self._get_register())
+        self._add_acc()
 
     #Arithmatic operators
-    #TODO
-    def Add(memoryLocation):
-        pass
+    def Add(self, memory_location):
+        """Add a word from a specific location in memory to the word in the accumulator"""
+        mem_loc = 0
+        try:
+            mem_loc = int(memory_location)
+        except ValueError:
+            print('Store: Bad input')
+            return ValueError
+        if self._get_register() is None:
+            self._set_register(int(self._get_memory()[mem_loc]))
+        else:
+            self._set_register(int(self._get_register()) + int(self._get_memory()[mem_loc]))
+        self._add_acc()
 
-    #TODO
-    def Subtract(memoryLocation):
-        pass
-
-    #TODO
-    def Divide(memoryLocation):
-        pass
-
-    #TODO
-    def Multiply(memoryLocation):
-        pass
+    def Subtract(self, memory_location):
+        """Subtract a word from a specific location in memory from the word in the accumulator"""
+        mem_loc = 0
+        try:
+            mem_loc = int(memory_location)
+        except ValueError:
+            print('Store: Bad input')
+            return ValueError
+        if self._get_register() is None:
+            self._set_register(0 - int(self._get_memory()[mem_loc]))
+        else:
+            self._set_register(int(self._get_register()) - int(self._get_memory()[mem_loc]))
+        self._add_acc()
+        
+    def Divide(self, memory_location):
+        """Divide the word in the accumilator by the word stored in the specified memory location"""
+        mem_loc = 0
+        try:
+            mem_loc = int(memory_location)
+        except ValueError:
+            print('Store: Bad input')
+            return ValueError
+        if self._get_register() is None:
+            self._set_register(0)
+        else:
+            self._set_register(int(self._get_register()) / int(self._get_memory()[mem_loc]))
+        self._add_acc()
+        
+    def Multiply(self, memory_location):
+        """Multiply word in the accumilator by the word stored in the specified memory location"""
+        mem_loc = 0
+        try:
+            mem_loc = int(memory_location)
+        except ValueError:
+            print('Store: Bad input')
+            return ValueError
+        if self._get_register() is None:
+            self._set_register(0)
+        else:
+            self._set_register(int(self._get_register()) * int(self._get_memory()[mem_loc]))
+        self._add_acc()
 
     #Control operators
     #TODO
@@ -65,8 +155,10 @@ class Operations:
         pass
 
     #TODO
-    def Halt():
-        pass
+    def Halt(self, memory_location = '00'):
+        """Stops the sim"""
+        self._set_accumulator(-1)
+        self._set_register(memory_location)
 
 def main():
     pass

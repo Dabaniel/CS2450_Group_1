@@ -4,11 +4,13 @@ from PySide6.QtWidgets import QApplication, QFileDialog, QTableWidgetItem
 from PySide6 import QtGui
 import sys
 from functools import partial
+import buffer
 
 class Controller():
     def __init__( self ) -> None:
         #Simulation interface
-        self.sim = I_UVSim( UVSim( True ) ) # Create a Interface with a UVSim object using its buffer
+        self.buffer = buffer.Buffer()
+        self.sim = I_UVSim( UVSim( self.buffer ) ) # Create a Interface with a UVSim object using its buffer
 
         #Simulation text source
         self.sim_editor = ''
@@ -32,20 +34,34 @@ class Controller():
     def button_activation( self ):
         """Connect buttons to functions
         """
-        self.gui.load_button.clicked.connect(self.load)
+        # self.gui.load_button.clicked.connect(self.file_load)
+        self.gui.halt_button.clicked.connect(self.halt)
         self.gui.run_button.clicked.connect(self.run)
         self.gui.step_button.clicked.connect(self.step)
         self.gui.reset_button.clicked.connect(self.reset)
         self.gui.accumulator_button.clicked.connect(self.set_accumulator)
         self.gui.register_button.clicked.connect(self.set_register)
         self.gui.editor_button.clicked.connect(self.open_editor)
-        self.gui.file_menu.addAction("Open New File", self.load)
+        self.gui.file_menu.addAction("Open New File", self.file_load)
         self.gui.edit_menu.addAction("Toggle Theme", self.gui.change_theme)
         self.gui.help_menu.addAction("About", self.gui.show_version)
         self.gui.help_menu.addAction("Docs", self.gui.show_help)
 
+    def editor_load(self):
+        self.sim.load_string(self.sim_editor)
+        self.update_memory()
+    
+    def halt(self):
+        if(self.sim.get_accumulator() == -1):
+            #unhalt
+            self.sim.set_accumulator(0)
+        else:
+            #halt
+            self.sim.halt()
 
-    def load(self):
+        self.update_memory()
+
+    def file_load(self):
         """
             This function holds the "Load" button and "Load" file menu's functionality:
                 Import a file which contains a script for UVSim
@@ -62,7 +78,7 @@ class Controller():
                 for i in contents:
                     new_code += i + '\n'
             self.set_sim_editor(new_code)
-            self.sim.load_string(self.sim_editor)
+            # self.sim.load_string(self.sim_editor)
             if(self.gui.new_dialog_id == 'code_editor'):
                 self.gui.text_editor.setText(self.sim_editor)
             # self.update_memory()
@@ -72,14 +88,14 @@ class Controller():
     def step(self, in_run = False):
         """Increment the simulation by one step"""
         self.sim.step()
-        if(self.sim.get_buffer_bit()):
-            self.sim.set_buffer_bit()
-            buffer = self.sim.get_buffer_message()
+        if(self.buffer.get_buffer_bit()):
+            self.buffer.set_buffer_bit()
+            buffer = self.buffer.get_buffer_message()
             if(len(buffer)):
                 self.append_console(buffer)
             else:
                 ret = self.gui.insert_Read()
-                self.sim.set_data_at_location(self.sim.get_buffer_location(), ret)
+                self.sim.set_data_at_location(self.buffer.get_buffer_location(), ret)
                 self.append_console(str(ret))
             if(in_run):
                 self.update_memory()
@@ -89,6 +105,7 @@ class Controller():
     def run(self):
         while -1 < self.sim.get_accumulator():
             self.step(True)
+        self.update_memory()
 
     def reset(self):
         self.sim.load_string(self.sim_editor)
@@ -124,10 +141,10 @@ class Controller():
         
         self.gui.text_editor.textChanged.connect(self.set_code)
         self.gui.code_load_button.clicked.connect(partial(self.sim.load_string, self.sim_editor))
-        self.gui.code_load_button.clicked.connect(self.update_memory)
+        self.gui.code_load_button.clicked.connect(self.editor_load)
         self.gui.export_button.clicked.connect(self.gui.name_export)
         self.gui.export_button.clicked.connect(self.export_code)
-        self.gui.editor_load_button.clicked.connect(self.load)
+        self.gui.editor_load_button.clicked.connect(self.file_load)
 
         _ = self.gui.new_dialog.exec()
         if(False):
@@ -169,6 +186,12 @@ class Controller():
             self.gui.memory_display.setItem(i, 1, QTableWidgetItem(f"{stack_memory[i] if stack_memory[i] is not None else ''}"))
         self.update_register()
         self.update_accumulator()
+        if(self.sim.get_accumulator() == -1):
+            #unhalt
+            self.gui.halt_button.setText("Unhalt")
+        else:
+            #halt
+            self.gui.halt_button.setText("Halt")
 
     def update_register(self):
         self.gui.register_button.setText(f"Register: '{self.sim.get_register()}'")
