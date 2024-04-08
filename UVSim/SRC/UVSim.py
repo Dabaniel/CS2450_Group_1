@@ -141,7 +141,8 @@ class UVSim:
             
             try:
                 data = self.split_data(self._memory[self.get_accumulator()])
-                self._case_switch(data[0], data[1])
+                self._case_switch(data[0], data[1]) #soon to be depreciated
+                #TODO, FINISH ALL FUNCTIONS IN OPERATOR
                 # self._operator.case_switch(data[0], data[1])
             except:
                 print(f"Something went wrong at line {self.get_accumulator()}. The simulation will now halt.")
