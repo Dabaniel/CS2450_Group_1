@@ -1,4 +1,4 @@
-<h1 style="color:blue;">UVSIM Application</h1>
+<h1>UVSIM Application</h1>
 The UVSIM application is a graphical user interface (GUI) designed to assist computer science students to learn machine language and computer architecture. 
 
 The UVUSIM is a virtual machine and can only interpret a machine language called BasicML. 
