@@ -184,6 +184,10 @@ class Controller():
         stack_memory = self.sim.get_memory()
         for i in range(100):
             self.gui.memory_display.setItem(i, 1, QTableWidgetItem(f"{stack_memory[i] if stack_memory[i] is not None else ''}"))
+            self.gui.memory_display.setItem(i, 2, QTableWidgetItem(""))
+        cnt = self.sim.get_accumulator()
+        if(0 <= cnt and cnt < len(stack_memory)):
+            self.gui.memory_display.setItem(cnt, 2, QTableWidgetItem(f"<- {cnt}"))
         self.update_register()
         self.update_accumulator()
         if(self.sim.get_accumulator() == -1):
