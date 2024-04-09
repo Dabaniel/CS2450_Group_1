@@ -40,7 +40,7 @@ class QTGUI(QMainWindow):
         #trdr
         self.memory_display = QTableWidget(100, 3)
         self.memory_display.setStyleSheet("background-color: #dbdbdb;")
-        self.memory_display.setHorizontalHeaderLabels(["##", "Value                      ", ""])
+        self.memory_display.setHorizontalHeaderLabels(["##", "Value", ""])
         self.memory_display.resizeColumnsToContents()
         # self.memory_display.setFixedWidth(227)
         # self.memory_display.setFixedHeight(300)
@@ -64,7 +64,6 @@ class QTGUI(QMainWindow):
         self.memory_layout.addLayout(button_split)
         
         button_split = QHBoxLayout()
-        button_split.addWidget(self.halt_button)
         self.run_button = QPushButton("Run")
         self.run_button.setStyleSheet("background-color: #dbdbdb;")
         button_split.addWidget(self.run_button)
@@ -124,7 +123,7 @@ class QTGUI(QMainWindow):
         self.textbox_layout.addWidget(self.editor_button)
 
         # optional logo placement at eof
-        self.textbox_layout.addStretch()
+        # self.textbox_layout.addStretch()
         # self.register_label = QLabel("Register")
         # self.register_label.setStyleSheet("color: #FFFFFF;")
         # self.textbox_layout.addWidget(self.register_label)
