@@ -22,6 +22,8 @@ class QTGUI(QMainWindow):
         self.main_layout = QVBoxLayout()
         self.display_layout = QHBoxLayout()
 
+        #TADA
+        # self.create_buttons()
         self.create_menu_bar()
         self.create_memory()
         # self.create_register()
@@ -29,23 +31,51 @@ class QTGUI(QMainWindow):
         self.create_console()
         self.create_textbox()
         self.display_main()
-        self.create_buttons()
 
         central_widget = QWidget()
         central_widget.setLayout(self.main_layout)
         self.setCentralWidget(central_widget)
 
     def create_memory(self):
-        self.memory_display = QTableWidget(100, 2)
+        #trdr
+        self.memory_display = QTableWidget(100, 3)
         self.memory_display.setStyleSheet("background-color: #dbdbdb;")
-        self.memory_display.setHorizontalHeaderLabels(["Address", "Value"])
-        self.memory_display.setFixedWidth(227)
-        self.memory_display.setFixedHeight(300)
+        self.memory_display.setHorizontalHeaderLabels(["##", "Value                      ", ""])
+        self.memory_display.resizeColumnsToContents()
+        # self.memory_display.setFixedWidth(227)
+        # self.memory_display.setFixedHeight(300)
         self.memory_layout = QVBoxLayout()
         self.memory_label = QLabel("Memory")
         self.memory_label.setStyleSheet("color: #FFFFFF;")
         self.memory_layout.addWidget(self.memory_label)
         self.memory_layout.addWidget(self.memory_display)
+
+        #Buttons
+        button_split = QHBoxLayout()
+        self.accumulator_button = QPushButton("Accumulator: NaN")
+        self.accumulator_button.setStyleSheet("background-color: #dbdbdb;")
+        button_split.addWidget(self.accumulator_button)
+        self.register_button = QPushButton("Register: NaN")
+        self.register_button.setStyleSheet("background-color: #dbdbdb;")
+        button_split.addWidget(self.register_button)
+        self.halt_button = QPushButton("----")
+        self.halt_button.setStyleSheet("background-color: #dbdbdb;")
+        button_split.addWidget(self.halt_button)
+        self.memory_layout.addLayout(button_split)
+        
+        button_split = QHBoxLayout()
+        button_split.addWidget(self.halt_button)
+        self.run_button = QPushButton("Run")
+        self.run_button.setStyleSheet("background-color: #dbdbdb;")
+        button_split.addWidget(self.run_button)
+        self.step_button = QPushButton("Step")
+        self.step_button.setStyleSheet("background-color: #dbdbdb;")
+        button_split.addWidget(self.step_button)
+        self.reset_button = QPushButton("Reset")
+        self.reset_button.setStyleSheet("background-color: #dbdbdb;")
+        button_split.addWidget(self.reset_button)
+        self.memory_layout.addLayout(button_split)
+
 
         labels = []
         for i in range(100):
@@ -76,7 +106,6 @@ class QTGUI(QMainWindow):
     def create_console(self):
         self.console = QTextEdit()
         self.console.setStyleSheet("background-color: #dbdbdb;")
-        self.console.setFixedHeight(150)
         self.console.setPlaceholderText("Programs will print out to here.")
         self.console.setDisabled(True)
         self.console.setTextColor('#000000')
@@ -84,12 +113,12 @@ class QTGUI(QMainWindow):
     def create_textbox(self):
         self.textbox_layout = QVBoxLayout()
         #Register and Accumulator
-        self.accumulator_button = QPushButton("Accumulator: NaN")
-        self.accumulator_button.setStyleSheet("background-color: #dbdbdb;")
-        self.textbox_layout.addWidget(self.accumulator_button)
-        self.register_button = QPushButton("Register: NaN")
-        self.register_button.setStyleSheet("background-color: #dbdbdb;")
-        self.textbox_layout.addWidget(self.register_button)
+        # self.accumulator_button = QPushButton("Accumulator: NaN")
+        # self.accumulator_button.setStyleSheet("background-color: #dbdbdb;")
+        # self.textbox_layout.addWidget(self.accumulator_button)
+        # self.register_button = QPushButton("Register: NaN")
+        # self.register_button.setStyleSheet("background-color: #dbdbdb;")
+        # self.textbox_layout.addWidget(self.register_button)
         self.editor_button = QPushButton("Open Code Editor")
         self.editor_button.setStyleSheet("background-color: #dbdbdb;")
         self.textbox_layout.addWidget(self.editor_button)
@@ -118,24 +147,23 @@ class QTGUI(QMainWindow):
         self.main_layout.addStretch()
     
     def create_buttons(self):
+        #Tydy
         buttons_layout = QHBoxLayout()
-        # self.load_button = QPushButton("Load")
-        self.halt_button = QPushButton("----")
-        self.run_button = QPushButton("Run")
-        self.step_button = QPushButton("Step")
-        self.reset_button = QPushButton("Reset")
-        # self.load_button.setStyleSheet("background-color: #dbdbdb;")
-        self.halt_button.setStyleSheet("background-color: #dbdbdb;")
-        self.run_button.setStyleSheet("background-color: #dbdbdb;")
-        self.step_button.setStyleSheet("background-color: #dbdbdb;")
-        self.reset_button.setStyleSheet("background-color: #dbdbdb;")
-        # buttons_layout.addWidget(self.load_button)
-        buttons_layout.addWidget(self.halt_button)
-        buttons_layout.addWidget(self.run_button)
-        buttons_layout.addWidget(self.step_button)
-        buttons_layout.addWidget(self.reset_button)
 
-        self.main_layout.addLayout(buttons_layout)
+        self.halt_button = QPushButton("----")
+        self.halt_button.setStyleSheet("background-color: #dbdbdb;")
+        # buttons_layout.addWidget(self.halt_button)
+        self.run_button = QPushButton("Run")
+        self.run_button.setStyleSheet("background-color: #dbdbdb;")
+        # buttons_layout.addWidget(self.run_button)
+        self.step_button = QPushButton("Step")
+        self.step_button.setStyleSheet("background-color: #dbdbdb;")
+        # buttons_layout.addWidget(self.step_button)
+        self.reset_button = QPushButton("Reset")
+        self.reset_button.setStyleSheet("background-color: #dbdbdb;")
+        # buttons_layout.addWidget(self.reset_button)
+
+        # self.main_layout.addLayout(buttons_layout)
     
     def create_menu_bar(self):
         menu_bar = self.menuBar()
