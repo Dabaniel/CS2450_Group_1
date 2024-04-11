@@ -7,7 +7,7 @@ class QTGUI(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("BasicML Simulator - No File Opened (0/1)")
-        self.setGeometry(100, 100, 600, 350)
+        self.setGeometry(100, 100, 700, 500)
         self.new_dialog = None
         self.new_dialog_id = ''
         self.__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -22,12 +22,8 @@ class QTGUI(QMainWindow):
         self.main_layout = QVBoxLayout()
         self.display_layout = QHBoxLayout()
 
-        #TADA
-        # self.create_buttons()
         self.create_menu_bar()
         self.create_memory()
-        # self.create_register()
-        # self.create_accumulator()
         self.create_console()
         self.create_textbox()
         self.display_main()
@@ -37,13 +33,12 @@ class QTGUI(QMainWindow):
         self.setCentralWidget(central_widget)
 
     def create_memory(self):
-        #trdr
         self.memory_display = QTableWidget(100, 3)
         self.memory_display.setStyleSheet("background-color: #dbdbdb;")
         self.memory_display.setHorizontalHeaderLabels(["##", "Value", ""])
-        self.memory_display.resizeColumnsToContents()
-        # self.memory_display.setFixedWidth(227)
-        # self.memory_display.setFixedHeight(300)
+        print(self.memory_display.columnWidth(0))
+        self.memory_display.setColumnWidth(2, 50)
+        print(self.memory_display.columnWidth(0))
         self.memory_layout = QVBoxLayout()
         self.memory_label = QLabel("Memory")
         self.memory_label.setStyleSheet("color: #FFFFFF;")
@@ -111,27 +106,31 @@ class QTGUI(QMainWindow):
 
     def create_textbox(self):
         self.textbox_layout = QVBoxLayout()
-        #Register and Accumulator
-        # self.accumulator_button = QPushButton("Accumulator: NaN")
-        # self.accumulator_button.setStyleSheet("background-color: #dbdbdb;")
-        # self.textbox_layout.addWidget(self.accumulator_button)
-        # self.register_button = QPushButton("Register: NaN")
-        # self.register_button.setStyleSheet("background-color: #dbdbdb;")
-        # self.textbox_layout.addWidget(self.register_button)
+        
+        page_navigation = QHBoxLayout()
+        self.change_page_button = QPushButton("TODO Page: --")
+        self.change_page_button.setStyleSheet("background-color: #dbdbdb;")
+        page_navigation.addWidget(self.change_page_button)
+        self.previous_file_button = QPushButton("TODO Previous")
+        self.previous_file_button.setStyleSheet("background-color: #dbdbdb;")
+        page_navigation.addWidget(self.previous_file_button)
+        self.next_file_button = QPushButton("TODO Next")
+        self.next_file_button.setStyleSheet("background-color: #dbdbdb;")
+        page_navigation.addWidget(self.next_file_button)
+        self.textbox_layout.addLayout(page_navigation)
+       
         self.editor_button = QPushButton("Open Code Editor")
         self.editor_button.setStyleSheet("background-color: #dbdbdb;")
         self.textbox_layout.addWidget(self.editor_button)
-
-        # optional logo placement at eof
-        # self.textbox_layout.addStretch()
-        # self.register_label = QLabel("Register")
-        # self.register_label.setStyleSheet("color: #FFFFFF;")
-        # self.textbox_layout.addWidget(self.register_label)
-        # self.textbox_layout.addWidget(self.register_display)
-        # self.accumulator_label = QLabel("Accumulator")
-        # self.accumulator_label.setStyleSheet("color: #FFFFFF;")
-        # self.textbox_layout.addWidget(self.accumulator_label)
-        # self.textbox_layout.addWidget(self.accumulator_display)
+        
+        button_split = QHBoxLayout()
+        self.copy_console_button = QPushButton("TODO Copy Console")
+        self.copy_console_button.setStyleSheet("background-color: #dbdbdb;")
+        button_split.addWidget(self.copy_console_button)
+        self.clear_console_button = QPushButton("Clear Console")
+        self.clear_console_button.setStyleSheet("background-color: #dbdbdb;")
+        button_split.addWidget(self.clear_console_button)
+        self.textbox_layout.addLayout(button_split)
         
         self.console_label = QLabel("Console")
         self.console_label.setStyleSheet("color: #FFFFFF;")
@@ -140,29 +139,8 @@ class QTGUI(QMainWindow):
 
     def display_main(self):
         self.display_layout.addLayout(self.memory_layout)
-        self.display_layout.addStretch()
         self.display_layout.addLayout(self.textbox_layout)
         self.main_layout.addLayout(self.display_layout)
-        self.main_layout.addStretch()
-    
-    def create_buttons(self):
-        #Tydy
-        buttons_layout = QHBoxLayout()
-
-        self.halt_button = QPushButton("----")
-        self.halt_button.setStyleSheet("background-color: #dbdbdb;")
-        # buttons_layout.addWidget(self.halt_button)
-        self.run_button = QPushButton("Run")
-        self.run_button.setStyleSheet("background-color: #dbdbdb;")
-        # buttons_layout.addWidget(self.run_button)
-        self.step_button = QPushButton("Step")
-        self.step_button.setStyleSheet("background-color: #dbdbdb;")
-        # buttons_layout.addWidget(self.step_button)
-        self.reset_button = QPushButton("Reset")
-        self.reset_button.setStyleSheet("background-color: #dbdbdb;")
-        # buttons_layout.addWidget(self.reset_button)
-
-        # self.main_layout.addLayout(buttons_layout)
     
     def create_menu_bar(self):
         menu_bar = self.menuBar()
@@ -304,8 +282,6 @@ class QTGUI(QMainWindow):
         # self.new_dialog.finished(self.close_dialog)
 
         self.new_dialog.setLayout(self.wiz_layout)
-        # self.new_dialog.setWindowTitle("Code Editor")
-        # self.new_dialog.setLabelText("Enter a Register value (TODO):")
 
     def name_export(self):
         self.export_name = QInputDialog()

@@ -14,8 +14,10 @@ class Controller():
 
         #Simulation text source
         self.sim_editor = ''
+        self.sim_editors = ['']
         self.text_check = ''
         self.file_path = ''
+        self.file_paths = ['']
 
         # GUI dispaly
         app = QApplication( sys.argv )
@@ -118,7 +120,7 @@ class Controller():
         self.gui.console.append(info)
 
     def clear_console(self):
-        self.gui.console.setText()
+        self.gui.console.setText('')
 
     def set_register(self):
         ret = self.gui.change_register()
@@ -142,6 +144,7 @@ class Controller():
         self.gui.text_editor.textChanged.connect(self.set_code)
         self.gui.code_load_button.clicked.connect(partial(self.sim.load_string, self.sim_editor))
         self.gui.code_load_button.clicked.connect(self.editor_load)
+        self.gui.clear_console_button.clicked.connect(self.clear_console)
         self.gui.export_button.clicked.connect(self.gui.name_export)
         self.gui.export_button.clicked.connect(self.export_code)
         self.gui.editor_load_button.clicked.connect(self.file_load)
