@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QAbstractItemView, QMainWindow, QPushButton, QVBoxLayout, \
-    QTableWidget, QLabel, QTextEdit, QHBoxLayout, QWidget, QTableWidgetItem, QMenu, QInputDialog, QMessageBox, QWizard, QWizardPage # pip install pyside6
+    QTableWidget, QLabel, QTextEdit, QHBoxLayout, QWidget, QTableWidgetItem, QMenu, QInputDialog, QMessageBox, QWizard, QWizardPage, QHeaderView # pip install pyside6
 from PySide6.QtCore import Qt
 import os
 
@@ -34,11 +34,14 @@ class QTGUI(QMainWindow):
 
     def create_memory(self):
         self.memory_display = QTableWidget(100, 3)
+        self.memory_display.setColumnCount(3)
         self.memory_display.setStyleSheet("background-color: #dbdbdb;")
-        self.memory_display.setHorizontalHeaderLabels(["##", "Value", ""])
-        print(self.memory_display.columnWidth(0))
-        self.memory_display.setColumnWidth(2, 50)
-        print(self.memory_display.columnWidth(0))
+        self.memory_display.setHorizontalHeaderLabels(["##", "Value", "A"])
+        self.memory_display.setMinimumWidth(300)
+        header = self.memory_display.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
         self.memory_layout = QVBoxLayout()
         self.memory_label = QLabel("Memory")
         self.memory_label.setStyleSheet("color: #FFFFFF;")
