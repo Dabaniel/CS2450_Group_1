@@ -83,7 +83,8 @@ class Controller():
             # self.sim.load_string(self.sim_editor)
             if(self.gui.new_dialog_id == 'code_editor'):
                 self.gui.text_editor.setText(self.sim_editor)
-            # self.update_memory()
+            self.sim.load_string(contents)
+            self.update_memory()
             self.file_path = file_path
             self.gui.setWindowTitle(f"BasicML Simulator - {file_path.split('/')[-1]} (1/1)")
     
@@ -110,7 +111,7 @@ class Controller():
         self.update_memory()
 
     def reset(self):
-        self.sim.load_string(self.sim_editor)
+        self.sim.load_string(self.sim_editor.splitlines())
         self.sim.set_register()
         self.sim.set_accumulator()
         self.clear_console()
@@ -185,7 +186,7 @@ class Controller():
 
     def update_memory(self):
         stack_memory = self.sim.get_memory()
-        for i in range(100):
+        for i in range(250):
             self.gui.memory_display.setItem(i, 1, QTableWidgetItem(f"{stack_memory[i] if stack_memory[i] is not None else ''}"))
             self.gui.memory_display.setItem(i, 2, QTableWidgetItem(""))
         cnt = self.sim.get_accumulator()

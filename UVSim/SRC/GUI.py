@@ -33,7 +33,7 @@ class QTGUI(QMainWindow):
         self.setCentralWidget(central_widget)
 
     def create_memory(self):
-        self.memory_display = QTableWidget(100, 3)
+        self.memory_display = QTableWidget(250, 3)
         self.memory_display.setColumnCount(3)
         self.memory_display.setStyleSheet("background-color: #dbdbdb;")
         self.memory_display.setHorizontalHeaderLabels(["##", "Value", "A"])
@@ -75,8 +75,8 @@ class QTGUI(QMainWindow):
 
 
         labels = []
-        for i in range(100):
-            self.memory_display.setItem(i, 0, QTableWidgetItem(f"{i:02d}"))
+        for i in range(250):
+            self.memory_display.setItem(i, 0, QTableWidgetItem(f"{i:03d}"))
             labels.append("")
         self.memory_display.setVerticalHeaderLabels(labels)
         # immutable table
@@ -230,7 +230,7 @@ class QTGUI(QMainWindow):
     def change_accumulator(self):
         self.new_dialog = QInputDialog()
         self.new_dialog.setWindowTitle("Change Accumulator")
-        self.new_dialog.setLabelText("Enter an Accumulator value (0-99):")
+        self.new_dialog.setLabelText("Enter an Accumulator value (0-249):")
 
         _ = self.new_dialog.exec_()
         try:
