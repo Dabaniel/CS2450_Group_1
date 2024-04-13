@@ -65,7 +65,7 @@ color: {self.off_style};
         self.create_menu_bar()
         self.create_memory()
         self.create_console()
-        self.create_textbox()
+        self.create_console_side()
         self.display_main()
 
         central_widget = QWidget()
@@ -147,7 +147,8 @@ color: {self.off_style};
         self.console.setDisabled(True)
         self.console.setTextColor('#000000')
 
-    def create_textbox(self):
+    def create_console_side(self):
+        """Creates console side of GUI"""
         self.textbox_layout = QVBoxLayout()
         
         page_navigation = QHBoxLayout()
