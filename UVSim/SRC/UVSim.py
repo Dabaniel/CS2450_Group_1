@@ -91,29 +91,42 @@ class I_UVSim():
 
 class UVSim:
     """Class for UVSim Virtual Machine"""
-    def __init__(self, buff = None, memory_size = 100) -> None:
+    def __init__(self, buff = None, memory_size = 250) -> None:
         self._memory_size = memory_size
         self._memory = [''] * memory_size
         self._command_length = 5 #3 + len(str(memory_size - 1))
+        self.set_command_length = False
         
         self._buffer = buff
 
         self._operator = operations.Operator(self.get_memory, self.set_position_in_memory, self.get_accumulator, self.set_accumulator, self.get_register, self.set_register, self._buffer)
         
-        self._accumulator = [-1, "00"] #First is next memory location, second is register content
+        self._accumulator = [-1, "000"] #First is next memory location, second is register content
         self._operations = {
             "+10": self.Read,
+            "+010": self.Read,
             "+11": self.Write,
+            "+011": self.Write,
             "+20": self.Load,
+            "+020": self.Load,
             "+21": self.Store,
+            "+021": self.Store,
             "+30": self.Add,
+            "+030": self.Add,
             "+31": self.Subtract,
+            "+031": self.Subtract,
             "+32": self.Divide,
+            "+032": self.Divide,
             "+33": self.Multiply,
+            "+033": self.Multiply,
             "+40": self.Branch,
+            "+040": self.Branch,
             "+41": self.BranchNeg,
+            "+041": self.BranchNeg,
             "+42": self.BranchZero,
-            "+43": self.Halt
+            "+042": self.BranchZero,
+            "+43": self.Halt,
+            "+043": self.Halt
         }
 
     ## CALLED ##
@@ -160,16 +173,29 @@ class UVSim:
 
     def load_from_string(self, text):
         """parses the content of a string into memory by line"""
-        contents = text.splitlines()
+        contents = text
         placeCnt = 0
         load_buffer = []
         for i, content in enumerate(contents):
+            #Checks the first detected instruction for length and 
+            if (self.set_command_length  is False):
+                if(check_if_instruction(content)):
+                    if(len(content) == 5):
+                        self._command_length = 5
+                        self.set_command_length = True
+                    if(len(content) == 7):
+                        self._command_length = 7
+                        self.set_command_length = True
             if(0 < len(content)):
                 if(self.check_if_non_instruction(content)):
                     load_buffer.append(content[1:].replace('\\n', '\n'))
                     placeCnt += 1
                 content = content.split()[0]
                 if(self.check_if_instruction(content)):
+                    if self._command_length == 7 and len(content) != 7 and content != "-99999":
+                        lengthened_string = content[0] + "0" + content[1:]
+                        lengthened_string = lengthened_string[:4] + "0" + lengthened_string[4:]
+                        content = lengthened_string
                     load_buffer.append(content)
                     placeCnt += 1
         if(len(load_buffer) < self._memory_size):
@@ -234,7 +260,8 @@ class UVSim:
         """Splits the input into a tuple: case, and memory location."""
         if (not len(user_input) == self._command_length):
             return ValueError
-        data = user_input[:3], user_input[3:]
+        splitpoint = int((len(user_input) + 1) / 2)
+        data = user_input[:splitpoint], user_input[splitpoint:]
         if data[0][0] != "+":
             return None
         return data
@@ -242,7 +269,7 @@ class UVSim:
     def check_if_instruction(self, user_input):
         """Checks an input for sign, if sign detected returns True"""
         if user_input[0] == '+' or user_input[0] == '-':
-            return 4 < len(user_input)
+            return True
         return False
 
     def check_if_non_instruction(self, user_input):
