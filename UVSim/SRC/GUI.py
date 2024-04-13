@@ -13,9 +13,49 @@ class QTGUI(QMainWindow):
         self.__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
         con = open(os.path.join(self.__location__, "config.ini"))
         lines = con.readlines()
-        self.main_theme = lines[0]
-        self.off_theme = lines[1]
-        self.setStyleSheet(f"background-color: {self.main_theme}; color: {self.off_theme};")
+        self.main_style = lines[0]
+        self.text_style = lines[1]
+        self.off_style = "#eeeeee"
+        self.button_style = """QPushButton {
+""" + f"""
+background-color: {self.off_style};
+border-color: {self.off_style};
+border-width: 4px;
+font-size: 14px;
+border: 2px solid {self.off_style};
+border-radius: 10px;
+height: 20px;
+color: {self.main_style};
+""" + """}
+""" + """QPushButton:hover {
+""" + f"""
+background-color: {self.main_style};
+color: {self.off_style};
+""" + """}
+"""
+#         self.button_style = f"""
+# QPushButton {
+# """{
+#     background-color: #eeeeee;
+#     border-color: #eeeeee;
+#     border-width: 4px;
+#     font-size: 14px;
+# """ + f"border: 2px solid {self.text_style};" + """
+#     border-radius: 10px;
+#     height: 20px;
+# }"""
+# }
+
+# QPushButton:hover {
+# "{" + f"background-color: {self.main_style}" + "}"
+# }
+
+# .disabled {
+#   "{" + f"opacity: 0.6;cursor: not-allowed;" + "}"
+# }
+# """
+        # self.button_style = "background-color: #eeeeee;font-size: 14px;border-radius: 10px;height: 20px"
+        self.setStyleSheet(f"background-color: {self.main_style}; color: {self.text_style};")
         self.UIsetup()
 
     def UIsetup(self):
@@ -51,25 +91,25 @@ class QTGUI(QMainWindow):
         #Buttons
         button_split = QHBoxLayout()
         self.accumulator_button = QPushButton("Accumulator: NaN")
-        self.accumulator_button.setStyleSheet("background-color: #dbdbdb;")
+        self.accumulator_button.setStyleSheet(self.button_style)
         button_split.addWidget(self.accumulator_button)
         self.register_button = QPushButton("Register: NaN")
-        self.register_button.setStyleSheet("background-color: #dbdbdb;")
+        self.register_button.setStyleSheet(self.button_style)
         button_split.addWidget(self.register_button)
         self.halt_button = QPushButton("----")
-        self.halt_button.setStyleSheet("background-color: #dbdbdb;")
+        self.halt_button.setStyleSheet(self.button_style)
         button_split.addWidget(self.halt_button)
         self.memory_layout.addLayout(button_split)
         
         button_split = QHBoxLayout()
         self.run_button = QPushButton("Run")
-        self.run_button.setStyleSheet("background-color: #dbdbdb;")
+        self.run_button.setStyleSheet(self.button_style)
         button_split.addWidget(self.run_button)
         self.step_button = QPushButton("Step")
-        self.step_button.setStyleSheet("background-color: #dbdbdb;")
+        self.step_button.setStyleSheet(self.button_style)
         button_split.addWidget(self.step_button)
         self.reset_button = QPushButton("Reset")
-        self.reset_button.setStyleSheet("background-color: #dbdbdb;")
+        self.reset_button.setStyleSheet(self.button_style)
         button_split.addWidget(self.reset_button)
         self.memory_layout.addLayout(button_split)
 
@@ -82,23 +122,23 @@ class QTGUI(QMainWindow):
         # immutable table
         self.memory_display.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
-    def create_register(self):
-        self.register_display = QTextEdit()
-        self.register_display.setStyleSheet("background-color: #dbdbdb;")
-        self.register_display.setFixedWidth(50)
-        self.register_display.setFixedHeight(50)
+    # def create_register(self):
+    #     self.register_display = QTextEdit()
+    #     self.register_display.setStyleSheet("background-color: #dbdbdb;")
+    #     self.register_display.setFixedWidth(50)
+    #     self.register_display.setFixedHeight(50)
 
         
-        buttons_layout = QHBoxLayout()
-        self.reset_button = QPushButton("Reset")
-        self.reset_button.setStyleSheet("background-color: #dbdbdb;")
-        buttons_layout.addWidget(self.reset_button)
+    #     buttons_layout = QHBoxLayout()
+    #     self.reset_button = QPushButton("Reset")
+    #     self.reset_button.setStyleSheet("background-color: #dbdbdb;")
+    #     buttons_layout.addWidget(self.reset_button)
 
-    def create_accumulator(self):
-        self.accumulator_display = QTextEdit()
-        self.accumulator_display.setStyleSheet("background-color: #dbdbdb;")
-        self.accumulator_display.setFixedWidth(50)
-        self.accumulator_display.setFixedHeight(50)
+    # def create_accumulator(self):
+    #     self.accumulator_display = QTextEdit()
+    #     self.accumulator_display.setStyleSheet("background-color: #dbdbdb;")
+    #     self.accumulator_display.setFixedWidth(50)
+    #     self.accumulator_display.setFixedHeight(50)
 
     def create_console(self):
         self.console = QTextEdit()
@@ -112,26 +152,26 @@ class QTGUI(QMainWindow):
         
         page_navigation = QHBoxLayout()
         self.change_page_button = QPushButton("TODO Page: --")
-        self.change_page_button.setStyleSheet("background-color: #dbdbdb;")
+        self.change_page_button.setStyleSheet(self.button_style)
         page_navigation.addWidget(self.change_page_button)
         self.previous_file_button = QPushButton("TODO Previous")
-        self.previous_file_button.setStyleSheet("background-color: #dbdbdb;")
+        self.previous_file_button.setStyleSheet(self.button_style)
         page_navigation.addWidget(self.previous_file_button)
         self.next_file_button = QPushButton("TODO Next")
-        self.next_file_button.setStyleSheet("background-color: #dbdbdb;")
+        self.next_file_button.setStyleSheet(self.button_style)
         page_navigation.addWidget(self.next_file_button)
         self.textbox_layout.addLayout(page_navigation)
        
         self.editor_button = QPushButton("Open Code Editor")
-        self.editor_button.setStyleSheet("background-color: #dbdbdb;")
+        self.editor_button.setStyleSheet(self.button_style)
         self.textbox_layout.addWidget(self.editor_button)
         
         button_split = QHBoxLayout()
         self.copy_console_button = QPushButton("TODO Copy Console")
-        self.copy_console_button.setStyleSheet("background-color: #dbdbdb;")
+        self.copy_console_button.setStyleSheet(self.button_style)
         button_split.addWidget(self.copy_console_button)
         self.clear_console_button = QPushButton("Clear Console")
-        self.clear_console_button.setStyleSheet("background-color: #dbdbdb;")
+        self.clear_console_button.setStyleSheet(self.button_style)
         button_split.addWidget(self.clear_console_button)
         self.textbox_layout.addLayout(button_split)
         
@@ -164,25 +204,25 @@ class QTGUI(QMainWindow):
         self.theme_dialog.setWindowTitle("Change Main Theme")
         self.theme_dialog.setLabelText("Enter a hex value to change the main theme:")
 
-        self.off_theme_dialog = QInputDialog()
-        self.off_theme_dialog.setWindowTitle("Change Off Theme")
-        self.off_theme_dialog.setLabelText("Enter a hex value to change the off theme:")
+        self.text_style_dialog = QInputDialog()
+        self.text_style_dialog.setWindowTitle("Change Off Theme")
+        self.text_style_dialog.setLabelText("Enter a hex value to change the off theme:")
 
 
         _ = self.theme_dialog.exec_()
         if self.theme_dialog.textValue():
-            self.main_theme = self.theme_dialog.textValue()
-            self.setStyleSheet(f"background-color: {self.main_theme}; color: {self.off_theme};")
+            self.main_style = self.theme_dialog.textValue()
+            self.setStyleSheet(f"background-color: {self.main_style}; color: {self.text_style};")
 
-        _ = self.off_theme_dialog.exec_()
-        if self.off_theme_dialog.textValue():
-            self.off_theme = self.off_theme_dialog.textValue()
-            self.setStyleSheet(f"color: {self.off_theme}; ")
-            self.setStyleSheet(f"background-color: {self.main_theme}; color: {self.off_theme};")
+        _ = self.text_style_dialog.exec_()
+        if self.text_style_dialog.textValue():
+            self.text_style = self.text_style_dialog.textValue()
+            self.setStyleSheet(f"color: {self.text_style}; ")
+            self.setStyleSheet(f"background-color: {self.main_style}; color: {self.text_style};")
 
         con = open(os.path.join(self.__location__, "config.ini"), "w")
-        con.write(self.main_theme + "\n")
-        con.write(self.off_theme)
+        con.write(self.main_style + "\n")
+        con.write(self.text_style)
 
 
     def show_version(self):
@@ -268,13 +308,13 @@ class QTGUI(QMainWindow):
         self.wiz_layout.addWidget(self.text_editor)
 
         self.code_load_button = QPushButton("Compile")
-        self.code_load_button.setStyleSheet("background-color: #dbdbdb;")
+        self.code_load_button.setStyleSheet(self.button_style)
         self.export_button = QPushButton("Save As")
-        self.export_button.setStyleSheet("background-color: #dbdbdb;")
+        self.export_button.setStyleSheet(self.button_style)
         self.save_button = QPushButton("Save")
-        self.save_button.setStyleSheet("background-color: #dbdbdb;")
+        self.save_button.setStyleSheet(self.button_style)
         self.editor_load_button = QPushButton("Open File")
-        self.editor_load_button.setStyleSheet("background-color: #dbdbdb;")
+        self.editor_load_button.setStyleSheet(self.button_style)
     
         self.button_layout.addWidget(self.code_load_button)
         self.button_layout.addWidget(self.export_button)
