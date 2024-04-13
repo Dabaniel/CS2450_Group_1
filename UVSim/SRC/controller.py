@@ -50,7 +50,7 @@ class Controller():
         self.gui.help_menu.addAction("Docs", self.gui.show_help)
 
     def editor_load(self):
-        self.sim.load_string(self.sim_editor)
+        self.sim.load_list(self.sim_editor.splitlines())
         self.update_memory()
     
     def halt(self):
@@ -80,10 +80,10 @@ class Controller():
                 for i in contents:
                     new_code += i + '\n'
             self.set_sim_editor(new_code)
-            # self.sim.load_string(self.sim_editor)
+            # self.sim.load_list(self.sim_editor)
             if(self.gui.new_dialog_id == 'code_editor'):
                 self.gui.text_editor.setText(self.sim_editor)
-            self.sim.load_string(contents)
+            self.sim.load_list(contents)
             self.update_memory()
             self.file_path = file_path
             self.gui.setWindowTitle(f"BasicML Simulator - {file_path.split('/')[-1]} (1/1)")
@@ -111,7 +111,7 @@ class Controller():
         self.update_memory()
 
     def reset(self):
-        self.sim.load_string(self.sim_editor.splitlines())
+        self.sim.load_list(self.sim_editor.splitlines())
         self.sim.set_register()
         self.sim.set_accumulator()
         self.clear_console()
@@ -143,7 +143,7 @@ class Controller():
         self.gui.code_editor(self.sim_editor)
         
         self.gui.text_editor.textChanged.connect(self.set_code)
-        self.gui.code_load_button.clicked.connect(partial(self.sim.load_string, self.sim_editor))
+        self.gui.code_load_button.clicked.connect(partial(self.sim.load_list, self.sim_editor.splitlines()))
         self.gui.code_load_button.clicked.connect(self.editor_load)
         self.gui.clear_console_button.clicked.connect(self.clear_console)
         self.gui.export_button.clicked.connect(self.gui.name_export)

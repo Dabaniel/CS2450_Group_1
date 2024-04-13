@@ -7,7 +7,7 @@ import buffer
 def check_if_instruction(user_input):
     """Checks an input for sign, if sign detected returns True"""
     if user_input[0] == '+' or user_input[0] == '-':
-        return 4 < len(user_input)
+        return True
     return False
 
 def check_if_non_instruction(user_input):
@@ -73,7 +73,7 @@ class I_UVSim():
         """Load code from a .txt file"""
         self.uvsim.load_from_text(file)
 
-    def load_string(self, text):
+    def load_list(self, text):
         """Load code from a string"""
         self.uvsim.load_from_string(text)
 
@@ -178,15 +178,15 @@ class UVSim:
         load_buffer = []
         for i, content in enumerate(contents):
             #Checks the first detected instruction for length and 
-            if (self.set_command_length  is False):
-                if(check_if_instruction(content)):
-                    if(len(content) == 5):
-                        self._command_length = 5
-                        self.set_command_length = True
-                    if(len(content) == 7):
-                        self._command_length = 7
-                        self.set_command_length = True
             if(0 < len(content)):
+                if (self.set_command_length is False):
+                    if(check_if_instruction(content)):
+                        if(len(content) == 5):
+                            self._command_length = 5
+                            self.set_command_length = True
+                        if(len(content) == 7):
+                            self._command_length = 7
+                            self.set_command_length = True
                 if(self.check_if_non_instruction(content)):
                     load_buffer.append(content[1:].replace('\\n', '\n'))
                     placeCnt += 1
