@@ -14,7 +14,8 @@ A word is a signed four-digit or a six-digit decimal number, such as +1234, -567
 
 <h2>Installation and Setup</h2>
 <li><strong>For Install:</strong></li> As this is a GitHub repository, to access the program the user will need to clone the repository. 
-<li><strong>For Setup:</strong></li> Once the repository has been cloned and is found within local computer files. Please note that PIP install files may be necessariy to run the program successfully. These include: PySide6 
+<li><strong>For Setup:</strong></li> Once the repository has been cloned and is found within local computer files. Please note that PIP install files may be necessariy to run the program successfully. These include: PySide6.
+Once the program is successfully running, please see the "Help" and "Docs" file for more information on functionalities and language specific questions.
 
 <h2>Contributing</h2>
 This program was implemented for educational purposes. Many Design patterns learned throughout the course have been applied however not all were beneficial for the use of this program and therefore were not implemented.
