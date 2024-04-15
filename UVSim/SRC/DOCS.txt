@@ -1,5 +1,5 @@
 When writing an operations, there are two necessary parts:
-  - The first three characters represent the "opcode," the code for the operation, and will be '+XX'. The 'XX' must be a code for an operation: i.e. '+11' is WRITE.
+  - The first three characters (if using a 4-Digit word) represent the "opcode," the code for the operation, and will be '+XX'. The 'XX' must be a code for an operation: i.e. '+11' is WRITE.
   - The following characters will be a memory address, i.e. '+XXxx', where xx is the memory address.
 
 EX:
@@ -7,9 +7,21 @@ Write value in memory location '00' into console: '+1100'
 
 Working commands:
 
-READ    / '+10XX': Read the following console input into memory location 'XX'.
-WRITE   / '+11XX': Write value at memory location 'XX' into console.
-LOAD    / '+20XX': 
-STORE   / '+21XX': 
+READ        / '+10XX': Read the following console input into memory location 'XX'.
+WRITE       / '+11XX': Write value at memory location 'XX' into console.
+LOAD        / '+20XX': Load a word from a specific location in memory into the accumulator.
+STORE       / '+21XX': Store a word from the accumulator into a specific location in memory.
+
+ADD**       / '+30XX": Add a word from a specific location in memory to the word in the accumulator 
+SUB**       / '+31XX': Subtract a word from a specific location in memory from the word in the accumulator
+DIVIDE**    / '+32XX': Divide the word in the accumulator by a word from a specific location in memory
+MULTIPLY**  / '+33XX': Multiply a word from a specific location in memory to the word in the accumulator
+**leaves the result in the accumulator
+
+BRANCH      / '+40XX': Branch to a specific location in memory
+BRANCHNEG   / '+41XX': Branch to a specific location in memory if the accumulator is negative.
+BRANCHZERO  / '+42XX': Branch to a specific location in memory if the accumulator is zero.
+HALT        / '+43XX': Pause the program
+
 
 Hit enter to close the program
