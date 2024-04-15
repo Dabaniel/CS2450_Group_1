@@ -272,7 +272,7 @@ color: {self.off_style};
     def change_register(self):
         self.new_dialog = QInputDialog()
         self.new_dialog.setWindowTitle("Change Register")
-        self.new_dialog.setLabelText("Enter a Register value (TODO):")
+        self.new_dialog.setLabelText("Enter a Register value:") # (todo)
 
         _ = self.new_dialog.exec_()
         try:

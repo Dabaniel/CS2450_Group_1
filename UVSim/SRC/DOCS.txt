@@ -1,27 +1,35 @@
+<h1>UVSim Application</h1>
 When writing an operations, there are two necessary parts:
-  - The first three characters (if using a 4-Digit word) represent the "opcode," the code for the operation, and will be '+XX'. The 'XX' must be a code for an operation: i.e. '+11' is WRITE.
-  - The following characters will be a memory address, i.e. '+XXxx', where xx is the memory address.
+  <ul>
+    <li> The first three characters (if using a 4-Digit word) represent the "opcode," the code for the operation, and will be '+XX'. The 'XX' must be a code for an operation: i.e. '+11' is WRITE.</li>
+    <li> The following characters will be a memory address, i.e. '+XXxx', where xx is the memory address.</li>
+  </ul>
 
 EX:
 Write value in memory location '00' into console: '+1100'
 
-Working commands:
+<br>Working commands:</br>
 
-READ        / '+10XX': Read the following console input into memory location 'XX'.
-WRITE       / '+11XX': Write value at memory location 'XX' into console.
-LOAD        / '+20XX': Load a word from a specific location in memory into the accumulator.
-STORE       / '+21XX': Store a word from the accumulator into a specific location in memory.
+<ul>
+  <li> READ        / '+10XX': Read the following console input into memory location 'XX'.</li>
+  <li> WRITE       / '+11XX': Write value at memory location 'XX' into console.</li>
+  <li> LOAD        / '+20XX': Load a word from a specific location in memory into the accumulator.</li>
+  <li> STORE       / '+21XX': Store a word from the accumulator into a specific location in memory.</li>
+</ul>
 
-ADD**       / '+30XX": Add a word from a specific location in memory to the word in the accumulator 
-SUB**       / '+31XX': Subtract a word from a specific location in memory from the word in the accumulator
-DIVIDE**    / '+32XX': Divide the word in the accumulator by a word from a specific location in memory
-MULTIPLY**  / '+33XX': Multiply a word from a specific location in memory to the word in the accumulator
+<ul>
+  <li>ADD**       / '+30XX": Add a word from a specific location in memory to the word in the accumulator </li></li>
+  <li>SUB**       / '+31XX': Subtract a word from a specific location in memory from the word in the accumulator</li></li>
+  <li>DIVIDE**    / '+32XX': Divide the word in the accumulator by a word from a specific location in memory</li></li>
+  <li>MULTIPLY**  / '+33XX': Multiply a word from a specific location in memory to the word in the accumulator</li></li>
+</ul>
 **leaves the result in the accumulator
 
-BRANCH      / '+40XX': Branch to a specific location in memory
-BRANCHNEG   / '+41XX': Branch to a specific location in memory if the accumulator is negative.
-BRANCHZERO  / '+42XX': Branch to a specific location in memory if the accumulator is zero.
-HALT        / '+43XX': Pause the program
-
+<ul>
+  <li>BRANCH      / '+40XX': Branch to a specific location in memory</li>
+  <li>BRANCHNEG   / '+41XX': Branch to a specific location in memory if the accumulator is negative.</li>
+  <li>BRANCHZERO  / '+42XX': Branch to a specific location in memory if the accumulator is zero.</li>
+  <li>HALT        / '+43XX': Pause the program</li>
+</ul>
 
 Hit enter to close the program
