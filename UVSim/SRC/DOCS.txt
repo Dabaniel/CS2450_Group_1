@@ -22,8 +22,7 @@ Write value in memory location '00' into console: '+1100'
   <li>SUB**       / '+31XX': Subtract a word from a specific location in memory from the word in the accumulator</li></li>
   <li>DIVIDE**    / '+32XX': Divide the word in the accumulator by a word from a specific location in memory</li></li>
   <li>MULTIPLY**  / '+33XX': Multiply a word from a specific location in memory to the word in the accumulator</li></li>
-</ul>
-**leaves the result in the accumulator
+</ul>**leaves the result in the accumulator
 
 <ul>
   <li>BRANCH      / '+40XX': Branch to a specific location in memory</li>
@@ -31,5 +30,22 @@ Write value in memory location '00' into console: '+1100'
   <li>BRANCHZERO  / '+42XX': Branch to a specific location in memory if the accumulator is zero.</li>
   <li>HALT        / '+43XX': Pause the program</li>
 </ul>
+<h2>Widgets</h2>
 
-Hit enter to close the program
+<p>The interface consists of 2 large widgets 'Memory' and 'Console'. Housed within these two widgets we are able to see the changes of memories as instructions are being applied. The Console is responsible of displaying information or prompting users depending on the instructions being run. </p>
+
+
+<h2>Functionalities</h2>
+
+<p>The following breakdown further details the buttons available and their purpose.</p>
+
+<ul>
+  <li><strong>Open Code Editor:</strong>Opens Code Editor where the user may type instructions and commands or open a file to run</li>
+  <li><strong>Clear Console:</strong>Removes all history or text within the console.</li>
+  <li><strong>Previous/Next:</strong>Allows for switching between multiple files</li>
+  <li><strong>Unhalt:</strong>Sets the Memory, must hit 'Run' following the instruction</li>
+  <li><strong>Run:</strong>Runs the program, must hit 'Unhalt' first.</li>
+  <li><strong>Step:</strong>Incriments the accumulator by +1 allowing for instructions to be walked through and seen the changes on the Memory </li>
+  <li><strong>Accumulator:</strong>Similar to a PC counter</li>
+  <li><strong>Register:</strong>Displays registers modifications </li>
+</ul>
