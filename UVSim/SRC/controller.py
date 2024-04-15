@@ -191,7 +191,7 @@ class Controller():
 
     def set_register(self):
         ret = self.gui.change_register()
-        if(False):
+        if(ret == None):
             self.custom_alert()
         else:
             self.sim.set_register(ret)
@@ -199,7 +199,9 @@ class Controller():
 
     def set_accumulator(self):
         ret = self.gui.change_accumulator()
-        if(ret < 0 or len(self.sim.get_memory()) <= ret):
+        if(ret == None):
+            self.custom_alert()
+        elif(ret < 0 or len(self.sim.get_memory()) <= ret):
             self.custom_alert()
         else:
             self.sim.set_accumulator(ret)
