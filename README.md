@@ -9,9 +9,15 @@ A word is a signed four-digit or a six-digit decimal number, such as +1234, -567
 <h2>Features</h2>
 <li><strong>GUI Interface:</strong> A user interface for interacting with the application.</li>
 <li><strong>File Import:</strong> Within the User Interface, open files and edit.</li>
+<li><strong>Multi File:</strong> This application supports multiple files to execute.</li>
+<li><strong>Multi word flexibility:</strong> Select from four-digit or six-digit words memory will seamlessly be edited for user.</li>
 
 <h2>Installation and Setup</h2>
+<li>For Install:</li> As this is a GitHub repository, to access the program the user will need to clone the repository. 
+<li>For Setup:</li> Once the repository has been cloned and is found within local computer files. Please note that PIP install files may be necessariy to run the program successfully. These include: PySide6 
 
 <h2>Contributing</h2>
+This program was implemented for educational purposes. Many Design patterns learned throughout the course have been applied however not all were beneficial for the use of this program and therefore were not implemented.
 
 <h2>Limitations</h2>
+This program is a designed to aid students in learning machine language. While the program does allow four or six- digit words please note that both cannot be accomidated within the same file. This application is not suitible for commercial use or deployment.
