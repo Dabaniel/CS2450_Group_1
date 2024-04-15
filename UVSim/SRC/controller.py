@@ -7,20 +7,22 @@ from functools import partial
 import buffer
 
 class Controller():
-    def __init__( self ) -> None:
-        #Simulation interface
-        self.buffer = buffer.Buffer()
-        self.sim = I_UVSim( UVSim( self.buffer ) ) # Create a Interface with a UVSim object using its buffer
-
+    def __init__(self) -> None:
         #Simulation text source
-        self.sim_editor = ''
+        self.current_file = 0
         self.sim_editors = ['']
-        self.text_check = ''
-        self.file_path = ''
         self.file_paths = ['']
-
+        self.buffers = [buffer.Buffer()]
+        self.sims = [I_UVSim(UVSim(self.buffers[0]))]
+        self.sim_editor = self.sim_editors[self.current_file]
+        self.file_path = self.file_paths[self.current_file]
+        
+        #Simulation interface
+        self.buffer = self.buffers[self.current_file]
+        self.sim = self.sims[self.current_file] # Create a Interface with a UVSim object using its buffer
+        
         # GUI dispaly
-        app = QApplication( sys.argv )
+        app = QApplication(sys.argv)
         self.gui = QTGUI()
         self.gui.show()
         self.button_activation()
@@ -33,19 +35,25 @@ class Controller():
         # Gui exit handler
         sys.exit(app.exec())
 
-    def button_activation( self ):
+    def button_activation(self):
         """Connect buttons to functions
         """
         # self.gui.load_button.clicked.connect(self.file_load)
         self.gui.halt_button.clicked.connect(self.halt)
         self.gui.run_button.clicked.connect(self.run)
         self.gui.step_button.clicked.connect(self.step)
-        self.gui.reset_button.clicked.connect(self.reset)
+        # self.gui.reset_button.clicked.connect(self.reset)
         self.gui.accumulator_button.clicked.connect(self.set_accumulator)
         self.gui.register_button.clicked.connect(self.set_register)
+        self.gui.next_file_button.clicked.connect(self.next_file)
+        self.gui.previous_file_button.clicked.connect(self.prev_file)
         self.gui.editor_button.clicked.connect(self.open_editor)
-        self.gui.file_menu.addAction("Open New File", self.file_load)
-        self.gui.edit_menu.addAction("Toggle Theme", self.gui.change_theme)
+        self.gui.file_menu.addAction("Open New Page", self.new_file)
+        theme = self.gui.edit_menu.addMenu("Change Theme")
+        theme.addAction("Main Theme", self.gui.change_main_theme)
+        # theme.addAction("Off Theme", self.gui.change_off_theme)
+        # theme.addAction("Text Theme", self.gui.change_text_theme)
+        
         self.gui.help_menu.addAction("About", self.gui.show_version)
         self.gui.help_menu.addAction("Docs", self.gui.show_help)
 
@@ -63,6 +71,60 @@ class Controller():
 
         self.update_memory()
 
+    def save_file(self):
+        with open(self.file_path, 'w') as file:
+            file.write(self.sim_editor)
+
+    def next_file(self):
+        if(self.current_file < len(self.file_paths) - 1):
+            self.current_file += 1
+            
+            self.buffer = self.buffers[self.current_file]
+            self.sim = self.sims[self.current_file]
+            self.sim_editor = self.sim_editors[self.current_file]
+            self.file_path = self.file_paths[self.current_file]
+            if(self.file_path == ''):
+                self.gui.setWindowTitle(f"BasicML Simulator - No File Opened ({self.current_file + 1}/{len(self.file_paths)})")
+            else:
+                self.gui.setWindowTitle(f"BasicML Simulator - {self.file_path.split('/')[-1]} ({self.current_file + 1}/{len(self.file_paths)})")
+            self.update_memory()
+
+    def prev_file(self):
+        if(0 < self.current_file):
+            self.current_file -= 1
+            
+            self.buffer = self.buffers[self.current_file]
+            self.sim = self.sims[self.current_file]
+            self.sim_editor = self.sim_editors[self.current_file]
+            self.file_path = self.file_paths[self.current_file]
+            if(self.file_path == ''):
+                self.gui.setWindowTitle(f"BasicML Simulator - No File Opened ({self.current_file + 1}/{len(self.file_paths)})")
+            else:
+                self.gui.setWindowTitle(f"BasicML Simulator - {self.file_path.split('/')[-1]} ({self.current_file + 1}/{len(self.file_paths)})")
+            self.update_memory()
+
+    def new_file(self):
+        self.current_file = len(self.file_paths)
+        self.sim_editors.append('')
+        self.file_paths.append('')
+        self.buffers.append(buffer.Buffer())
+        self.sims.append(I_UVSim(UVSim(self.buffers[self.current_file])))
+        
+        self.buffer = self.buffers[self.current_file]
+        self.sim = self.sims[self.current_file]
+        self.sim_editor = self.sim_editors[self.current_file]
+        self.file_path = self.file_paths[self.current_file]
+        self.gui.setWindowTitle(f"BasicML Simulator - No File Opened ({self.current_file + 1}/{len(self.file_paths)})")
+
+        self.update_memory()
+    
+    def remove_file(self):
+        if(1 < len(self.file_paths)):
+            self.sim_editor.remove(self.current_file)
+            self.sims.remove(self.current_file)
+            self.buffers.remove(self.current_file)
+            self.file_paths.remove(self.current_file)
+    
     def file_load(self):
         """
             This function holds the "Load" button and "Load" file menu's functionality:
@@ -86,7 +148,7 @@ class Controller():
             self.sim.load_list(contents)
             self.update_memory()
             self.file_path = file_path
-            self.gui.setWindowTitle(f"BasicML Simulator - {file_path.split('/')[-1]} (1/1)")
+            self.gui.setWindowTitle(f"BasicML Simulator - {file_path.split('/')[-1]} ({self.current_file + 1}/{len(self.file_paths)})")
     
     def step(self, in_run = False):
         """Increment the simulation by one step"""
@@ -145,6 +207,7 @@ class Controller():
         self.gui.text_editor.textChanged.connect(self.set_code)
         self.gui.code_load_button.clicked.connect(partial(self.sim.load_list, self.sim_editor.splitlines()))
         self.gui.code_load_button.clicked.connect(self.editor_load)
+        self.gui.save_button.clicked.connect(self.save_file)
         self.gui.clear_console_button.clicked.connect(self.clear_console)
         self.gui.export_button.clicked.connect(self.gui.name_export)
         self.gui.export_button.clicked.connect(self.export_code)
@@ -168,12 +231,14 @@ class Controller():
     #         return None
     
     def export_code(self):
-        with open(self.gui.file_name, "w") as export_file:
-            export_file.write(self.sim_editor)
-    
+        try:
+            with open(self.gui.file_name, "w") as export_file:
+                export_file.write(self.sim_editor)
+        except:
+            self.custom_alert('File Error', 'Invalid directory')
+
     def set_code(self):
         self.sim_editor = self.gui.text_editor.toPlainText()
-        self.text_check = self.gui.text_editor.toPlainText()
     
     def set_sim_editor(self, value):
         self.sim_editor = value
@@ -197,9 +262,17 @@ class Controller():
         if(self.sim.get_accumulator() == -1):
             #unhalt
             self.gui.halt_button.setText("Unhalt")
+            self.gui.register_button.setEnabled(False)
+            self.gui.accumulator_button.setEnabled(False)
+            self.gui.step_button.setEnabled(False)
+            self.gui.run_button.setEnabled(False)
         else:
             #halt
             self.gui.halt_button.setText("Halt")
+            self.gui.register_button.setEnabled(True)
+            self.gui.accumulator_button.setEnabled(True)
+            self.gui.step_button.setEnabled(True)
+            self.gui.run_button.setEnabled(True)
 
     def update_register(self):
         self.gui.register_button.setText(f"Register: '{self.sim.get_register()}'")

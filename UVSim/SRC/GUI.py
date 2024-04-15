@@ -6,7 +6,7 @@ import os
 class QTGUI(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("BasicML Simulator - No File Opened (0/1)")
+        self.setWindowTitle("BasicML Simulator - No File Opened (1/1)")
         self.setGeometry(100, 100, 700, 500)
         self.new_dialog = None
         self.new_dialog_id = ''
@@ -15,7 +15,7 @@ class QTGUI(QMainWindow):
         lines = con.readlines()
         self.main_style = lines[0]
         self.text_style = lines[1]
-        self.off_style = "#eeeeee"
+        self.off_style = lines[2]
         self.button_style = """QPushButton {
 """ + f"""
 background-color: {self.off_style};
@@ -28,6 +28,11 @@ height: 20px;
 color: {self.main_style};
 """ + """}
 """ + """QPushButton:hover {
+""" + f"""
+background-color: {self.main_style};
+color: {self.off_style};
+""" + """}
+""" + """QPushButton:disabled {
 """ + f"""
 background-color: {self.main_style};
 color: {self.off_style};
@@ -84,7 +89,7 @@ color: {self.off_style};
         header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
         self.memory_layout = QVBoxLayout()
         self.memory_label = QLabel("Memory")
-        self.memory_label.setStyleSheet("color: #FFFFFF;")
+        self.memory_label.setStyleSheet(f'color: {self.off_style}')
         self.memory_layout.addWidget(self.memory_label)
         self.memory_layout.addWidget(self.memory_display)
 
@@ -108,9 +113,9 @@ color: {self.off_style};
         self.step_button = QPushButton("Step")
         self.step_button.setStyleSheet(self.button_style)
         button_split.addWidget(self.step_button)
-        self.reset_button = QPushButton("Reset")
-        self.reset_button.setStyleSheet(self.button_style)
-        button_split.addWidget(self.reset_button)
+        # self.reset_button = QPushButton("Reset")
+        # self.reset_button.setStyleSheet(self.button_style)
+        # button_split.addWidget(self.reset_button)
         self.memory_layout.addLayout(button_split)
 
 
@@ -148,36 +153,45 @@ color: {self.off_style};
         self.console.setTextColor('#000000')
 
     def create_console_side(self):
-        """Creates console side of GUI"""
+        """Creates buttons for textbox side of GUI"""
         self.textbox_layout = QVBoxLayout()
         
+        #Page navigation buttons
         page_navigation = QHBoxLayout()
-        self.change_page_button = QPushButton("TODO Page: --")
-        self.change_page_button.setStyleSheet(self.button_style)
-        page_navigation.addWidget(self.change_page_button)
-        self.previous_file_button = QPushButton("TODO Previous")
+            #Set page button
+        # self.change_page_button = QPushButton("TODO Page: --")
+        # self.change_page_button.setStyleSheet(self.button_style)
+        # page_navigation.addWidget(self.change_page_button)
+            #Previous page
+        self.previous_file_button = QPushButton("Previous")
         self.previous_file_button.setStyleSheet(self.button_style)
         page_navigation.addWidget(self.previous_file_button)
-        self.next_file_button = QPushButton("TODO Next")
+            #Next page
+        self.next_file_button = QPushButton("Next")
         self.next_file_button.setStyleSheet(self.button_style)
         page_navigation.addWidget(self.next_file_button)
         self.textbox_layout.addLayout(page_navigation)
-       
+        
+        #Add editor button underneath
         self.editor_button = QPushButton("Open Code Editor")
         self.editor_button.setStyleSheet(self.button_style)
         self.textbox_layout.addWidget(self.editor_button)
         
+        #Add Console control buttons underneath
         button_split = QHBoxLayout()
-        self.copy_console_button = QPushButton("TODO Copy Console")
-        self.copy_console_button.setStyleSheet(self.button_style)
-        button_split.addWidget(self.copy_console_button)
+            #Copy from console
+        # self.copy_console_button = QPushButton("TODO Copy Console")
+        # self.copy_console_button.setStyleSheet(self.button_style)
+        # button_split.addWidget(self.copy_console_button)
+            #Clear console content
         self.clear_console_button = QPushButton("Clear Console")
         self.clear_console_button.setStyleSheet(self.button_style)
         button_split.addWidget(self.clear_console_button)
         self.textbox_layout.addLayout(button_split)
         
+        #Add console and its label underneath all buttons
         self.console_label = QLabel("Console")
-        self.console_label.setStyleSheet("color: #FFFFFF;")
+        self.console_label.setStyleSheet(f'color: {self.off_style}')
         self.textbox_layout.addWidget(self.console_label)
         self.textbox_layout.addWidget(self.console)
 
@@ -200,7 +214,7 @@ color: {self.off_style};
         self.help_menu.setStyleSheet("QMenu{background-color: lightgray;} QMenu::item:selected {color: darkgray;}")
         menu_bar.addMenu(self.help_menu)
     
-    def change_theme(self):
+    def change_main_theme(self):
         self.theme_dialog = QInputDialog()
         self.theme_dialog.setWindowTitle("Change Main Theme")
         self.theme_dialog.setLabelText("Enter a hex value to change the main theme:")
@@ -222,8 +236,32 @@ color: {self.off_style};
             self.setStyleSheet(f"background-color: {self.main_style}; color: {self.text_style};")
 
         con = open(os.path.join(self.__location__, "config.ini"), "w")
-        con.write(self.main_style + "\n")
+        con.write(self.main_style)
         con.write(self.text_style)
+
+        self.setStyleSheet("""QPushButton {
+""" + f"""
+background-color: {self.off_style};
+border-color: {self.off_style};
+border-width: 4px;
+font-size: 14px;
+border: 2px solid {self.off_style};
+border-radius: 10px;
+height: 20px;
+color: {self.main_style};
+""" + """}
+""" + """QPushButton:hover {
+""" + f"""
+background-color: {self.main_style};
+color: {self.off_style};
+""" + """}
+""" + """QPushButton:disabled {
+""" + f"""
+background-color: {self.main_style};
+color: {self.off_style};
+""" + """}
+""")
+
 
 
     def show_version(self):
