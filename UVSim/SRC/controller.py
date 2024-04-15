@@ -51,6 +51,7 @@ class Controller():
         self.gui.file_menu.addAction("Open New Page", self.new_file)
         theme = self.gui.edit_menu.addMenu("Change Theme")
         theme.addAction("Main Theme", self.gui.change_main_theme)
+        theme.addAction("Off Theme", self.gui.change_off_theme)
         # theme.addAction("Off Theme", self.gui.change_off_theme)
         # theme.addAction("Text Theme", self.gui.change_text_theme)
         
@@ -72,8 +73,11 @@ class Controller():
         self.update_memory()
 
     def save_file(self):
-        with open(self.file_path, 'w') as file:
-            file.write(self.sim_editor)
+        try:
+            with open(self.file_path, 'w') as file:
+                file.write(self.sim_editor)
+        except:
+            self.custom_alert('File Error', 'Invalid directory')
 
     def next_file(self):
         if(self.current_file < len(self.file_paths) - 1):
