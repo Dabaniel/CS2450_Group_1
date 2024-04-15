@@ -49,6 +49,7 @@ class Controller():
         self.gui.previous_file_button.clicked.connect(self.prev_file)
         self.gui.editor_button.clicked.connect(self.open_editor)
         self.gui.file_menu.addAction("Open New Page", self.new_file)
+        self.gui.file_menu.addAction("Remove Current Page", self.remove_file)
         theme = self.gui.edit_menu.addMenu("Change Theme")
         theme.addAction("Main Theme", self.gui.change_main_theme)
         theme.addAction("Off Theme", self.gui.change_off_theme)
@@ -78,56 +79,70 @@ class Controller():
                 file.write(self.sim_editor)
         except:
             self.custom_alert('File Error', 'Invalid directory')
+    
+    def remember_current(self):
+        self.buffers[self.current_file] = self.buffers
+        self.sims[self.current_file] = self.sim
+        self.sim_editors[self.current_file] = self.sim_editor
+        self.file_paths[self.current_file] = self.file_path
+    
+    def adjust_current(self):
+        self.buffer = self.buffers[self.current_file]
+        self.sim = self.sims[self.current_file]
+        self.sim_editor = self.sim_editors[self.current_file]
+        self.file_path = self.file_paths[self.current_file]
+    
+    def update_title(self):
+        if(self.file_path == ''):
+            self.gui.setWindowTitle(f"BasicML Simulator - No File Opened ({self.current_file + 1}/{len(self.file_paths)})")
+        else:
+            self.gui.setWindowTitle(f"BasicML Simulator - {self.file_path.split('/')[-1]} ({self.current_file + 1}/{len(self.file_paths)})")
 
     def next_file(self):
         if(self.current_file < len(self.file_paths) - 1):
+            self.remember_current()
+            
             self.current_file += 1
             
-            self.buffer = self.buffers[self.current_file]
-            self.sim = self.sims[self.current_file]
-            self.sim_editor = self.sim_editors[self.current_file]
-            self.file_path = self.file_paths[self.current_file]
-            if(self.file_path == ''):
-                self.gui.setWindowTitle(f"BasicML Simulator - No File Opened ({self.current_file + 1}/{len(self.file_paths)})")
-            else:
-                self.gui.setWindowTitle(f"BasicML Simulator - {self.file_path.split('/')[-1]} ({self.current_file + 1}/{len(self.file_paths)})")
+            self.adjust_current()
+
+            self.update_title()
             self.update_memory()
 
     def prev_file(self):
         if(0 < self.current_file):
+            self.remember_current()
+
             self.current_file -= 1
             
-            self.buffer = self.buffers[self.current_file]
-            self.sim = self.sims[self.current_file]
-            self.sim_editor = self.sim_editors[self.current_file]
-            self.file_path = self.file_paths[self.current_file]
-            if(self.file_path == ''):
-                self.gui.setWindowTitle(f"BasicML Simulator - No File Opened ({self.current_file + 1}/{len(self.file_paths)})")
-            else:
-                self.gui.setWindowTitle(f"BasicML Simulator - {self.file_path.split('/')[-1]} ({self.current_file + 1}/{len(self.file_paths)})")
+            self.adjust_current()
+            self.update_title()
             self.update_memory()
 
     def new_file(self):
+        self.remember_current()
+
         self.current_file = len(self.file_paths)
         self.sim_editors.append('')
         self.file_paths.append('')
         self.buffers.append(buffer.Buffer())
         self.sims.append(I_UVSim(UVSim(self.buffers[self.current_file])))
         
-        self.buffer = self.buffers[self.current_file]
-        self.sim = self.sims[self.current_file]
-        self.sim_editor = self.sim_editors[self.current_file]
-        self.file_path = self.file_paths[self.current_file]
-        self.gui.setWindowTitle(f"BasicML Simulator - No File Opened ({self.current_file + 1}/{len(self.file_paths)})")
+        self.adjust_current()
+        self.update_title()
 
         self.update_memory()
     
     def remove_file(self):
         if(1 < len(self.file_paths)):
-            self.sim_editor.remove(self.current_file)
-            self.sims.remove(self.current_file)
-            self.buffers.remove(self.current_file)
-            self.file_paths.remove(self.current_file)
+            del self.sim_editors[self.current_file]
+            del self.sims[self.current_file]
+            del self.buffers[self.current_file]
+            del self.file_paths[self.current_file]
+            if(self.current_file == len(self.file_paths)):
+                self.current_file -= 1
+            self.adjust_current()
+            self.update_title()
     
     def file_load(self):
         """
@@ -150,9 +165,9 @@ class Controller():
             if(self.gui.new_dialog_id == 'code_editor'):
                 self.gui.text_editor.setText(self.sim_editor)
             self.sim.load_list(contents)
-            self.update_memory()
             self.file_path = file_path
-            self.gui.setWindowTitle(f"BasicML Simulator - {file_path.split('/')[-1]} ({self.current_file + 1}/{len(self.file_paths)})")
+            self.update_memory()
+            self.update_title()
     
     def step(self, in_run = False):
         """Increment the simulation by one step"""
