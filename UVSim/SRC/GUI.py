@@ -11,12 +11,17 @@ class QTGUI(QMainWindow):
         self.new_dialog = None
         self.new_dialog_id = ''
         self.__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-        con = open(os.path.join(self.__location__, "config.ini"))
-        lines = con.readlines()
-        self.main_style = lines[0]
-        self.text_style = lines[1]
-        self.off_style = lines[2]
-        self.button_style = """QPushButton {
+        try:
+            con = open(os.path.join(self.__location__, "config.ini"))
+            lines = con.readlines()
+            self.main_style = lines[0]
+            self.text_style = lines[1]
+            self.off_style = lines[2]
+        except:
+            self.main_style = "#4C721D"
+            self.text_style = "#222222"
+            self.off_style = "#eeeeee"
+        self.setStyleSheet("QTGUI {" + f"background-color: {self.main_style}; color: {self.text_style};" + "}" + """QPushButton {
 """ + f"""
 background-color: {self.off_style};
 border-color: {self.off_style};
@@ -37,30 +42,7 @@ color: {self.off_style};
 background-color: {self.main_style};
 color: {self.off_style};
 """ + """}
-"""
-#         self.button_style = f"""
-# QPushButton {
-# """{
-#     background-color: #eeeeee;
-#     border-color: #eeeeee;
-#     border-width: 4px;
-#     font-size: 14px;
-# """ + f"border: 2px solid {self.text_style};" + """
-#     border-radius: 10px;
-#     height: 20px;
-# }"""
-# }
-
-# QPushButton:hover {
-# "{" + f"background-color: {self.main_style}" + "}"
-# }
-
-# .disabled {
-#   "{" + f"opacity: 0.6;cursor: not-allowed;" + "}"
-# }
-# """
-        # self.button_style = "background-color: #eeeeee;font-size: 14px;border-radius: 10px;height: 20px"
-        self.setStyleSheet(f"background-color: {self.main_style}; color: {self.text_style};")
+""")
         self.UIsetup()
 
     def UIsetup(self):
@@ -96,25 +78,19 @@ color: {self.off_style};
         #Buttons
         button_split = QHBoxLayout()
         self.accumulator_button = QPushButton("Accumulator: NaN")
-        self.accumulator_button.setStyleSheet(self.button_style)
         button_split.addWidget(self.accumulator_button)
         self.register_button = QPushButton("Register: NaN")
-        self.register_button.setStyleSheet(self.button_style)
         button_split.addWidget(self.register_button)
         self.halt_button = QPushButton("----")
-        self.halt_button.setStyleSheet(self.button_style)
         button_split.addWidget(self.halt_button)
         self.memory_layout.addLayout(button_split)
         
         button_split = QHBoxLayout()
         self.run_button = QPushButton("Run")
-        self.run_button.setStyleSheet(self.button_style)
         button_split.addWidget(self.run_button)
         self.step_button = QPushButton("Step")
-        self.step_button.setStyleSheet(self.button_style)
         button_split.addWidget(self.step_button)
         # self.reset_button = QPushButton("Reset")
-        # self.reset_button.setStyleSheet(self.button_style)
         # button_split.addWidget(self.reset_button)
         self.memory_layout.addLayout(button_split)
 
@@ -160,32 +136,26 @@ color: {self.off_style};
         page_navigation = QHBoxLayout()
             #Set page button
         # self.change_page_button = QPushButton("TODO Page: --")
-        # self.change_page_button.setStyleSheet(self.button_style)
         # page_navigation.addWidget(self.change_page_button)
             #Previous page
         self.previous_file_button = QPushButton("Previous")
-        self.previous_file_button.setStyleSheet(self.button_style)
         page_navigation.addWidget(self.previous_file_button)
             #Next page
         self.next_file_button = QPushButton("Next")
-        self.next_file_button.setStyleSheet(self.button_style)
         page_navigation.addWidget(self.next_file_button)
         self.textbox_layout.addLayout(page_navigation)
         
         #Add editor button underneath
         self.editor_button = QPushButton("Open Code Editor")
-        self.editor_button.setStyleSheet(self.button_style)
         self.textbox_layout.addWidget(self.editor_button)
         
         #Add Console control buttons underneath
         button_split = QHBoxLayout()
             #Copy from console
         # self.copy_console_button = QPushButton("TODO Copy Console")
-        # self.copy_console_button.setStyleSheet(self.button_style)
         # button_split.addWidget(self.copy_console_button)
             #Clear console content
         self.clear_console_button = QPushButton("Clear Console")
-        self.clear_console_button.setStyleSheet(self.button_style)
         button_split.addWidget(self.clear_console_button)
         self.textbox_layout.addLayout(button_split)
         
@@ -213,33 +183,9 @@ color: {self.off_style};
         self.help_menu = QMenu("&Help", self)
         self.help_menu.setStyleSheet("QMenu{background-color: lightgray;} QMenu::item:selected {color: darkgray;}")
         menu_bar.addMenu(self.help_menu)
-    
-    def change_main_theme(self):
-        self.theme_dialog = QInputDialog()
-        self.theme_dialog.setWindowTitle("Change Main Theme")
-        self.theme_dialog.setLabelText("Enter a hex value to change the main theme:")
 
-        self.text_style_dialog = QInputDialog()
-        self.text_style_dialog.setWindowTitle("Change Off Theme")
-        self.text_style_dialog.setLabelText("Enter a hex value to change the off theme:")
-
-
-        _ = self.theme_dialog.exec_()
-        if self.theme_dialog.textValue():
-            self.main_style = self.theme_dialog.textValue()
-            self.setStyleSheet(f"background-color: {self.main_style}; color: {self.text_style};")
-
-        _ = self.text_style_dialog.exec_()
-        if self.text_style_dialog.textValue():
-            self.text_style = self.text_style_dialog.textValue()
-            self.setStyleSheet(f"color: {self.text_style}; ")
-            self.setStyleSheet(f"background-color: {self.main_style}; color: {self.text_style};")
-
-        con = open(os.path.join(self.__location__, "config.ini"), "w")
-        con.write(self.main_style)
-        con.write(self.text_style)
-
-        self.setStyleSheet("""QPushButton {
+    def reset_style(self):
+        self.setStyleSheet("QTGUI {" + f"background-color: {self.main_style}; color: {self.text_style};" + "}" + """QPushButton {
 """ + f"""
 background-color: {self.off_style};
 border-color: {self.off_style};
@@ -262,8 +208,36 @@ color: {self.off_style};
 """ + """}
 """)
 
+    def change_main_theme(self):
+        self.theme_dialog = QInputDialog()
+        self.theme_dialog.setWindowTitle("Change Main Theme")
+        self.theme_dialog.setLabelText("Enter a hex value to change the main theme:")
 
 
+        _ = self.theme_dialog.exec_()
+        if self.theme_dialog.textValue():
+            self.main_style = self.theme_dialog.textValue()
+
+        con = open(os.path.join(self.__location__, "config.ini"), "w")
+        con.write(f"{self.main_style.strip()}\n{self.text_style.strip()}\n{self.off_style.strip()}")
+
+        self.reset_style()
+
+    def change_off_theme(self):
+        self.theme_dialog = QInputDialog()
+        self.theme_dialog.setWindowTitle("Change Off Theme")
+        self.theme_dialog.setLabelText("Enter a hex value to change the off theme:")
+
+
+        _ = self.theme_dialog.exec_()
+        if self.theme_dialog.textValue():
+            self.off_style = self.theme_dialog.textValue()
+
+        con = open(os.path.join(self.__location__, "config.ini"), "w")
+        con.write(f"{self.main_style.strip()}\n{self.text_style.strip()}\n{self.off_style.strip()}")
+
+        self.reset_style()
+        
     def show_version(self):
         self.version_dialog = QMessageBox()
         
@@ -298,7 +272,7 @@ color: {self.off_style};
     def change_register(self):
         self.new_dialog = QInputDialog()
         self.new_dialog.setWindowTitle("Change Register")
-        self.new_dialog.setLabelText("Enter a Register value (TODO):")
+        self.new_dialog.setLabelText("Enter a Register value:") # (todo)
 
         _ = self.new_dialog.exec_()
         try:
@@ -347,13 +321,9 @@ color: {self.off_style};
         self.wiz_layout.addWidget(self.text_editor)
 
         self.code_load_button = QPushButton("Compile")
-        self.code_load_button.setStyleSheet(self.button_style)
         self.export_button = QPushButton("Save As")
-        self.export_button.setStyleSheet(self.button_style)
         self.save_button = QPushButton("Save")
-        self.save_button.setStyleSheet(self.button_style)
         self.editor_load_button = QPushButton("Open File")
-        self.editor_load_button.setStyleSheet(self.button_style)
     
         self.button_layout.addWidget(self.code_load_button)
         self.button_layout.addWidget(self.export_button)
