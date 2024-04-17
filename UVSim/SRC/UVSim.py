@@ -201,6 +201,10 @@ class UVSim:
         if(len(load_buffer) < self._memory_size):
             for i, content in enumerate(load_buffer):
                 self._memory[i] = content
+        else:
+            #TODO give a valid error for when code exceeds memory limit
+            raise ValueError('your code too long :(')
+        self.Halt()
 
     def load_from_text(self, filename):
         """Opens a text file and parses the content into memory by line"""

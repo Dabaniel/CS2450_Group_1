@@ -61,6 +61,7 @@ class Controller():
 
     def editor_load(self):
         self.sim.load_list(self.sim_editor.splitlines())
+        self.halt()
         self.update_memory()
     
     def halt(self):
@@ -107,7 +108,7 @@ class Controller():
             self.adjust_current()
 
             self.update_title()
-            self.update_memory()
+            self.update_memory(True)
 
     def prev_file(self):
         if(0 < self.current_file):
@@ -117,7 +118,7 @@ class Controller():
             
             self.adjust_current()
             self.update_title()
-            self.update_memory()
+            self.update_memory(True)
 
     def new_file(self):
         self.remember_current()
@@ -131,7 +132,7 @@ class Controller():
         self.adjust_current()
         self.update_title()
 
-        self.update_memory()
+        self.update_memory(True)
     
     def remove_file(self):
         if(1 < len(self.file_paths)):
@@ -164,9 +165,10 @@ class Controller():
             # self.sim.load_list(self.sim_editor)
             if(self.gui.new_dialog_id == 'code_editor'):
                 self.gui.text_editor.setText(self.sim_editor)
-            self.sim.load_list(contents)
+            # self.sim.load_list(contents)
             self.file_path = file_path
-            self.update_memory()
+            # self.halt()
+            # self.update_memory(True)
             self.update_title()
     
     def step(self, in_run = False):
@@ -189,7 +191,7 @@ class Controller():
     def run(self):
         while -1 < self.sim.get_accumulator():
             self.step(True)
-        self.update_memory()
+        self.update_memory(True)
 
     def reset(self):
         self.sim.load_list(self.sim_editor.splitlines())
@@ -220,7 +222,7 @@ class Controller():
             self.custom_alert()
         else:
             self.sim.set_accumulator(ret)
-            self.update_accumulator()
+            self.update_memory(True)
     
     def open_editor(self):
         self.gui.code_editor(self.sim_editor)
@@ -228,6 +230,7 @@ class Controller():
         self.gui.text_editor.textChanged.connect(self.set_code)
         self.gui.code_load_button.clicked.connect(partial(self.sim.load_list, self.sim_editor.splitlines()))
         self.gui.code_load_button.clicked.connect(self.editor_load)
+        self.gui.code_load_button.clicked.connect(self.halt)
         self.gui.save_button.clicked.connect(self.save_file)
         self.gui.clear_console_button.clicked.connect(self.clear_console)
         self.gui.export_button.clicked.connect(self.gui.name_export)
@@ -270,9 +273,9 @@ class Controller():
     def custom_alert(self, title = "About your input...", desc = "The input provided was not proper!"):
         self.gui.custom_alert(title, desc)
 
-    def update_memory(self):
+    def update_memory(self, hard = False):
         stack_memory = self.sim.get_memory()
-        for i in range(250):
+        for i in range(max(250 * hard, min(250, 1 + max(len(self.sim_editor), self.sim.get_accumulator())))):
             self.gui.memory_display.setItem(i, 1, QTableWidgetItem(f"{stack_memory[i] if stack_memory[i] is not None else ''}"))
             self.gui.memory_display.setItem(i, 2, QTableWidgetItem(""))
         cnt = self.sim.get_accumulator()
