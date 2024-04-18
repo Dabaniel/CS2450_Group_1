@@ -159,6 +159,7 @@ class UVSim:
                 # self._operator.case_switch(data[0], data[1])
             except:
                 print(f"Something went wrong at line {self.get_accumulator()}. The simulation will now halt.")
+                self._buffer.set_buffer(1, self.get_accumulator(), f"Something went wrong at line {self.get_accumulator()}. The simulation will now halt.")
                 self.Halt()
                 return False
             
