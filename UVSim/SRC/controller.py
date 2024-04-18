@@ -51,8 +51,10 @@ class Controller():
         self.gui.file_menu.addAction("Open New Page", self.new_file)
         self.gui.file_menu.addAction("Remove Current Page", self.remove_file)
         theme = self.gui.edit_menu.addMenu("Change Theme")
-        theme.addAction("Main Theme", self.gui.change_main_theme)
-        theme.addAction("Off Theme", self.gui.change_off_theme)
+        theme.addAction("Main Theme", partial(self.gui.change_theme, 0))
+        theme.addAction("Off Theme", partial(self.gui.change_theme, 1))
+        theme.addAction("Text Theme", partial(self.gui.change_theme, 2))
+        theme.addAction("Content Theme", partial(self.gui.change_theme, 3))
         # theme.addAction("Off Theme", self.gui.change_off_theme)
         # theme.addAction("Text Theme", self.gui.change_text_theme)
         
@@ -72,7 +74,7 @@ class Controller():
             #halt
             self.sim.halt()
 
-        self.update_memory()
+        self.update_memory(True)
 
     def save_file(self):
         try:
@@ -180,11 +182,15 @@ class Controller():
             if(len(buffer)):
                 self.append_console(buffer)
             else:
+                if(in_run):
+                    self.update_memory()
                 ret = self.gui.insert_Read()
-                self.sim.set_data_at_location(self.buffer.get_buffer_location(), ret)
-                self.append_console(str(ret))
-            if(in_run):
-                self.update_memory()
+                if(ret == None):
+                    self.halt()
+                    self.custom_alert()
+                else:
+                    self.sim.set_data_at_location(self.buffer.get_buffer_location(), ret)
+                    self.append_console(str(ret))
         if(not in_run):
             self.update_memory()
     

@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QAbstractItemView, QMainWindow, QPushButton, QVBoxLayout, \
-    QTableWidget, QLabel, QTextEdit, QHBoxLayout, QWidget, QTableWidgetItem, QMenu, QInputDialog, QMessageBox, QWizard, QWizardPage, QHeaderView # pip install pyside6
+    QTableWidget, QLabel, QTextEdit, QHBoxLayout, QWidget, QTableWidgetItem, QMenu, QInputDialog, QMessageBox, QDialog, QWizard, QWizardPage, QHeaderView # pip install pyside6
 from PySide6.QtCore import Qt
 import os
 
@@ -11,39 +11,18 @@ class QTGUI(QMainWindow):
         self.new_dialog = None
         self.new_dialog_id = ''
         self.__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+        self.styles = []
         try:
             con = open(os.path.join(self.__location__, "config.ini"))
-            lines = con.readlines()
-            self.main_style = lines[0]
-            self.text_style = lines[1]
-            self.off_style = lines[2]
+            self.styles = con.readlines()
+            for i in range(len(self.styles)):
+                self.styles[i].strip()
+            self.styles[3]
         except:
-            self.main_style = "#4C721D"
-            self.text_style = "#222222"
-            self.off_style = "#eeeeee"
-        self.setStyleSheet("QTGUI {" + f"background-color: {self.main_style}; color: {self.text_style};" + "}" + """QPushButton {
-""" + f"""
-background-color: {self.off_style};
-border-color: {self.off_style};
-border-width: 4px;
-font-size: 14px;
-border: 2px solid {self.off_style};
-border-radius: 10px;
-height: 20px;
-color: {self.main_style};
-""" + """}
-""" + """QPushButton:hover {
-""" + f"""
-background-color: {self.main_style};
-color: {self.off_style};
-""" + """}
-""" + """QPushButton:disabled {
-""" + f"""
-background-color: {self.main_style};
-color: {self.off_style};
-""" + """}
-""")
+            self.styles = ["#4C721D", "#eeeeee", "#222222", "#aaaaaa"]
         self.UIsetup()
+
+        self.reset_style()
 
     def UIsetup(self):
         self.main_layout = QVBoxLayout()
@@ -62,7 +41,7 @@ color: {self.off_style};
     def create_memory(self):
         self.memory_display = QTableWidget(250, 3)
         self.memory_display.setColumnCount(3)
-        self.memory_display.setStyleSheet("background-color: #dbdbdb;")
+        # self.reset_style(self.memory_display)
         self.memory_display.setHorizontalHeaderLabels(["##", "Value", "A"])
         self.memory_display.setMinimumWidth(300)
         header = self.memory_display.horizontalHeader()
@@ -71,7 +50,6 @@ color: {self.off_style};
         header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
         self.memory_layout = QVBoxLayout()
         self.memory_label = QLabel("Memory")
-        self.memory_label.setStyleSheet(f'color: {self.off_style}')
         self.memory_layout.addWidget(self.memory_label)
         self.memory_layout.addWidget(self.memory_display)
 
@@ -103,30 +81,10 @@ color: {self.off_style};
         # immutable table
         self.memory_display.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
-    # def create_register(self):
-    #     self.register_display = QTextEdit()
-    #     self.register_display.setStyleSheet("background-color: #dbdbdb;")
-    #     self.register_display.setFixedWidth(50)
-    #     self.register_display.setFixedHeight(50)
-
-        
-    #     buttons_layout = QHBoxLayout()
-    #     self.reset_button = QPushButton("Reset")
-    #     self.reset_button.setStyleSheet("background-color: #dbdbdb;")
-    #     buttons_layout.addWidget(self.reset_button)
-
-    # def create_accumulator(self):
-    #     self.accumulator_display = QTextEdit()
-    #     self.accumulator_display.setStyleSheet("background-color: #dbdbdb;")
-    #     self.accumulator_display.setFixedWidth(50)
-    #     self.accumulator_display.setFixedHeight(50)
-
     def create_console(self):
         self.console = QTextEdit()
-        self.console.setStyleSheet("background-color: #dbdbdb;")
         self.console.setPlaceholderText("Programs will print out to here.")
         self.console.setDisabled(True)
-        self.console.setTextColor('#000000')
 
     def create_console_side(self):
         """Creates buttons for textbox side of GUI"""
@@ -161,7 +119,6 @@ color: {self.off_style};
         
         #Add console and its label underneath all buttons
         self.console_label = QLabel("Console")
-        self.console_label.setStyleSheet(f'color: {self.off_style}')
         self.textbox_layout.addWidget(self.console_label)
         self.textbox_layout.addWidget(self.console)
 
@@ -173,40 +130,83 @@ color: {self.off_style};
     def create_menu_bar(self):
         menu_bar = self.menuBar()
         self.file_menu = QMenu("&File", self)
-        self.file_menu.setStyleSheet("QMenu{background-color: lightgray;} QMenu::item:selected {color: darkgray;}")
         menu_bar.addMenu(self.file_menu)
 
         self.edit_menu = QMenu("&Edit", self)
-        self.edit_menu.setStyleSheet("QMenu{background-color: lightgray;} QMenu::item:selected {color: darkgray;}")
         menu_bar.addMenu(self.edit_menu)
 
         self.help_menu = QMenu("&Help", self)
-        self.help_menu.setStyleSheet("QMenu{background-color: lightgray;} QMenu::item:selected {color: darkgray;}")
         menu_bar.addMenu(self.help_menu)
 
-    def reset_style(self):
-        self.setStyleSheet("QTGUI {" + f"background-color: {self.main_style}; color: {self.text_style};" + "}" + """QPushButton {
+    def reset_style(self, value = None):
+        #QTGUI Style
+        style_string = "QMainWindow {" + f"background-color: {self.styles[0]}; color: {self.styles[1]};" + "}"
+        if(value == None):
+            value = self
+            #border: 1px solid orange;
+            #Table Style
+            self.memory_display.setStyleSheet(f"background-color: {self.styles[3]}; color: {self.styles[2]};")
+            self.console.setStyleSheet(f"background-color: {self.styles[3]}; color: {self.styles[2]};")
+            #Menu Style
+            self.menuBar().setStyleSheet(f"background-color: {self.styles[3]}; color: {self.styles[2]}")
+            #Label Style
+            style_string += "QLabel {" + f"color: {self.styles[1]};" + "}"
+        elif(type(value) == type(QMessageBox())):
+            #Label Style
+            style_string += "QLabel {" + f"color: {self.styles[2]};" + "}"
+        #QDialog Style
+        style_string += "QDialog {" + f"background-color: {self.styles[0]}; color: {self.styles[1]};" + "}"
+        #QMessageBox Style
+        style_string += "QMessageBox {" + f"background-color: {self.styles[3]}; color: {self.styles[2]};" + "}"
+        #QInputDialog Style
+        style_string += "QInputDialog {" + f"background-color: {self.styles[3]}; color: {self.styles[2]};" + "}" + "QInputDialog > QLabel {" + f"color: {self.styles[2]};" + "}"
+        #QMenu Style
+        style_string += "QMenu {" + f"background-color: {self.styles[3]}; color: {self.styles[2]};" + "} QMenu::item:selected {" + f"background-color: {self.styles[2]}; color: {self.styles[3]};" +"}"
+        #QTextEdit Style
+        style_string += "QTextEdit {" + f"background-color: {self.styles[3]}; color: {self.styles[2]};" + "}"
+        #QPushButton Style
+        style_string += """QPushButton {
 """ + f"""
-background-color: {self.off_style};
-border-color: {self.off_style};
+background-color: {self.styles[1]};
+border-color: {self.styles[1]};
 border-width: 4px;
-font-size: 14px;
-border: 2px solid {self.off_style};
+font-size: 12px;
+border: 2px solid {self.styles[1]};
 border-radius: 10px;
 height: 20px;
-color: {self.main_style};
+min-width: 40px;
+color: {self.styles[0]};
 """ + """}
 """ + """QPushButton:hover {
 """ + f"""
-background-color: {self.main_style};
-color: {self.off_style};
+background-color: {self.styles[0]};
+color: {self.styles[1]};
 """ + """}
 """ + """QPushButton:disabled {
 """ + f"""
-background-color: {self.main_style};
-color: {self.off_style};
+background-color: {self.styles[0]};
+color: {self.styles[1]};
 """ + """}
-""")
+"""
+        value.setStyleSheet(style_string)
+    
+    def change_theme(self, which):
+        self.theme_dialog = QInputDialog()
+        self.theme_dialog.setWindowTitle("Change Main Theme")
+        self.theme_dialog.setLabelText("Enter a hex value to change the main theme:")
+
+
+        _ = self.theme_dialog.exec_()
+        if self.theme_dialog.textValue():
+            self.styles[which] = self.theme_dialog.textValue()
+
+        con = open(os.path.join(self.__location__, "config.ini"), "w")
+        for i in self.styles:
+            con.write(i.strip() + '\n')
+        # con.write(f"{self.styles[0].strip()}\n{self.styles[1].strip()}\n{self.styles[2].strip()}\n{self.styles[3].strip()}")
+        # con.write(f"{self.styles[which].strip()}\n{self.styles[2].strip()}\n{self.styles[1].strip()}")
+
+        self.reset_style()
 
     def change_main_theme(self):
         self.theme_dialog = QInputDialog()
@@ -216,10 +216,10 @@ color: {self.off_style};
 
         _ = self.theme_dialog.exec_()
         if self.theme_dialog.textValue():
-            self.main_style = self.theme_dialog.textValue()
+            self.styles[0] = self.theme_dialog.textValue()
 
         con = open(os.path.join(self.__location__, "config.ini"), "w")
-        con.write(f"{self.main_style.strip()}\n{self.text_style.strip()}\n{self.off_style.strip()}")
+        con.write(f"{self.styles[0].strip()}\n{self.styles[1].strip()}\n{self.styles[2].strip()}\n{self.styles[3].strip()}")
 
         self.reset_style()
 
@@ -231,15 +231,16 @@ color: {self.off_style};
 
         _ = self.theme_dialog.exec_()
         if self.theme_dialog.textValue():
-            self.off_style = self.theme_dialog.textValue()
+            self.styles[1] = self.theme_dialog.textValue()
 
         con = open(os.path.join(self.__location__, "config.ini"), "w")
-        con.write(f"{self.main_style.strip()}\n{self.text_style.strip()}\n{self.off_style.strip()}")
+        con.write(f"{self.styles[0].strip()}\n{self.styles[2].strip()}\n{self.styles[1].strip()}")
 
         self.reset_style()
         
     def show_version(self):
         self.version_dialog = QMessageBox()
+        self.reset_style(self.version_dialog)
         
         help_about = open(os.path.join(self.__location__, "about.txt"))
         help_about_lines = help_about.read()
@@ -250,7 +251,8 @@ color: {self.off_style};
 
     def show_help(self):
         self.help_dialog = QMessageBox()
-        self.help_dialog.setStyleSheet("QLabel{min-width: 700px; text-align: left;}")
+        self.reset_style(self.help_dialog)
+        # .setStyleSheet("QLabel{min-width: 700px; text-align: left;}")
         # change the following to an updated instruction list
 
         help_doc = open(os.path.join(self.__location__, "DOCS.txt"))
@@ -262,7 +264,8 @@ color: {self.off_style};
 
     def custom_alert(self, title, desc):
         self.new_dialog = QMessageBox()
-        self.new_dialog.setStyleSheet("QLabel{min-width: 200px; text-align: left;}")
+        self.reset_style(self.new_dialog)
+        # .setStyleSheet("QLabel{min-width: 200px; text-align: left;}")
         # change the following to an updated instruction list
         self.new_dialog.setWindowTitle(title)
         self.new_dialog.setText(desc)
@@ -271,6 +274,7 @@ color: {self.off_style};
 
     def change_register(self):
         self.new_dialog = QInputDialog()
+        self.reset_style(self.new_dialog)
         self.new_dialog.setWindowTitle("Change Register")
         self.new_dialog.setLabelText("Enter a Register value:") # (todo)
 
@@ -282,6 +286,7 @@ color: {self.off_style};
 
     def change_accumulator(self):
         self.new_dialog = QInputDialog()
+        self.reset_style(self.new_dialog)
         self.new_dialog.setWindowTitle("Change Accumulator")
         self.new_dialog.setLabelText("Enter an Accumulator value (0-249):")
 
@@ -293,6 +298,7 @@ color: {self.off_style};
 
     def insert_Read(self):
         self.new_dialog = QInputDialog()
+        self.reset_style(self.new_dialog)
         self.new_dialog.setWindowTitle("Insert Value")
         self.new_dialog.setLabelText("Enter a value for the program:")
 
@@ -307,11 +313,11 @@ color: {self.off_style};
         self.new_dialog_id = ''
 
     def code_editor(self, code):
-        self.new_dialog = QWizard()
+        self.new_dialog = QDialog()
         self.new_dialog_id = 'code_editor'
-        self.new_dialog.setStyleSheet("QWizard { background-color: #ffffff; }")
-        self.new_dialog.setButtonLayout([])
-        # self.new_dialog.setWindowFlags(self.windowFlags() & ~Qt.WindowCloseButtonHint) # no close button
+        self.reset_style(self.new_dialog)
+        self.new_dialog.setWindowTitle('UVSim Code Editor')
+        self.new_dialog.setGeometry(150, 150, 600, 400)
         self.text_editor = QTextEdit()
         self.text_editor.setText(code)
 
