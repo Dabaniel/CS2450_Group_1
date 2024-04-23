@@ -1,5 +1,7 @@
 import pytest
-import UVSim
+from ..simulation.UVSim import UVSim
+
+#TODO: MAKE THIS EXECUTABLE
 
 #TODO: TESTS MUST BE KEPT UP-TO-DATE WITH PROGRESS IN MEMORY
 

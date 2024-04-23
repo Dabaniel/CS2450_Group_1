@@ -1,5 +1,7 @@
 import pytest
-import UVSim.src.simulation.operations as operations
+from ..src.simulation.operations import Operator
+
+#TODO: MAKE THIS EXECUTABLE
 
 # @pytest.mark.parametrize('example,num', [
 #     ('examplearg1', 1),
@@ -13,3 +15,7 @@ import UVSim.src.simulation.operations as operations
 
 # def test_example(example,num):
 #     assert int(example[-1]) == num
+
+def test_initialize():
+    opA = operations.Operator()
+    assert opA
