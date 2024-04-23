@@ -19,7 +19,7 @@ class QTGUI(QMainWindow):
                 self.styles[i].strip()
             self.styles[3]
         except:
-            self.styles = ["#4C721D", "#eeeeee", "#222222", "#aaaaaa"]
+            self.styles = ["#4C721D", "#eeeeee", "#006600", "#dddddd"]
         self.UIsetup()
 
         self.reset_style()

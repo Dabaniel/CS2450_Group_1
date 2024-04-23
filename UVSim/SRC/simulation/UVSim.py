@@ -1,8 +1,8 @@
 """Module that contains and runs the UVSim Virtual machine"""
 
-import UVSim
-import operations
-import buffer
+#  simulation.UVSim
+import simulation.operations as operations
+import controllers.buffer as buffer
 
 def check_if_instruction(user_input):
     """Checks an input for sign, if sign detected returns True"""
@@ -12,82 +12,6 @@ def check_if_instruction(user_input):
 
 def check_if_non_instruction(user_input):
     return user_input[0] == '&'
-
-class I_UVSim():
-    """
-        Interface for UVSim
-            This is an interface for the UVSim class. Here are the interface's capabilities:
-        -- METHODS --
-        Getters:
-            get_accumulator()
-            get_register()
-            get_memory()
-
-        Setters:
-            set_accumulator(value)
-            set_register(value)
-            set_data_at_location(position, value)
-            load_text_file(file)
-            load_string(text)
-            step()
-            run()
-            halt()
-            reboot()
-    """
-    def __init__(self, uvsim: UVSim) -> None:
-        self.uvsim = uvsim
-
-    ## GETTERS ##
-    def get_accumulator(self):
-        return self.uvsim.get_accumulator()
-    
-    def get_register(self):
-        return self.uvsim.get_register()
-    
-    def get_memory(self):
-        return self.uvsim.get_memory()
-    
-    def get_buffer_bit(self):
-        return self.uvsim.get_buffer_bit()
-    
-    def get_buffer_message(self):
-        return self.uvsim.get_buffer_message()
-    
-    def get_buffer_location(self):
-        return self.uvsim.get_buffer_location()
-    
-    def get_memory_size(self):
-        return self.uvsim.get_memory_size()
-
-    ## SETTERS ##
-    def set_accumulator(self, value = 0):
-        return self.uvsim.set_accumulator(value)
-    
-    def set_register(self, value = '00'):
-        self.uvsim.set_register(value)
-    
-    def set_data_at_location(self, position, value):
-        self.uvsim.set_position_in_memory(position, value)
-
-    def load_text_file(self, file):
-        """Load code from a .txt file"""
-        self.uvsim.load_from_text(file)
-
-    def load_list(self, text):
-        """Load code from a string"""
-        self.uvsim.load_from_string(text)
-
-    def step(self):
-        self.uvsim.step()
-
-    def run(self):
-        self.uvsim.run()
-
-    def halt(self):
-        self.uvsim.Halt()
-
-    def reboot(self):
-        self.uvsim.Reboot()
 
 class UVSim:
     """Class for UVSim Virtual Machine"""
@@ -436,6 +360,82 @@ class UVSim:
         """Reboot the simulation"""
         self._accumulator = [0, '0']
         self._memory = [''] * self.get_memory_size()
+
+class I_UVSim():
+    """
+        Interface for UVSim
+            This is an interface for the UVSim class. Here are the interface's capabilities:
+        -- METHODS --
+        Getters:
+            get_accumulator()
+            get_register()
+            get_memory()
+
+        Setters:
+            set_accumulator(value)
+            set_register(value)
+            set_data_at_location(position, value)
+            load_text_file(file)
+            load_string(text)
+            step()
+            run()
+            halt()
+            reboot()
+    """
+    def __init__(self, uvsim: UVSim) -> None:
+        self.uvsim = uvsim
+
+    ## GETTERS ##
+    def get_accumulator(self):
+        return self.uvsim.get_accumulator()
+    
+    def get_register(self):
+        return self.uvsim.get_register()
+    
+    def get_memory(self):
+        return self.uvsim.get_memory()
+    
+    def get_buffer_bit(self):
+        return self.uvsim.get_buffer_bit()
+    
+    def get_buffer_message(self):
+        return self.uvsim.get_buffer_message()
+    
+    def get_buffer_location(self):
+        return self.uvsim.get_buffer_location()
+    
+    def get_memory_size(self):
+        return self.uvsim.get_memory_size()
+
+    ## SETTERS ##
+    def set_accumulator(self, value = 0):
+        return self.uvsim.set_accumulator(value)
+    
+    def set_register(self, value = '00'):
+        self.uvsim.set_register(value)
+    
+    def set_data_at_location(self, position, value):
+        self.uvsim.set_position_in_memory(position, value)
+
+    def load_text_file(self, file):
+        """Load code from a .txt file"""
+        self.uvsim.load_from_text(file)
+
+    def load_list(self, text):
+        """Load code from a string"""
+        self.uvsim.load_from_string(text)
+
+    def step(self):
+        self.uvsim.step()
+
+    def run(self):
+        self.uvsim.run()
+
+    def halt(self):
+        self.uvsim.Halt()
+
+    def reboot(self):
+        self.uvsim.Reboot()
 
 def main():
     test_the_sim = UVSim()

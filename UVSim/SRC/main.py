@@ -1,4 +1,4 @@
-from controller import Controller
+from controllers.controller import Controller
 
 def main():
     """Main function"""

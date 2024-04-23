@@ -1,10 +1,10 @@
-from UVSim import UVSim, I_UVSim
-from GUI import QTGUI
+from simulation.UVSim import UVSim, I_UVSim
+from interface.GUI import QTGUI
 from PySide6.QtWidgets import QApplication, QFileDialog, QTableWidgetItem
 from PySide6 import QtGui
 import sys
 from functools import partial
-import buffer
+import controllers.buffer as buffer
 
 class Controller():
     def __init__(self) -> None:
