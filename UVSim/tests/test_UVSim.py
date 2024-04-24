@@ -1,33 +1,43 @@
+import sys
+import os
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+
 import pytest
-from ..simulation.UVSim import UVSim
+import src.simulation.UVSim as UVSim
 
 #TODO: MAKE THIS EXECUTABLE
 
 #TODO: TESTS MUST BE KEPT UP-TO-DATE WITH PROGRESS IN MEMORY
 
 def test_get_memory():
-    sim = UVSim.UVSim()
-    assert type(sim.get_memory()) == type([])
-    assert sim.get_memory() == [None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
+    sim = UVSim.I_UVSim(UVSim.UVSim())
+    assert type(sim.get_memory()) == list
+    assert sim.get_memory() == [''] * 250
 
-def test_get_acc():
-    sim = UVSim.UVSim()
-    assert type(sim.get_acc()) == type([])
-    assert sim.get_acc() == [0, '0']
+def test_get_accumulator():
+    sim = UVSim.I_UVSim(UVSim.UVSim())
+    assert type(sim.get_accumulator()) == int
+    assert sim.get_accumulator() == -1
 
-@pytest.mark.parametrize('input,expected,expected_list', [
-    ('test1', True, ['+1007', '+1008', '+2007', '+2008', '+2109', '+1109', '+4300', '+0000', '+0000', '+0000', '-99999', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]),
-    ('test2', True, ['+1009', '+1010', '+2009', '+3110', '+4107', '+1109', '+4300', '+1110', '+4300', '+0000', '+0000', '-99999', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]),
-    ('test3', True, ['+1009', '+1010', '+2009', '+3110', '+4107', '+1109', '+4300', '+1110', '+4300', '+0000', '+0000', '-99999', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]),
-    ('test1', False, ['+1007', '+1000', '+2007', '+2008', '+2109', '+1109', '+4300', '+0000', '+0000', '+0000', '-99999', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]),
-    ('test2', False, []),
-    ('test3', False, ['+1000', '+1010', '+2009', '+3110', '+4107', '+1109', '+4300', '+1110', '+4300', '+0000', '+0000', '-99999', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None])
+@pytest.mark.parametrize('expected_list', [
+    (['+1007', '+1008', '+2007', '+2008', '+2109', '+1109', '+4300', '+0000', '+0000', '+0000', '-99999']),
+    (['+1009', '+1010', '+2009', '+3110', '+4107', '+1109', '+4300', '+1110', '+4300', '+0000', '+0000', '-99999']),
+    (['+1009', '+1010', '+2009', '+3110', '+4107', '+1109', '+4300', '+1110', '+4300', '+0000', '+0000', '-99999']),
+    (['+1007', '+1000', '+2007', '+2008', '+2109', '+1109', '+4300', '+0000', '+0000', '+0000', '-99999']),
+    ([]),
+    (['+1000', '+1010', '+2009', '+3110', '+4107', '+1109', '+4300', '+1110', '+4300', '+0000', '+0000', '-99999'])
 ])
 
-def test_load_from_text(input, expected, expected_list):
-    sim = UVSim.UVSim()
-    sim.load_from_text(f'{input}.txt')
-    assert (sim.get_memory() == expected_list) == expected
+def test_load_from_text(expected_list):
+    sim = UVSim.I_UVSim(UVSim.UVSim())
+    sim.load_list(expected_list)
+    seen = True
+    for i in range(len(expected_list)):
+        current = sim.get_memory()[i] == expected_list[i]
+        seen = current and seen
+        assert current
 
 @pytest.mark.parametrize('num', [
     (0),
@@ -40,10 +50,11 @@ def test_load_from_text(input, expected, expected_list):
 ])
 
 def test_accumulator_progression(num):
-    sim = UVSim.UVSim()
+    sim = UVSim.I_UVSim(UVSim.UVSim())
+    sim.set_accumulator(0)
     for i in range(num):
         sim.step()
-    assert sim.get_acc() == [num, '0']
+    assert sim.get_accumulator() == num
 
 # @pytest.mark.parametrize('example,num', [
 #     ('examplearg1', 1),

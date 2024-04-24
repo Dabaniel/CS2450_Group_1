@@ -1,6 +1,10 @@
 """Module that contains and runs the UVSim Virtual machine"""
+import sys
+import os
 
-#  simulation.UVSim
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+
 import simulation.operations as operations
 import controllers.buffer as buffer
 

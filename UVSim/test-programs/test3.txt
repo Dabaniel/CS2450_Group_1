@@ -1,15 +1,12 @@
-//This Program Has Comments
-+1009
++1009 This program has comments
 +1010
-+2009
-//Comments are pretty cool
-+3110 //Comments still work?
++2009 Comments are pretty cool
++3110
 +4107
 +1109
 +4300
-+1110 //Comment
++1110 Comments are helpful for reading code
 +4300
-//Just all sorts of fun :)
 +0000
 +0000
--99999 //Final Comment
+-99999 Just make sure there is a space between your code and the comment
