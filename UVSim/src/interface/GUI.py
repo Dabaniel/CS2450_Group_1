@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QAbstractItemView, QMainWindow, QPushButton, QVBoxLayout, \
-    QTableWidget, QLabel, QTextEdit, QHBoxLayout, QWidget, QTableWidgetItem, QMenu, QInputDialog, QMessageBox, QDialog, QWizard, QWizardPage, QHeaderView # pip install pyside6
+    QTableWidget, QLabel, QTextEdit, QHBoxLayout, QWidget, QTableWidgetItem, QMenu, QInputDialog, QMessageBox, QDialog, QHeaderView, QScrollArea, QScrollBar # pip install pyside6
 from PySide6.QtCore import Qt
 import os
 
@@ -84,7 +84,7 @@ class QTGUI(QMainWindow):
     def create_console(self):
         self.console = QTextEdit()
         self.console.setPlaceholderText("Programs will print out to here.")
-        self.console.setDisabled(True)
+        self.console.setReadOnly(True)
 
     def create_console_side(self):
         """Creates buttons for textbox side of GUI"""
@@ -154,6 +154,7 @@ class QTGUI(QMainWindow):
         elif(type(value) == type(QMessageBox())):
             #Label Style
             style_string += "QLabel {" + f"color: {self.styles[2]};" + "}"
+        style_string += "QScrollArea{min-width:300 px; min-height: 400px}"
         #QDialog Style
         style_string += "QDialog {" + f"background-color: {self.styles[0]}; color: {self.styles[1]};" + "}"
         #QMessageBox Style
@@ -250,15 +251,28 @@ color: {self.styles[1]};
         _ = self.version_dialog.exec_()
 
     def show_help(self):
-        self.help_dialog = QMessageBox()
-        self.reset_style(self.help_dialog)
-        # .setStyleSheet("QLabel{min-width: 700px; text-align: left;}")
-        # change the following to an updated instruction list
+        self.help_dialog = QDialog()
+        self.help_dialog.setMinimumWidth(500)
+        self.help_dialog.setMinimumHeight(400)
+        layout = QVBoxLayout()
+        # self.help_dialog.layout()
 
         help_doc = open(os.path.join(self.__location__, "DOCS.txt"))
         help_doc_lines = help_doc.read()
 
-        self.help_dialog.setText(help_doc_lines)
+        textBox = QTextEdit()
+        textBox.setText(help_doc_lines)
+        textBox.setReadOnly(True)
+
+        layout.addWidget(textBox)
+        self.reset_style(self.help_dialog)
+
+        # help_doc = open(os.path.join(self.__location__, "DOCS.txt"))
+        # help_doc_lines = help_doc.read()
+
+        # self.help_dialog.setText(help_doc_lines)
+
+        self.help_dialog.setLayout(layout)
 
         _ = self.help_dialog.exec_()
 

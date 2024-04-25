@@ -84,7 +84,7 @@ class Controller():
             self.custom_alert('File Error', 'Invalid directory')
     
     def remember_current(self):
-        self.buffers[self.current_file] = self.buffers
+        self.buffers[self.current_file] = self.buffer
         self.sims[self.current_file] = self.sim
         self.sim_editors[self.current_file] = self.sim_editor
         self.file_paths[self.current_file] = self.file_path
