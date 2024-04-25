@@ -57,21 +57,32 @@ def test_write(acc,reg):
     ops.Write(get_accumulator())
     assert buff.get_buffer_message() == register
 
-@pytest.mark.parametrize('acc,value', [
-    (0, "00"),
-    (0, "11"),
-    (2, "65"),
-    (3, "54"),
-    (1, "11"),
-    (4, "99"),
-    (1, "00"),
+@pytest.mark.parametrize('mem_loc,value', [
+    ("00", "2"),
+    ("11", "a"),
+    ("65", "43"),
+    ("54", "6"),
+    ("11", "9"),
+    ("99", "0"),
 ])
 
-def test_read(acc,value,monkeypatch):
+def test_read(mem_loc,value):
     global memory, accumulator, register
     buff = buffer.Buffer()
     memory = [""] * 100
+    operations.input = lambda: value
     ops = operations.Operator(get_memory, set_position_in_memory, get_accumulator, set_accumulator, get_register, set_register, buff)
-    monkeypatch.setattr('builtins.input', lambda _: "2")
-    ops.Read(get_accumulator())
+    ops.Read(mem_loc)
+    assert get_memory()[int(mem_loc)] == value
+    
+    ops.Read("string not int")
     assert ops._get_register() == value
+
+
+def test_case_switch():
+    global memory, accumulator, register
+    buff = buffer.Buffer()
+    ops = operations.Operator(get_memory, set_position_in_memory, get_accumulator, set_accumulator, get_register, set_register, buff)
+    
+    assert ops.case_switch("+10", 0) == None
+    assert ops.case_switch("+30", -1) == ValueError
