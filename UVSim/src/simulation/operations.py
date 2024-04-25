@@ -10,19 +10,31 @@ class Operator:
         self._set_register = reg_setter
         self._buffer = buff
 
-        self._operations = {
+        self._operations = {            
             "+10": self.Read,
+            "+010": self.Read,
             "+11": self.Write,
+            "+011": self.Write,
             "+20": self.Load,
+            "+020": self.Load,
             "+21": self.Store,
+            "+021": self.Store,
             "+30": self.Add,
+            "+030": self.Add,
             "+31": self.Subtract,
+            "+031": self.Subtract,
             "+32": self.Divide,
+            "+032": self.Divide,
             "+33": self.Multiply,
+            "+033": self.Multiply,
             "+40": self.Branch,
+            "+040": self.Branch,
             "+41": self.BranchNeg,
+            "+041": self.BranchNeg,
             "+42": self.BranchZero,
-            "+43": self.Halt
+            "+042": self.BranchZero,
+            "+43": self.Halt,
+            "+043": self.Halt
         }
     
     def _add_acc(self, add = 1):
@@ -37,6 +49,10 @@ class Operator:
             self.Halt()
             return ValueError
     
+    def Nothing(self):
+        """Placeholder"""
+        self._add_acc()
+
     #I/O operators
     def Read(self, memory_location):
         """Reads input from the keyboard and stores in specifed memory location"""
@@ -91,7 +107,7 @@ class Operator:
         try:
             mem_loc = int(memory_location)
         except ValueError:
-            print('Store: Bad input')
+            print('Add: Bad input')
             return ValueError
         if self._get_register() is None:
             self._set_register(int(self._get_memory()[mem_loc]))
@@ -105,7 +121,7 @@ class Operator:
         try:
             mem_loc = int(memory_location)
         except ValueError:
-            print('Store: Bad input')
+            print('Subtract: Bad input')
             return ValueError
         if self._get_register() is None:
             self._set_register(0 - int(self._get_memory()[mem_loc]))
@@ -119,7 +135,7 @@ class Operator:
         try:
             mem_loc = int(memory_location)
         except ValueError:
-            print('Store: Bad input')
+            print('Divide: Bad input')
             return ValueError
         if self._get_register() is None:
             self._set_register(0)
@@ -133,7 +149,7 @@ class Operator:
         try:
             mem_loc = int(memory_location)
         except ValueError:
-            print('Store: Bad input')
+            print('Multiply: Bad input')
             return ValueError
         if self._get_register() is None:
             self._set_register(0)
@@ -143,18 +159,50 @@ class Operator:
 
     #Control operators
     #TODO
-    def Branch(memoryLocation):
-        pass
+    def Branch(self, memory_location):
+        """Branches to the specified memory location"""
+        mem_loc = 0
+        try:
+            mem_loc = int(memory_location)
+        except ValueError:
+            print('Branch: Bad input')
+            return ValueError
+        self._set_accumulator(mem_loc)
 
-    #TODO
-    def BranchNeg(memoryLocation):
-        pass
+    def BranchNeg(self, memory_location):
+        """Branches to the specified memory location if accumulator is negative"""
+        mem_loc = 0
+        try:
+            mem_loc = int(memory_location)
+        except ValueError:
+            print('BranchNeg: Bad input')
+            return ValueError
+        try:
+            if int(self._get_register()) < 0:
+                self._set_accumulator(mem_loc)
+            else:
+                self._add_acc()
+        except ValueError:
+            print('BranchNeg: Bad input')
+            return ValueError
 
-    #TODO
-    def BranchZero(memoryLocation):
-        pass
+    def BranchZero(self, memory_location):
+        """Branches to the specified memory location if accumulator is zero"""
+        mem_loc = 0
+        try:
+            mem_loc = int(memory_location)
+        except ValueError:
+            print('BranchZero: Bad input')
+            return ValueError
+        try:
+            if int(self._get_register()) == 0:
+                self._set_accumulator(mem_loc)
+            else:
+                self._add_acc()
+        except ValueError:
+            print('BranchZero: Bad input')
+            return ValueError
 
-    #TODO
     def Halt(self, memory_location = '00'):
         """Stops the sim"""
         self._set_accumulator(-1)
